@@ -1,3 +1,11 @@
+import {
+	getBoundingBox,
+	parsePath,
+	reduceInstructions,
+	resetPath,
+	scalePath,
+} from '@remotion/paths';
+import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
 import {useCurrentFrame} from 'remotion';
 import {
 	Camera,
@@ -8,49 +16,59 @@ import {
 	Vector4D,
 } from './multiply';
 
+const w =
+	'M18 48.5L1.5 0.5H15L24 27.5L33 0.5H48L62 27.5L67.5 0.5H84L71 48.5H56L42 24.5L33 48.5H18Z';
+
+const scale = 0.02;
+
+const parsed = reduceInstructions(
+	parsePath(scalePath(resetPath(w), scale, scale))
+);
+
+const bBox = getBoundingBoxFromInstructions(parsed);
+const width = bBox.y2 - bBox.y1;
+const height = bBox.x2 - bBox.x1;
+
+const removedZ = parsed.filter((p) => p.type !== 'Z');
+
+const face = removedZ
+	.map((p) => {
+		if (p.type !== 'M' && p.type !== 'L') {
+			throw new Error('unexpected');
+		}
+
+		return [p.x, p.y] as const;
+	})
+	.map(([x, y]) => {
+		return [x, y, 0] as Vector;
+	});
+
+const depth = 0.2;
+
 const faces = [
-	[
-		[0, 0, 0],
-		[1, 0, 0],
-		[1, 1, 0],
-		[0, 1, 0],
-		[0, 0, 0],
-	],
-	[
-		[0, 0, 1],
-		[1, 0, 1],
-		[1, 1, 1],
-		[0, 1, 1],
-		[0, 0, 1],
-	],
-	[
-		[0, 0, 0],
-		[0, 0, 1],
-		[0, 1, 1],
-		[0, 1, 0],
-		[0, 0, 0],
-	],
-	[
-		[1, 0, 0],
-		[1, 0, 1],
-		[1, 1, 1],
-		[1, 1, 0],
-		[1, 0, 0],
-	],
-	[
-		[0, 0, 0],
-		[0, 0, 1],
-		[1, 0, 1],
-		[1, 0, 0],
-		[0, 0, 0],
-	],
-	[
-		[0, 1, 0],
-		[0, 1, 1],
-		[1, 1, 1],
-		[1, 1, 0],
-		[0, 1, 0],
-	],
+	face,
+	face.map((p) => {
+		return [p[0], p[1], p[2] - depth] as Vector;
+	}),
+	...removedZ.map((p, i) => {
+		if (p.type !== 'M' && p.type !== 'L') {
+			throw new Error('unexpected');
+		}
+
+		const joined = i === 0 ? removedZ.length - 1 : i - 1;
+		const segmentToJoin = removedZ[joined];
+		if (segmentToJoin.type !== 'M' && segmentToJoin.type !== 'L') {
+			throw new Error('unexpected');
+		}
+
+		return [
+			[p.x, p.y, 0],
+			[p.x, p.y, -depth],
+			[segmentToJoin.x, segmentToJoin.y, -depth],
+			[segmentToJoin.x, segmentToJoin.y, 0],
+			[p.x, p.y, 0],
+		];
+	}),
 ];
 
 const camAngle = Math.PI / 12;
@@ -64,8 +82,6 @@ const cam: Camera = {
 	angle: camAngle,
 };
 
-const width = 1;
-const height = 1;
 const vSphereCenter = [width / 2, height / 2];
 const vSphereRadius = Math.min(...vSphereCenter);
 
@@ -84,16 +100,13 @@ export const MyComposition = () => {
 	const rotatedFaces = faces.map((points) => {
 		const projected = points
 			.map((p) => {
-				return [...p, 1] as Vector4D;
+				return [p[0] - width / 2, p[1] - height / 2, p[2], 1] as Vector4D;
 			})
 			.map((p) => {
-				return [p[0] - 0.5, p[1] - 0.5, p[2] - 0.5, p[3]] as Vector4D;
+				return [p[0], p[1], p[2], p[3]] as Vector4D;
 			})
 			.map((p) => {
 				return multiplyMatrixAndPoint(rotated([0, 1, 0], frame / 20), p);
-			})
-			.map((p) => {
-				return multiplyMatrixAndPoint(rotated([1, 0, 0], frame / 40), p);
 			});
 		return projected;
 	});
@@ -101,8 +114,16 @@ export const MyComposition = () => {
 	const projectedFaces = rotatedFaces
 		.slice()
 		.map((points, j) => {
+			const availableColors = [
+				'red',
+				'green',
+				'blue',
+				'yellow',
+				'orange',
+				'purple',
+			];
 			return {
-				color: ['red', 'green', 'blue', 'yellow', 'orange', 'purple'][j],
+				color: availableColors[j % availableColors.length],
 				points,
 			};
 		})
@@ -134,7 +155,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{projectedFaces.map(({color, points}, j) => {
+			{projectedFaces.map(({color, points}) => {
 				return (
 					<path
 						d={points

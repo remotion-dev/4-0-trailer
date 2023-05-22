@@ -12,6 +12,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@remotion/cli": "3.3.95",
+    "@remotion/paths": "^3.3.95",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "remotion": "3.3.95"
