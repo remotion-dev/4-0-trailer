@@ -16,12 +16,14 @@ export const projectPoints = ({
 	height,
 	frame,
 	camera,
+	color,
 }: {
 	points: number[][];
 	width: number;
 	height: number;
 	frame: number;
 	camera: MatrixTransform4D;
+	color: string;
 }): Face => {
 	const projected = points
 		.map((p) => {
@@ -40,7 +42,7 @@ export const projectPoints = ({
 			return multiplyMatrixAndPoint(camera, p);
 		});
 	return {
-		color: 'white',
+		color,
 		points: projected,
 	};
 };

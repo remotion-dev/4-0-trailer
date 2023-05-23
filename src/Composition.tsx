@@ -114,13 +114,20 @@ export const MyComposition = () => {
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((points) =>
-			projectPoints({points, width, height, frame, camera})
+			projectPoints({points, width, height, frame, camera, color: 'white'})
 		)
 	);
 	const sorted = mainFaces.map((face) => {
 		return sortFacesZIndex(
 			face.map((points) =>
-				projectPoints({points, width, height, frame, camera})
+				projectPoints({
+					points,
+					width,
+					height,
+					frame,
+					camera,
+					color: 'var(--blue)',
+				})
 			)
 		);
 	});
@@ -136,13 +143,13 @@ export const MyComposition = () => {
 			}}
 		>
 			{bottomFaces.map(({color, points}) => {
-				return <Face color="var(--blue)" points={points} />;
+				return <Face color={color} points={points} />;
 			})}
 			{rotatedFaces.map(({color, points}) => {
 				return <Face color={color} points={points} />;
 			})}
 			{topFaces.map(({color, points}) => {
-				return <Face color="var(--blue)" points={points} />;
+				return <Face color={color} points={points} />;
 			})}
 		</svg>
 	);
