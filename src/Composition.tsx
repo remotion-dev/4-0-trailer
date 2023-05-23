@@ -24,7 +24,7 @@ export const MyComposition = () => {
 
 	const scale = 0.02;
 
-	const text = useText('svg');
+	const text = useText('v');
 	if (!text) {
 		return null;
 	}
@@ -58,11 +58,11 @@ export const MyComposition = () => {
 	const inbetweenFaces: FaceType[] = joinInbetweenTiles(
 		facePerSubpath.points,
 		depth
-	).map((p) => {
+	).map(({instructions, shouldDrawLine}) => {
 		return {
-			points: p,
+			points: instructions,
 			color: '#fff',
-			shouldDrawLine: true,
+			shouldDrawLine,
 		};
 	});
 
