@@ -1,5 +1,5 @@
 import {ThreeDReducedInstruction} from './3d-svg';
-import {translateSvgInstruction} from './map-face';
+import {FaceType, translateSvgInstruction} from './map-face';
 import {Vector4D} from './multiply';
 
 function dotProduct(a: Vector4D, b: Vector4D): number {
@@ -23,13 +23,18 @@ function angleBetweenVectors(a: Vector4D, b: Vector4D): number {
 
 const getOutgoingVector = ({
 	nextInstruction,
-	currentPoing: currentPoint,
+	currentPoint,
 }: {
 	nextInstruction: ThreeDReducedInstruction;
-	currentPoing: Vector4D;
+	currentPoint: Vector4D;
 }): Vector4D => {
 	if (nextInstruction.type === 'M') {
-		return currentPoint;
+		return [
+			nextInstruction.point[0] - currentPoint[0],
+			nextInstruction.point[1] - currentPoint[1],
+			nextInstruction.point[2] - currentPoint[2],
+			nextInstruction.point[3] - currentPoint[3],
+		];
 	}
 	if (nextInstruction.type === 'L') {
 		return [
@@ -60,36 +65,41 @@ const getOutgoingVector = ({
 
 const getIncomingVector = ({
 	previousInstruction,
-	previousPoint,
+	currentPoint,
 }: {
 	previousInstruction: ThreeDReducedInstruction;
-	previousPoint: Vector4D;
+	currentPoint: Vector4D;
 }): Vector4D => {
 	if (previousInstruction.type === 'M') {
-		return previousPoint;
+		return [
+			currentPoint[0] - previousInstruction.point[0],
+			currentPoint[1] - previousInstruction.point[1],
+			currentPoint[2] - previousInstruction.point[2],
+			currentPoint[3] - previousInstruction.point[3],
+		];
 	}
 	if (previousInstruction.type === 'L') {
 		return [
-			previousInstruction.point[0] - previousPoint[0],
-			previousInstruction.point[1] - previousPoint[1],
-			previousInstruction.point[2] - previousPoint[2],
-			previousInstruction.point[3] - previousPoint[3],
+			currentPoint[0] - previousInstruction.point[0],
+			currentPoint[1] - previousInstruction.point[1],
+			currentPoint[2] - previousInstruction.point[2],
+			currentPoint[3] - previousInstruction.point[3],
 		];
 	}
 	if (previousInstruction.type === 'C') {
 		return [
-			3 * (previousInstruction.cp2[0] - previousPoint[0]),
-			3 * (previousInstruction.cp2[1] - previousPoint[1]),
-			3 * (previousInstruction.cp2[2] - previousPoint[2]),
-			3 * (previousInstruction.cp2[3] - previousPoint[3]),
+			currentPoint[0] - previousInstruction.cp2[0],
+			currentPoint[1] - previousInstruction.cp2[1],
+			currentPoint[2] - previousInstruction.cp2[2],
+			currentPoint[3] - previousInstruction.cp2[3],
 		];
 	}
 	if (previousInstruction.type === 'Q') {
 		return [
-			previousInstruction.cp[0] - previousPoint[0],
-			previousInstruction.cp[1] - previousPoint[1],
-			previousInstruction.cp[2] - previousPoint[2],
-			previousInstruction.cp[3] - previousPoint[3],
+			currentPoint[0] - previousInstruction.cp[0],
+			currentPoint[1] - previousInstruction.cp[1],
+			currentPoint[2] - previousInstruction.cp[2],
+			currentPoint[3] - previousInstruction.cp[3],
 		];
 	}
 	throw new Error('Unknown instruction type');
@@ -98,64 +108,84 @@ const getIncomingVector = ({
 export const joinInbetweenTiles = (
 	instructions: ThreeDReducedInstruction[],
 	depth: number
-) => {
-	return instructions.map((t, i) => {
-		const nextInstruction =
-			i === instructions.length - 1 ? instructions[0] : instructions[i + 1];
-		const previousInstructionIndex = i === 0 ? instructions.length - 1 : i - 1;
-		const previousInstruction = instructions[previousInstructionIndex];
-		const twoInstructionsAgo =
-			previousInstructionIndex === 0
-				? instructions[instructions.length - 1]
-				: instructions[previousInstructionIndex - 1];
+): FaceType[] => {
+	console.log({instructions});
+	return instructions
+		.map((t, i): FaceType[] => {
+			const nextInstruction =
+				i === instructions.length - 1 ? instructions[0] : instructions[i + 1];
+			const previousInstructionIndex =
+				i === 0 ? instructions.length - 1 : i - 1;
+			const previousInstruction = instructions[previousInstructionIndex];
 
-		const incomingVector = getIncomingVector({
-			previousInstruction,
-			previousPoint: twoInstructionsAgo.point,
-		});
-		const outgoingVector = getOutgoingVector({
-			nextInstruction,
-			currentPoing: t.point,
-		});
+			const incomingVector = getIncomingVector({
+				previousInstruction,
+				currentPoint: t.point,
+			});
+			const outgoingVector = getOutgoingVector({
+				nextInstruction,
+				currentPoint: t.point,
+			});
 
-		const angle = angleBetweenVectors(incomingVector, outgoingVector);
+			const angle = angleBetweenVectors(incomingVector, outgoingVector);
 
-		const currentPoint = t.point;
-		const nextPoint = nextInstruction.point;
-		const movingOver: Vector4D = [
-			nextPoint[0],
-			nextPoint[1],
-			nextPoint[2] - depth,
-			nextPoint[3],
-		];
+			const currentPoint = t.point;
+			const nextPoint = nextInstruction.point;
+			const movingOver: Vector4D = [
+				nextPoint[0],
+				nextPoint[1],
+				nextPoint[2] - depth,
+				nextPoint[3],
+			];
 
-		const newInstructions: ThreeDReducedInstruction[] = [
-			{
-				type: 'M',
-				point: currentPoint,
-			},
-			nextInstruction,
-			{
-				type: 'L',
-				point: movingOver,
-			},
-			translateSvgInstruction(
-				inverseInstruction(nextInstruction, currentPoint),
-				0,
-				0,
-				-depth
-			),
-			{
-				type: 'L',
-				point: currentPoint,
-			},
-		];
-		console.log({angle});
-		return {
-			instructions: newInstructions,
-			shouldDrawLine: !Number.isNaN(angle) && angle > 0 && angle < 90,
-		};
-	});
+			const movingOverCurrent: Vector4D = [
+				t.point[0],
+				t.point[1],
+				t.point[2] - depth,
+				t.point[3],
+			];
+
+			const newInstructions: ThreeDReducedInstruction[] = [
+				{
+					type: 'M',
+					point: currentPoint,
+				},
+				nextInstruction,
+				{
+					type: 'L',
+					point: movingOver,
+				},
+				translateSvgInstruction(
+					inverseInstruction(nextInstruction, currentPoint),
+					0,
+					0,
+					-depth
+				),
+				{
+					type: 'L',
+					point: currentPoint,
+				},
+			];
+
+			return [
+				{points: newInstructions, color: '#fff', shouldDrawLine: false},
+				{
+					points: [
+						{
+							type: 'M',
+							point: currentPoint,
+						},
+						{
+							type: 'L',
+							point: movingOverCurrent,
+						},
+					],
+					color: '#fff',
+					shouldDrawLine: !Number.isNaN(angle) && angle > 40,
+				},
+			];
+		})
+		.flat(1);
 };
 
 const inverseInstruction = (

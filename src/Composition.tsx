@@ -24,7 +24,8 @@ export const MyComposition = () => {
 
 	const scale = 0.02;
 
-	const text = useText('v');
+	const text = useText('4');
+	console.log(text);
 	if (!text) {
 		return null;
 	}
@@ -33,7 +34,9 @@ export const MyComposition = () => {
 	const bBox = getBoundingBox(scaled);
 
 	const parsed = subdivideInstructions(
-		subdivideInstructions(turnInto3D(reduceInstructions(parsePath(scaled))))
+		subdivideInstructions(
+			subdivideInstructions(turnInto3D(reduceInstructions(parsePath(scaled))))
+		)
 	);
 
 	const width = bBox.y2 - bBox.y1;
@@ -58,13 +61,7 @@ export const MyComposition = () => {
 	const inbetweenFaces: FaceType[] = joinInbetweenTiles(
 		facePerSubpath.points,
 		depth
-	).map(({instructions, shouldDrawLine}) => {
-		return {
-			points: instructions,
-			color: '#fff',
-			shouldDrawLine,
-		};
-	});
+	);
 
 	const camAngle = Math.PI / 12;
 

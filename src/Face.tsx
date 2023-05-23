@@ -11,10 +11,10 @@ export const Face: React.FC<{
 			d={threeDIntoSvgPath(points)}
 			fill={color}
 			strokeLinejoin="bevel"
-			strokeLinecap="butt"
+			strokeLinecap="round"
 			stroke="black"
 			shapeRendering="crispEdges"
-			strokeWidth={shouldDrawLine ? 0.1 : 0}
+			strokeWidth={shouldDrawLine ? 0.2 : 0}
 		/>
 	);
 };
