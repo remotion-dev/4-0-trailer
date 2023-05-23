@@ -1,11 +1,3 @@
-export function faceM44(rx: number, ry: number, scale: number) {
-	return m44multiply(
-		rotated([0, 1, 0], ry),
-		rotated([1, 0, 0], rx),
-		translated4d([0, 0, scale])
-	);
-}
-
 export const translated4d = function (vec: Vector) {
 	return stride({v: vec, m: identity4(), width: 4, offset: 3, colStride: 0});
 };
