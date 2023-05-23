@@ -19,18 +19,17 @@ import {useText} from './get-char';
 import {joinInbetweenTiles} from './join-inbetween-tiles';
 import {subdivideInstructions} from './subdivide-instruction';
 
+const scale = 0.01;
+
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
 
-	const scale = 0.02;
-
-	const text = useText('4');
-	console.log(text);
+	const text = useText('Mohit');
 	if (!text) {
 		return null;
 	}
 
-	const scaled = scalePath(resetPath(text.path), scale, scale);
+	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
 
 	const parsed = subdivideInstructions(
@@ -39,8 +38,8 @@ export const MyComposition = () => {
 		)
 	);
 
-	const width = bBox.y2 - bBox.y1;
-	const height = bBox.x2 - bBox.x1;
+	const width = bBox.x2 - bBox.x1;
+	const height = bBox.y2 - bBox.y1;
 
 	const facePerSubpath: FaceType = {
 		points: parsed,
@@ -70,11 +69,10 @@ export const MyComposition = () => {
 		eye: [0, 0, 1 / Math.tan(camAngle / 2) - 1] as Vector,
 		coa: [0, 0, 0],
 		up: [0, 1, 0],
-		near: 2,
-		far: 4,
+		near: 400,
+		far: 500,
 		angle: camAngle,
 	};
-
 	const vSphereCenter = [width / 2, height / 2];
 	const vSphereRadius = Math.min(...vSphereCenter);
 
@@ -84,7 +82,7 @@ export const MyComposition = () => {
 		vSphereRadius,
 		vSphereRadius,
 	] as const;
-	const camera = setupCamera(area, 1, cam);
+	const camera = setupCamera(area, 100, cam);
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {

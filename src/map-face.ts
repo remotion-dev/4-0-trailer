@@ -35,13 +35,13 @@ export const projectPoints = ({
 }): FaceType => {
 	const projected = points
 		.map((p) => {
-			return translateSvgInstruction(p, -width, -height / 4, depth / 2);
+			return translateSvgInstruction(p, -width / 2, -height / 2, depth / 2);
 		})
 		.map((p) => {
 			return multiplyMatrixAndSvgInstruction(rotated([0, 1, 0], frame / 20), p);
 		})
 		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(rotated([1, 0, 0], frame / 40), p);
+			return multiplyMatrixAndSvgInstruction(rotated([1, 1, 0], frame / 40), p);
 		})
 		.map((p) => {
 			return multiplyMatrixAndSvgInstruction(camera, p);
@@ -55,7 +55,6 @@ export const projectPoints = ({
 };
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
-	console.log(face.filter((f) => f.isStroke));
 	return face.slice().sort((a, b) => {
 		const maxA =
 			Math.max(...a.points.map((p) => p.point[2])) + (a.isStroke ? 0.2 : 0);
