@@ -19,7 +19,7 @@ import {useText} from './get-char';
 import {joinInbetweenTiles} from './join-inbetween-tiles';
 import {subdivideInstructions} from './subdivide-instruction';
 
-const scale = 0.01;
+const scale = 1;
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
@@ -47,7 +47,7 @@ export const MyComposition = () => {
 		shouldDrawLine: true,
 		isStroke: false,
 	};
-	const depth = 0.2;
+	const depth = 20;
 
 	const mainFaces: FaceType[] = [
 		facePerSubpath,
@@ -117,7 +117,7 @@ export const MyComposition = () => {
 
 	return (
 		<svg
-			viewBox="-10 -10 20 20"
+			viewBox="-800 -800 1600 1600"
 			style={{
 				width: '100%',
 				backgroundColor: 'white',

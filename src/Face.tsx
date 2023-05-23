@@ -14,7 +14,7 @@ export const Face: React.FC<{
 			strokeLinecap="round"
 			stroke="black"
 			shapeRendering="crispEdges"
-			strokeWidth={shouldDrawLine ? 0.1 : 0}
+			strokeWidth={shouldDrawLine ? 10 : 0}
 		/>
 	);
 };
