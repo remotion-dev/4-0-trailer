@@ -1,6 +1,7 @@
 import {ThreeDReducedInstruction} from './3d-svg';
 import {FaceType, translateSvgInstruction} from './map-face';
 import {Vector4D} from './multiply';
+import {truthy} from './truthy';
 
 function dotProduct(a: Vector4D, b: Vector4D): number {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
@@ -109,7 +110,6 @@ export const joinInbetweenTiles = (
 	instructions: ThreeDReducedInstruction[],
 	depth: number
 ): FaceType[] => {
-	console.log({instructions});
 	return instructions
 		.map((t, i): FaceType[] => {
 			const nextInstruction =
@@ -167,23 +167,34 @@ export const joinInbetweenTiles = (
 				},
 			];
 
-			return [
-				{points: newInstructions, color: '#fff', shouldDrawLine: false},
+			const shouldDrawLine = !Number.isNaN(angle) && angle > 20;
+
+			const d: FaceType[] = [
 				{
-					points: [
-						{
-							type: 'M',
-							point: currentPoint,
-						},
-						{
-							type: 'L',
-							point: movingOverCurrent,
-						},
-					],
-					color: '#fff',
-					shouldDrawLine: !Number.isNaN(angle) && angle > 40,
+					points: newInstructions,
+					color: 'rgba(0, 0, 0, 1)',
+					shouldDrawLine: false,
+					isStroke: false,
 				},
-			];
+				shouldDrawLine
+					? {
+							points: [
+								{
+									type: 'M' as const,
+									point: currentPoint,
+								},
+								{
+									type: 'L' as const,
+									point: movingOverCurrent,
+								},
+							],
+							color: 'transparent',
+							shouldDrawLine,
+							isStroke: true,
+					  }
+					: null,
+			].filter(truthy);
+			return d;
 		})
 		.flat(1);
 };

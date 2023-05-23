@@ -9,6 +9,7 @@ export type FaceType = {
 	color: string;
 	points: ThreeDReducedInstruction[];
 	shouldDrawLine: boolean;
+	isStroke: boolean;
 };
 
 export const projectPoints = ({
@@ -20,6 +21,7 @@ export const projectPoints = ({
 	depth,
 	height,
 	width,
+	isStroke,
 }: {
 	points: ThreeDReducedInstruction[];
 	frame: number;
@@ -29,6 +31,7 @@ export const projectPoints = ({
 	width: number;
 	height: number;
 	depth: number;
+	isStroke: boolean;
 }): FaceType => {
 	const projected = points
 		.map((p) => {
@@ -47,13 +50,17 @@ export const projectPoints = ({
 		color,
 		points: projected,
 		shouldDrawLine,
+		isStroke,
 	};
 };
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
+	console.log(face.filter((f) => f.isStroke));
 	return face.slice().sort((a, b) => {
-		const maxA = Math.max(...a.points.map((p) => p.point[2]));
-		const maxB = Math.max(...b.points.map((p) => p.point[2]));
+		const maxA =
+			Math.max(...a.points.map((p) => p.point[2])) + (a.isStroke ? 0.2 : 0);
+		const maxB =
+			Math.max(...b.points.map((p) => p.point[2])) + (b.isStroke ? 0.2 : 0);
 
 		const avgA =
 			a.points.reduce((acc, p) => acc + p.point[2], 0) / a.points.length;

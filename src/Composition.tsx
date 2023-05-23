@@ -46,6 +46,7 @@ export const MyComposition = () => {
 		points: parsed,
 		color: '#0b84f3',
 		shouldDrawLine: true,
+		isStroke: false,
 	};
 	const depth = 0.2;
 
@@ -96,11 +97,12 @@ export const MyComposition = () => {
 				depth,
 				height,
 				width,
+				isStroke: face.isStroke,
 			});
 		})
 	);
 	const [bottomFace, topFace] = sortFacesZIndex(
-		mainFaces.map(({points, shouldDrawLine, color}) =>
+		mainFaces.map(({points, shouldDrawLine, color, isStroke}) =>
 			projectPoints({
 				points,
 				frame,
@@ -110,6 +112,7 @@ export const MyComposition = () => {
 				depth,
 				height,
 				width,
+				isStroke,
 			})
 		)
 	);
