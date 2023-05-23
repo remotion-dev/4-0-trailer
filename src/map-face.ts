@@ -17,14 +17,23 @@ export const projectPoints = ({
 	camera,
 	color,
 	shouldDrawLine,
+	depth,
+	height,
+	width,
 }: {
 	points: ThreeDReducedInstruction[];
 	frame: number;
 	camera: MatrixTransform4D;
 	color: string;
 	shouldDrawLine: boolean;
+	width: number;
+	height: number;
+	depth: number;
 }): FaceType => {
 	const projected = points
+		.map((p) => {
+			return translateSvgInstruction(p, -width, -height / 4, depth / 2);
+		})
 		.map((p) => {
 			return multiplyMatrixAndSvgInstruction(rotated([0, 1, 0], frame / 20), p);
 		})

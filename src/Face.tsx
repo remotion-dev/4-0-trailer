@@ -1,4 +1,3 @@
-import {serializeInstructions} from '@remotion/paths';
 import React from 'react';
 import {threeDIntoSvgPath, ThreeDReducedInstruction} from './3d-svg';
 

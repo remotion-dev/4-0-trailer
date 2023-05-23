@@ -1,7 +1,7 @@
 import {ReducedInstruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
 
-export const fixZ = (
+export const turnInto3D = (
 	instructions: ReducedInstruction[]
 ): ThreeDReducedInstruction[] => {
 	let lastMove: [number, number, number, number] = [0, 0, 0, 0];

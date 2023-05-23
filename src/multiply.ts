@@ -180,6 +180,10 @@ const scaled = function (vec: Vector) {
 	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
 };
 
+export const translated = function (vec: Vector) {
+	return stride({v: vec, m: identity4(), width: 4, offset: 3, colStride: 0});
+};
+
 const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
 	if (!m.every((m) => !isNaN(m))) {
 		throw new Error('some members of matrix are NaN m=' + m);
