@@ -24,7 +24,7 @@ const scale = 0.01;
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
 
-	const text = useText('Mohit');
+	const text = useText('4.0');
 	if (!text) {
 		return null;
 	}
