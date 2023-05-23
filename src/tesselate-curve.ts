@@ -14,42 +14,6 @@ function linearInterpolation(t: number, a: Point, b: Point): Point {
 	};
 }
 
-function cubicBezier({
-	controlPoint1,
-	controlPoint2,
-	endPoint,
-	startPoint,
-	t,
-}: {
-	t: number;
-	startPoint: Point;
-	controlPoint1: Point;
-	controlPoint2: Point;
-	endPoint: Point;
-}): Point {
-	console.log({t});
-	const u = 1 - t;
-	const tt = t * t;
-	const uu = u * u;
-	const uuu = uu * u;
-	const ttt = tt * t;
-	const p = {x: 0, y: 0};
-
-	p.x = uuu * startPoint.x; // Point 0
-	p.y = uuu * startPoint.y;
-
-	p.x += 3 * uu * t * controlPoint1.x; // Point 1
-	p.y += 3 * uu * t * controlPoint1.y;
-
-	p.x += 3 * u * tt * controlPoint2.x; // Point 2
-	p.y += 3 * u * tt * controlPoint2.y;
-
-	p.x += ttt * endPoint.x; // Point 3
-	p.y += ttt * endPoint.y;
-
-	return p;
-}
-
 function splitBezier({
 	t,
 	startPoint,
@@ -62,7 +26,7 @@ function splitBezier({
 	controlPoint1: Point;
 	controlPoint2: Point;
 	endPoint: Point;
-}): [Curve, Curve] {
+}): Curve {
 	const a = linearInterpolation(t, startPoint, controlPoint1);
 	const b = linearInterpolation(t, controlPoint1, controlPoint2);
 	const c = linearInterpolation(t, controlPoint2, endPoint);
@@ -70,20 +34,12 @@ function splitBezier({
 	const e = linearInterpolation(t, b, c);
 	const final = linearInterpolation(t, d, e);
 
-	return [
-		{
-			startPoint,
-			endPoint: final,
-			controlPoint1: a,
-			controlPoint2: d,
-		},
-		{
-			startPoint: final,
-			endPoint,
-			controlPoint1: e,
-			controlPoint2: c,
-		},
-	];
+	return {
+		startPoint,
+		endPoint: final,
+		controlPoint1: a,
+		controlPoint2: d,
+	};
 }
 
 type Curve = {
@@ -110,12 +66,11 @@ const curveIntoLines = ({
 		controlPoint2: {x: instruction.cp2x, y: instruction.cp2y},
 		endPoint: {x: instruction.x, y: instruction.y},
 	};
-	console.log({curve});
 
 	const lines: ReducedInstruction[] = [];
 	const steps = 4;
 	for (let i = 0; i < steps; i++) {
-		const [segment, next] = splitBezier({
+		const segment = splitBezier({
 			t: (i + 1) / (steps + 1),
 			startPoint: curve.startPoint,
 			controlPoint1: curve.controlPoint1,
@@ -125,7 +80,6 @@ const curveIntoLines = ({
 		lines.push({type: 'L', x: segment.endPoint.x, y: segment.endPoint.y});
 	}
 	lines.push({type: 'L', x: instruction.x, y: instruction.y});
-	console.log({lines});
 	return lines;
 };
 

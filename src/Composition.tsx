@@ -28,6 +28,7 @@ export const MyComposition = () => {
 
 	const scaled = scalePath(resetPath(text.path), scale, scale);
 	const bBox = getBoundingBox(scaled);
+	console.log(bBox);
 	const subpaths = getSubpaths(scaled);
 
 	const parsed = subpaths.map((p) => {
