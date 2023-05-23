@@ -72,7 +72,7 @@ const curveIntoLines = ({
 	};
 
 	const lines: InstructionWithDrawInfo[] = [];
-	const steps = 4;
+	const steps = 10;
 	for (let i = 0; i < steps; i++) {
 		const segment = splitBezier({
 			t: (i + 1) / (steps + 1),
