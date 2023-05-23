@@ -1,22 +1,28 @@
 import React from 'react';
-import {Vector4D} from './multiply';
+import {ThreeDReducedInstruction} from './3d-svg';
 
 export const Face: React.FC<{
-	points: Vector4D[];
+	points: ThreeDReducedInstruction[];
 	color: string;
 	shouldDrawLine: boolean;
 }> = ({color, points, shouldDrawLine}) => {
 	return (
 		<path
 			d={points
-				.map((p, i) => {
-					if (i === points.length - 1) {
-						return `Z`;
+				.map((p) => {
+					if (p.type === 'C') {
+						return `C ${p.cp1[0]} ${p.cp1[2]} ${p.cp2[0]} ${p.cp2[1]} ${p.point[0]} ${p.point[1]}`;
 					}
-					if (i === 0) {
-						return `M ${p[0]} ${p[1]}`;
+					if (p.type === 'L') {
+						return `L ${p.point[0]} ${p.point[1]}`;
 					}
-					return `L ${p[0]} ${p[1]}`;
+					if (p.type === 'M') {
+						return `M ${p.point[0]} ${p.point[1]}`;
+					}
+					if (p.type === 'Q') {
+						return `Q ${p.cp[0]} ${p.cp[1]} ${p.point[0]} ${p.point[1]}`;
+					}
+					throw new Error('Unexpected');
 				})
 				.join(' ')}
 			fill={color}

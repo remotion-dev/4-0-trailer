@@ -1,3 +1,5 @@
+import {ThreeDReducedInstruction} from './3d-svg';
+
 export const translated4d = function (vec: Vector) {
 	return stride({v: vec, m: identity4(), width: 4, offset: 3, colStride: 0});
 };
@@ -402,3 +404,50 @@ export function multiplyMatrixAndPoint(
 
 	return result as Vector4D;
 }
+
+export function multiplyMatrixAndSvgInstruction(
+	matrix: MatrixTransform4D,
+	point: ThreeDReducedInstruction
+): ThreeDReducedInstruction {
+	if (point.type === 'C') {
+		return {
+			type: 'C',
+			cp1: multiplyMatrix(matrix, point.cp1),
+			cp2: multiplyMatrix(matrix, point.cp2),
+			point: multiplyMatrix(matrix, point.point),
+		};
+	}
+	if (point.type === 'Q') {
+		return {
+			type: 'Q',
+			cp: multiplyMatrix(matrix, point.cp),
+			point: multiplyMatrix(matrix, point.point),
+		};
+	}
+	if (point.type === 'M') {
+		return {
+			type: 'M',
+			point: multiplyMatrix(matrix, point.point),
+		};
+	}
+	if (point.type === 'L') {
+		return {
+			type: 'L',
+			point: multiplyMatrix(matrix, point.point),
+		};
+	}
+	throw new Error('Unknown instruction type: ' + JSON.stringify(point));
+}
+
+const multiplyMatrix = (matrix: MatrixTransform4D, point: Vector4D) => {
+	const result = [];
+
+	for (let i = 0; i < 4; i++) {
+		result[i] =
+			matrix[i] * point[0] +
+			matrix[i + 4] * point[1] +
+			matrix[i + 8] * point[2] +
+			matrix[i + 12] * point[3];
+	}
+	return result as Vector4D;
+};

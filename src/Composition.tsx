@@ -1,7 +1,6 @@
 import {
 	getSubpaths,
 	parsePath,
-	ReducedInstruction,
 	reduceInstructions,
 	resetPath,
 	scalePath,
@@ -9,20 +8,23 @@ import {
 } from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {Camera, setupCamera, Vector, Vector4D} from './multiply';
+import {Camera, setupCamera, Vector} from './multiply';
 import {Face} from './Face';
-import {FaceType, projectPoints, sortFacesZIndex} from './map-face';
+import {
+	FaceType,
+	projectPoints,
+	sortFacesZIndex,
+	translateSvgInstruction,
+} from './map-face';
 import {fixZ} from './fix-z';
 import {useText} from './get-char';
-import {replaceCurveByLines} from './tesselate-curve';
-import {truthy} from './truthy';
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
 
 	const scale = 0.02;
 
-	const text = useText('g');
+	const text = useText('m');
 	if (!text) {
 		return null;
 	}
@@ -34,25 +36,16 @@ export const MyComposition = () => {
 	const subpaths = getSubpaths(scaled);
 
 	const parsed = subpaths.map((p) => {
-		return replaceCurveByLines(fixZ(reduceInstructions(parsePath(p))));
+		return fixZ(reduceInstructions(parsePath(p)));
 	});
+	console.log({parsed});
 
 	const width = bBox.y2 - bBox.y1;
 	const height = bBox.x2 - bBox.x1;
 
 	const facePerSubpath = parsed.map((path): FaceType => {
 		return {
-			points: path
-				.map((p) => {
-					if (p.type !== 'M' && p.type !== 'L') {
-						throw new Error('unexpected');
-					}
-
-					return [p.x, p.y] as const;
-				})
-				.map(([x, y]) => {
-					return [x, y, 0, 0] as Vector4D;
-				}),
+			points: path,
 			color: '#0b84f3',
 			shouldDrawLine: true,
 		};
@@ -65,22 +58,22 @@ export const MyComposition = () => {
 			{
 				...face,
 				points: face.points.map((p) => {
-					return [p[0], p[1], p[2] - depth, 0] as const;
+					return translateSvgInstruction(p, 0, 0, -depth);
 				}),
 			} as FaceType,
 		];
 	});
-
-	const inbetweenFaces = [
+	/*
+	Const inbetweenFaces = [
 		...parsed
 			.map((path) => {
-				return path.map((p, i) => {
+				return path.map((p, i): FaceType[] => {
 					if (p.type !== 'M' && p.type !== 'L') {
 						throw new Error('unexpected');
 					}
 
 					const joined: number = i === 0 ? path.length - 1 : i - 1;
-					const segmentToJoin: ReducedInstruction = path[joined];
+					const segmentToJoin: ThreeDReducedInstruction = path[joined];
 					if (segmentToJoin.type !== 'M' && segmentToJoin.type !== 'L') {
 						throw new Error('unexpected');
 					}
@@ -126,6 +119,7 @@ export const MyComposition = () => {
 			.flat(2)
 			.filter(truthy),
 	];
+	*/
 
 	const camAngle = Math.PI / 12;
 
@@ -148,8 +142,8 @@ export const MyComposition = () => {
 		vSphereRadius,
 	] as const;
 	const camera = setupCamera(area, 1, cam);
-
-	const rotatedFaces = sortFacesZIndex(
+	/*
+	Const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map(({points, shouldDrawLine}) =>
 			projectPoints({
 				points,
@@ -161,14 +155,12 @@ export const MyComposition = () => {
 				color: '#000',
 			})
 		)
-	);
+	); */
 	const sorted = mainFaces.map((face) => {
 		return sortFacesZIndex(
 			face.map(({points, shouldDrawLine, color}) =>
 				projectPoints({
 					points,
-					width,
-					height,
 					frame,
 					camera,
 					color,
@@ -188,7 +180,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{[...bottomFaces, ...rotatedFaces, ...topFaces].map(
+			{[...bottomFaces, ...topFaces].map(
 				({color, points, shouldDrawLine}, i) => {
 					return (
 						<Face
