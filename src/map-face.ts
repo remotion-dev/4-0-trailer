@@ -55,10 +55,6 @@ export const sortFacesZIndex = (face: Face[]): Face[] => {
 		const avgA = a.points.reduce((acc, p) => acc + p[2], 0) / a.points.length;
 		const avgB = b.points.reduce((acc, p) => acc + p[2], 0) / b.points.length;
 
-		if (maxA === maxB) {
-			return avgA - avgB;
-		}
-
-		return maxA - maxB;
+		return avgA + maxA - (avgB + maxB);
 	});
 };

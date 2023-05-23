@@ -21,19 +21,19 @@ export const MyComposition = () => {
 
 	const scale = 0.02;
 
-	const text = useText('i');
+	const text = useText('svg');
 	if (!text) {
 		return null;
 	}
 
 	const scaled = scalePath(resetPath(text.path), scale, scale);
+	const bBox = getBoundingBox(scaled);
 	const subpaths = getSubpaths(scaled);
 
 	const parsed = subpaths.map((p) => {
 		return replaceCurveByLines(fixZ(reduceInstructions(parsePath(p))));
 	});
 
-	const bBox = getBoundingBox(scaled);
 	const width = bBox.y2 - bBox.y1;
 	const height = bBox.x2 - bBox.x1;
 
@@ -51,7 +51,6 @@ export const MyComposition = () => {
 			});
 	});
 	const depth = 0.2;
-	console.log(facePerSubpath);
 
 	const mainFaces = facePerSubpath.map((face) => {
 		return [
@@ -142,14 +141,32 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{bottomFaces.map(({color, points}) => {
-				return <Face color={color} points={points} />;
+			{bottomFaces.map(({color, points}, i) => {
+				return (
+					<Face
+						key={JSON.stringify(points) + i}
+						color={color}
+						points={points}
+					/>
+				);
 			})}
-			{rotatedFaces.map(({color, points}) => {
-				return <Face color={color} points={points} />;
+			{rotatedFaces.map(({color, points}, i) => {
+				return (
+					<Face
+						key={JSON.stringify(points) + i}
+						color={color}
+						points={points}
+					/>
+				);
 			})}
-			{topFaces.map(({color, points}) => {
-				return <Face color={color} points={points} />;
+			{topFaces.map(({color, points}, i) => {
+				return (
+					<Face
+						key={JSON.stringify(points) + i}
+						color={color}
+						points={points}
+					/>
+				);
 			})}
 		</svg>
 	);

@@ -7,11 +7,47 @@ interface Point {
 	y: number;
 }
 
-function lerp(t: number, a: Point, b: Point): Point {
+function linearInterpolation(t: number, a: Point, b: Point): Point {
 	return {
-		x: a.x + (b.x - a.x) * t,
-		y: a.y + (b.y - a.y) * t,
+		x: (1 - t) * a.x + b.x * t,
+		y: (1 - t) * a.y + b.y * t,
 	};
+}
+
+function cubicBezier({
+	controlPoint1,
+	controlPoint2,
+	endPoint,
+	startPoint,
+	t,
+}: {
+	t: number;
+	startPoint: Point;
+	controlPoint1: Point;
+	controlPoint2: Point;
+	endPoint: Point;
+}): Point {
+	console.log({t});
+	const u = 1 - t;
+	const tt = t * t;
+	const uu = u * u;
+	const uuu = uu * u;
+	const ttt = tt * t;
+	const p = {x: 0, y: 0};
+
+	p.x = uuu * startPoint.x; // Point 0
+	p.y = uuu * startPoint.y;
+
+	p.x += 3 * uu * t * controlPoint1.x; // Point 1
+	p.y += 3 * uu * t * controlPoint1.y;
+
+	p.x += 3 * u * tt * controlPoint2.x; // Point 2
+	p.y += 3 * u * tt * controlPoint2.y;
+
+	p.x += ttt * endPoint.x; // Point 3
+	p.y += ttt * endPoint.y;
+
+	return p;
 }
 
 function splitBezier({
@@ -27,25 +63,25 @@ function splitBezier({
 	controlPoint2: Point;
 	endPoint: Point;
 }): [Curve, Curve] {
-	const ab = lerp(t, startPoint, controlPoint1);
-	const bc = lerp(t, controlPoint1, controlPoint2);
-	const cd = lerp(t, controlPoint2, endPoint);
-	const abc = lerp(t, ab, bc);
-	const bcd = lerp(t, bc, cd);
-	const final = lerp(t, abc, bcd);
+	const a = linearInterpolation(t, startPoint, controlPoint1);
+	const b = linearInterpolation(t, controlPoint1, controlPoint2);
+	const c = linearInterpolation(t, controlPoint2, endPoint);
+	const d = linearInterpolation(t, a, b);
+	const e = linearInterpolation(t, b, c);
+	const final = linearInterpolation(t, d, e);
 
 	return [
 		{
 			startPoint,
 			endPoint: final,
-			controlPoint1: ab,
-			controlPoint2: abc,
+			controlPoint1: a,
+			controlPoint2: d,
 		},
 		{
 			startPoint: final,
 			endPoint,
-			controlPoint1: bcd,
-			controlPoint2: cd,
+			controlPoint1: e,
+			controlPoint2: c,
 		},
 	];
 }
@@ -68,38 +104,44 @@ const curveIntoLines = ({
 		throw new Error('Not a curve');
 	}
 
-	let curve: Curve = {
+	const curve: Curve = {
 		startPoint,
 		controlPoint1: {x: instruction.cp1x, y: instruction.cp1y},
 		controlPoint2: {x: instruction.cp2x, y: instruction.cp2y},
 		endPoint: {x: instruction.x, y: instruction.y},
 	};
+	console.log({curve});
 
 	const lines: ReducedInstruction[] = [];
-	for (let i = 0; i < 10; i++) {
-		const [left, right] = splitBezier({
-			t: i / 10,
+	const steps = 4;
+	for (let i = 0; i < steps; i++) {
+		const [segment, next] = splitBezier({
+			t: (i + 1) / (steps + 1),
 			startPoint: curve.startPoint,
 			controlPoint1: curve.controlPoint1,
 			controlPoint2: curve.controlPoint2,
 			endPoint: curve.endPoint,
 		});
-		lines.push({type: 'L', x: left.endPoint.x, y: left.endPoint.y});
-		curve = right;
+		lines.push({type: 'L', x: segment.endPoint.x, y: segment.endPoint.y});
 	}
 	lines.push({type: 'L', x: instruction.x, y: instruction.y});
+	console.log({lines});
 	return lines;
 };
 
-export const replaceCurveByLines = (instructions: ReducedInstruction[]) => {
+export const replaceCurveByLines = (
+	instructions: ReducedInstruction[]
+): ReducedInstruction[] => {
 	let lastMove: Point = {x: 0, y: 0};
 	return instructions
 		.map((instruction) => {
+			if (instruction.type === 'C') {
+				const newCurve = curveIntoLines({startPoint: lastMove, instruction});
+				lastMove = {x: instruction.x, y: instruction.y};
+				return newCurve;
+			}
 			if (instruction.type !== 'Z') {
 				lastMove = {x: instruction.x, y: instruction.y};
-			}
-			if (instruction.type === 'C') {
-				return curveIntoLines({startPoint: lastMove, instruction});
 			}
 			return instruction;
 		})
