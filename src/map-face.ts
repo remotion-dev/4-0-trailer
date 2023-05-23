@@ -47,10 +47,16 @@ export const projectPoints = ({
 
 export const sortFacesZIndex = (face: Face[]): Face[] => {
 	return face.slice().sort((a, b) => {
-		const aZ =
-			a.points.reduce((acc, curr) => acc + curr[2], 0) / a.points.length;
-		const bZ: number =
-			b.points.reduce((acc, curr) => acc + curr[2], 0) / b.points.length;
-		return bZ - aZ;
+		const maxA = Math.max(...a.points.map((p) => p[2]));
+		const maxB = Math.max(...b.points.map((p) => p[2]));
+
+		const avgA = a.points.reduce((acc, p) => acc + p[2], 0) / a.points.length;
+		const avgB = b.points.reduce((acc, p) => acc + p[2], 0) / b.points.length;
+
+		if (maxA === maxB) {
+			return avgA - avgB;
+		}
+
+		return maxA - maxB;
 	});
 };

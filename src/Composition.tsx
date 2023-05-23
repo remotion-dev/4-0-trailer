@@ -10,23 +10,22 @@ import {useCurrentFrame} from 'remotion';
 import {Camera, setupCamera, Vector} from './multiply';
 import {Face} from './Face';
 import {projectPoints, sortFacesZIndex} from './map-face';
+import {fixZ} from './fix-z';
 
 const w =
 	'M18 48.5L1.5 0.5H15L24 27.5L33 0.5H48L62 27.5L67.5 0.5H84L71 48.5H56L42 24.5L33 48.5H18Z';
 
 const scale = 0.02;
 
-const parsed = reduceInstructions(
-	parsePath(scalePath(resetPath(w), scale, scale))
+const parsed = fixZ(
+	reduceInstructions(parsePath(scalePath(resetPath(w), scale, scale)))
 );
 
 const bBox = getBoundingBoxFromInstructions(parsed);
 const width = bBox.y2 - bBox.y1;
 const height = bBox.x2 - bBox.x1;
 
-const removedZ = parsed.filter((p) => p.type !== 'Z');
-
-const face = removedZ
+const face = parsed
 	.map((p) => {
 		if (p.type !== 'M' && p.type !== 'L') {
 			throw new Error('unexpected');
@@ -48,13 +47,13 @@ const mainFaces = [
 ];
 
 const inbetweenFaces = [
-	...removedZ.map((p, i) => {
+	...parsed.map((p, i) => {
 		if (p.type !== 'M' && p.type !== 'L') {
 			throw new Error('unexpected');
 		}
 
-		const joined: number = i === 0 ? removedZ.length - 1 : i - 1;
-		const segmentToJoin: ReducedInstruction = removedZ[joined];
+		const joined: number = i === 0 ? parsed.length - 1 : i - 1;
+		const segmentToJoin: ReducedInstruction = parsed[joined];
 		if (segmentToJoin.type !== 'M' && segmentToJoin.type !== 'L') {
 			throw new Error('unexpected');
 		}
