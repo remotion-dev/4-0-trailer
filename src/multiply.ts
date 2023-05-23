@@ -106,7 +106,7 @@ export const rotated = function (
 	);
 };
 
-type MatrixTransform4D = [
+export type MatrixTransform4D = [
 	number,
 	number,
 	number,
