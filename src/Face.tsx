@@ -9,13 +9,18 @@ export const Face: React.FC<{
 		<path
 			d={points
 				.map((p, i) => {
-					if (i === points.length - 1) return `Z`;
-					if (i === 0) return `M ${p[0]} ${p[1]}`;
+					if (i === points.length - 1) {
+						return `Z`;
+					}
+					if (i === 0) {
+						return `M ${p[0]} ${p[1]}`;
+					}
 					return `L ${p[0]} ${p[1]}`;
 				})
 				.join(' ')}
 			fill={color}
 			strokeLinejoin="bevel"
+			strokeLinecap="square"
 			stroke="black"
 			strokeWidth={0.1}
 		/>
