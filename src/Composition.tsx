@@ -22,7 +22,7 @@ export const MyComposition = () => {
 
 	const scale = 0.02;
 
-	const text = useText('svg');
+	const text = useText('g');
 	if (!text) {
 		return null;
 	}
@@ -97,6 +97,14 @@ export const MyComposition = () => {
 							],
 						},
 						{
+							shouldDrawLine: false,
+							points: [
+								[p.x, p.y, 0],
+								[p.x, p.y, -depth],
+								[p.x, p.y, 0],
+							],
+						},
+						{
 							shouldDrawLine: true,
 							points: [
 								[p.x, p.y, -depth],
@@ -139,8 +147,7 @@ export const MyComposition = () => {
 		vSphereRadius,
 		vSphereRadius,
 	] as const;
-
-	const camera = setupCamera(area, 100, cam);
+	const camera = setupCamera(area, 1, cam);
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map(({points, shouldDrawLine}) =>
@@ -151,7 +158,7 @@ export const MyComposition = () => {
 				height,
 				frame,
 				camera,
-				color: '#fff',
+				color: '#000',
 			})
 		)
 	);
