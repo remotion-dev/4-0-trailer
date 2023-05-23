@@ -24,7 +24,7 @@ export const MyComposition = () => {
 
 	const scale = 0.02;
 
-	const text = useText('m');
+	const text = useText('g');
 	if (!text) {
 		return null;
 	}
@@ -38,7 +38,6 @@ export const MyComposition = () => {
 	const parsed = subpaths.map((p) => {
 		return fixZ(reduceInstructions(parsePath(p)));
 	});
-	console.log({parsed});
 
 	const width = bBox.y2 - bBox.y1;
 	const height = bBox.x2 - bBox.x1;
