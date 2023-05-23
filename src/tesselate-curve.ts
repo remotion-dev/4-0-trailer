@@ -49,13 +49,17 @@ type Curve = {
 	endPoint: Point;
 };
 
+export type InstructionWithDrawInfo = ReducedInstruction & {
+	shouldDrawLine: boolean;
+};
+
 const curveIntoLines = ({
 	startPoint,
 	instruction,
 }: {
 	startPoint: Point;
 	instruction: ReducedInstruction;
-}): ReducedInstruction[] => {
+}): InstructionWithDrawInfo[] => {
 	if (instruction.type !== 'C') {
 		throw new Error('Not a curve');
 	}
@@ -67,7 +71,7 @@ const curveIntoLines = ({
 		endPoint: {x: instruction.x, y: instruction.y},
 	};
 
-	const lines: ReducedInstruction[] = [];
+	const lines: InstructionWithDrawInfo[] = [];
 	const steps = 4;
 	for (let i = 0; i < steps; i++) {
 		const segment = splitBezier({
@@ -77,18 +81,28 @@ const curveIntoLines = ({
 			controlPoint2: curve.controlPoint2,
 			endPoint: curve.endPoint,
 		});
-		lines.push({type: 'L', x: segment.endPoint.x, y: segment.endPoint.y});
+		lines.push({
+			type: 'L',
+			x: segment.endPoint.x,
+			y: segment.endPoint.y,
+			shouldDrawLine: false,
+		});
 	}
-	lines.push({type: 'L', x: instruction.x, y: instruction.y});
+	lines.push({
+		type: 'L',
+		x: instruction.x,
+		y: instruction.y,
+		shouldDrawLine: true,
+	});
 	return lines;
 };
 
 export const replaceCurveByLines = (
 	instructions: ReducedInstruction[]
-): ReducedInstruction[] => {
+): InstructionWithDrawInfo[] => {
 	let lastMove: Point = {x: 0, y: 0};
 	return instructions
-		.map((instruction) => {
+		.map((instruction): InstructionWithDrawInfo[] => {
 			if (instruction.type === 'C') {
 				const newCurve = curveIntoLines({startPoint: lastMove, instruction});
 				lastMove = {x: instruction.x, y: instruction.y};
@@ -97,7 +111,7 @@ export const replaceCurveByLines = (
 			if (instruction.type !== 'Z') {
 				lastMove = {x: instruction.x, y: instruction.y};
 			}
-			return instruction;
+			return [{...instruction, shouldDrawLine: true}];
 		})
 		.flat(1);
 };

@@ -35,15 +35,11 @@ export const useText = (text: string) => {
 			return;
 		}
 
-		const path = font.getPaths(text, 0, 0, fontSize, {});
+		const path = font.getPath(text, 0, 0, fontSize, {});
 
 		setPath({
-			boundingBox: font.getPath(text, 0, 0, fontSize, {}).getBoundingBox(),
-			path: path
-				.map((p) => {
-					return p.toPathData(1);
-				})
-				.join(' '),
+			boundingBox: path.getBoundingBox(),
+			path: path.toPathData(1),
 		});
 		continueRender(handle);
 	}, [font, handle, text]);

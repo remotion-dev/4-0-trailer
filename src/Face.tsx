@@ -4,7 +4,8 @@ import {Vector4D} from './multiply';
 export const Face: React.FC<{
 	points: Vector4D[];
 	color: string;
-}> = ({color, points}) => {
+	shouldDrawLine: boolean;
+}> = ({color, points, shouldDrawLine}) => {
 	return (
 		<path
 			d={points
@@ -20,9 +21,10 @@ export const Face: React.FC<{
 				.join(' ')}
 			fill={color}
 			strokeLinejoin="bevel"
-			strokeLinecap="square"
+			strokeLinecap="butt"
 			stroke="black"
-			strokeWidth={0.1}
+			shapeRendering="crispEdges"
+			strokeWidth={shouldDrawLine ? 0.1 : 0}
 		/>
 	);
 };

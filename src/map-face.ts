@@ -5,9 +5,10 @@ import {
 	Vector4D,
 } from './multiply';
 
-type Face = {
+export type FaceType = {
 	color: string;
 	points: Vector4D[];
+	shouldDrawLine: boolean;
 };
 
 export const projectPoints = ({
@@ -17,6 +18,7 @@ export const projectPoints = ({
 	frame,
 	camera,
 	color,
+	shouldDrawLine,
 }: {
 	points: number[][];
 	width: number;
@@ -24,7 +26,8 @@ export const projectPoints = ({
 	frame: number;
 	camera: MatrixTransform4D;
 	color: string;
-}): Face => {
+	shouldDrawLine: boolean;
+}): FaceType => {
 	const projected = points
 		.map((p) => {
 			return [p[0] - width / 2, p[1] - height / 2, p[2], 1] as Vector4D;
@@ -44,10 +47,11 @@ export const projectPoints = ({
 	return {
 		color,
 		points: projected,
+		shouldDrawLine,
 	};
 };
 
-export const sortFacesZIndex = (face: Face[]): Face[] => {
+export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
 		const maxA = Math.max(...a.points.map((p) => p[2]));
 		const maxB = Math.max(...b.points.map((p) => p[2]));
