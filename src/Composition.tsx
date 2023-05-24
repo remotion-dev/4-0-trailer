@@ -60,7 +60,8 @@ export const MyComposition = () => {
 	];
 	const inbetweenFaces: FaceType[] = joinInbetweenTiles(
 		facePerSubpath.points,
-		depth
+		depth,
+		'#000'
 	);
 
 	const camAngle = Math.PI / 12;
@@ -128,6 +129,7 @@ export const MyComposition = () => {
 					return (
 						<Face
 							key={JSON.stringify(points) + i}
+							strokeColor="black"
 							color={color}
 							points={points}
 							shouldDrawLine={shouldDrawLine}

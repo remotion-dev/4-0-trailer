@@ -5,14 +5,15 @@ export const Face: React.FC<{
 	points: ThreeDReducedInstruction[];
 	color: string;
 	shouldDrawLine: boolean;
-}> = ({color, points, shouldDrawLine}) => {
+	strokeColor: string;
+}> = ({color, points, shouldDrawLine, strokeColor}) => {
 	return (
 		<path
 			d={threeDIntoSvgPath(points)}
 			fill={color}
 			strokeLinejoin="bevel"
 			strokeLinecap="round"
-			stroke="black"
+			stroke={strokeColor}
 			shapeRendering="crispEdges"
 			strokeWidth={shouldDrawLine ? 10 : 0}
 		/>

@@ -108,7 +108,8 @@ const getIncomingVector = ({
 
 export const joinInbetweenTiles = (
 	instructions: ThreeDReducedInstruction[],
-	depth: number
+	depth: number,
+	color: string
 ): FaceType[] => {
 	return instructions
 		.map((t, i): FaceType[] => {
@@ -172,7 +173,7 @@ export const joinInbetweenTiles = (
 			const d: FaceType[] = [
 				{
 					points: newInstructions,
-					color: 'rgba(0, 0, 0, 1)',
+					color,
 					shouldDrawLine: false,
 					isStroke: false,
 				},
