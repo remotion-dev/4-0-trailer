@@ -119,13 +119,11 @@ export const extrudeInstructions = ({
 	frontFaceColor: string;
 	backFaceColor: string;
 }): FaceType[] => {
+	const backFace = transformFace(instructions, [translated([0, 0, depth / 2])]);
 	const frontFace = transformFace(instructions, [
-		translated([0, 0, depth / 2]),
-	]);
-	const backFace = transformFace(instructions, [
 		translated([0, 0, -depth / 2]),
 	]);
-	const {points} = frontFace;
+	const {points} = backFace;
 
 	const inbetween = points
 		.map((t, i): FaceType[] => {

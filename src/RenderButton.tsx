@@ -32,11 +32,11 @@ import {
 import {Sparks} from './Sparks';
 import {subdivideInstructions} from './subdivide-instruction';
 
-const viewBox = [-1500, -800, 3000, 1600];
+const viewBox = [-1600, -800, 3000, 1600];
 
 const maxDepth = 20;
 
-export const projectButtonPoints = ({
+export const projectPoints = ({
 	points,
 	camera,
 	color,
@@ -155,7 +155,7 @@ export const RenderButton: React.FC = () => {
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {
-			return projectButtonPoints({
+			return projectPoints({
 				points: face.points,
 				shouldDrawLine: face.shouldDrawLine,
 				frame,
@@ -174,7 +174,7 @@ export const RenderButton: React.FC = () => {
 
 	const bBoxText = getBoundingBox(textPath);
 
-	const textProjected = projectButtonPoints({
+	const textProjected = projectPoints({
 		camera: getCamera(width, height),
 		color: 'white',
 		depth,

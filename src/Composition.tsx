@@ -12,7 +12,7 @@ import {FaceType, sortFacesZIndex} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectButtonPoints} from './RenderButton';
+import {projectPoints} from './RenderButton';
 import {getCamera} from './camera';
 
 const scale = 1;
@@ -53,7 +53,7 @@ export const MyComposition = () => {
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {
-			return projectButtonPoints({
+			return projectPoints({
 				points: face.points,
 				shouldDrawLine: face.shouldDrawLine,
 				frame,
