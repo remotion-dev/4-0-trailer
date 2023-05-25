@@ -443,7 +443,7 @@ export function multiplyMatrixAndSvgInstruction(
 	throw new Error('Unknown instruction type: ' + JSON.stringify(point));
 }
 
-const multiplyMatrix = (matrix: MatrixTransform4D, point: Vector4D) => {
+export const multiplyMatrix = (matrix: MatrixTransform4D, point: Vector4D) => {
 	const result = [];
 
 	for (let i = 0; i < 4; i++) {
