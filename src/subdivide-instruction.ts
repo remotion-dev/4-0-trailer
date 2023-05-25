@@ -1,5 +1,5 @@
 import {ThreeDReducedInstruction} from './3d-svg';
-import {Vector4D} from './multiply';
+import {Vector4D} from './matrix';
 
 export const subdivideInstructions = (
 	instructions: ThreeDReducedInstruction[]

@@ -1,5 +1,5 @@
 import {noise2D} from '@remotion/noise';
-import {interpolate, Sequence} from 'remotion';
+import {interpolate} from 'remotion';
 import {spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {AbsoluteFill} from 'remotion';
 import {Cursor} from './Cursor';

@@ -9,47 +9,43 @@ import {makeRect} from '@remotion/shapes';
 import React from 'react';
 import {
 	AbsoluteFill,
-	interpolate,
 	Sequence,
 	spring,
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
 import {ThreeDReducedInstruction} from './3d-svg';
+import {getCamera} from './camera';
 import {CursorWithButton} from './CursorAnimation';
 import {Face} from './Face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
-import {joinInbetweenTiles} from './join-inbetween-tiles';
+import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, sortFacesZIndex, translateSvgInstruction} from './map-face';
 import {
-	Camera,
 	MatrixTransform4D,
+	multiplyMatrix,
 	multiplyMatrixAndSvgInstruction,
 	rotated,
-	setupCamera,
-	Vector,
-} from './multiply';
+	Vector4D,
+} from './matrix';
 import {Sparks} from './Sparks';
 import {subdivideInstructions} from './subdivide-instruction';
-import {truthy} from './truthy';
 
 const viewBox = [-1500, -800, 3000, 1600];
 
 const maxDepth = 20;
 
-const projectButtonPoints = ({
+export const projectButtonPoints = ({
 	points,
-	frame,
 	camera,
 	color,
 	shouldDrawLine,
-	depth,
 	height,
 	width,
 	isStroke,
-	fps,
-	z,
+	transformations,
+	centerPoint,
 }: {
 	points: ThreeDReducedInstruction[];
 	frame: number;
@@ -61,63 +57,32 @@ const projectButtonPoints = ({
 	height: number;
 	depth: number;
 	isStroke: boolean;
-	z: number;
+	transformations: MatrixTransform4D[];
+	centerPoint: Vector4D;
 }): FaceType => {
-	const up = spring({
-		fps,
-		frame,
-		config: {
-			damping: 16,
-		},
-		durationInFrames: 35,
+	let projected = points.map((p) => {
+		return translateSvgInstruction(p, -width / 2, -height / 2, 0);
 	});
 
-	const xRotation =
-		interpolate(up - 1, [0, 1], [0, -Math.PI * 5], {
-			extrapolateLeft: 'clamp',
-		}) + 0.15;
+	let newCenterPoint = centerPoint;
 
-	const afterPress = spring({
-		fps,
-		frame: frame - 70,
-		config: {
-			damping: 200,
-		},
-		durationInFrames: 120,
+	for (const transformation of transformations) {
+		projected = projected.map((p) =>
+			multiplyMatrixAndSvgInstruction(transformation, p)
+		);
+		newCenterPoint = multiplyMatrix(transformation, newCenterPoint);
+	}
+
+	projected = projected.map((p) => {
+		return multiplyMatrixAndSvgInstruction(camera, p);
 	});
-
-	const yRotation =
-		interpolate(up, [0, 1], [Math.PI / 2, 0], {}) +
-		interpolate(afterPress, [0, 1], [0, -Math.PI * 2], {});
-
-	const y =
-		interpolate(up, [0, 1], [300, 0]) +
-		interpolate(afterPress, [0, 1], [0, -300]);
-
-	const projected = points
-		.map((p) => {
-			return translateSvgInstruction(
-				p,
-				-width / 2,
-				-height / 2 + y,
-				maxDepth / 2 - depth + z
-			);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(rotated([1, 0, 0], xRotation), p);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(rotated([0, 1, 0], yRotation), p);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(camera, p);
-		});
 
 	return {
 		color,
 		points: projected,
 		shouldDrawLine,
 		isStroke,
+		centerPoint: newCenterPoint,
 	};
 };
 
@@ -161,7 +126,11 @@ export const RenderButton: React.FC = () => {
 	}
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
 	const parsedText = parsePath(textPath);
-	const threeD = turnInto3D(reduceInstructions(parsedText));
+	const depth = maxDepth - press * maxDepth;
+
+	const threeD = turnInto3D(reduceInstructions(parsedText)).map((p) => {
+		return translateSvgInstruction(p, 0, 0, -depth / 2);
+	});
 
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
@@ -171,44 +140,18 @@ export const RenderButton: React.FC = () => {
 		color: buttonColor,
 		shouldDrawLine: true,
 		isStroke: false,
+		centerPoint: [0, 0, 0, 1],
 	};
-	const depth = maxDepth - press * maxDepth;
 
-	const mainFaces: FaceType[] = [
-		{...facePerSubpath, color: '#222'},
-		{
-			...facePerSubpath,
-			points: facePerSubpath.points.map((p) => {
-				return translateSvgInstruction(p, 0, 0, -depth);
-			}),
-		},
-	];
-	const inbetweenFaces: FaceType[] = joinInbetweenTiles(
-		facePerSubpath.points,
+	const inbetweenFaces: FaceType[] = extrudeInstructions({
+		instructions: facePerSubpath,
 		depth,
-		'#000'
-	);
+		sideColor: 'black',
+		frontFaceColor: 'red',
+		backFaceColor: 'green',
+	});
 
-	const camAngle = Math.PI / 12;
-
-	const cam: Camera = {
-		eye: [0, 0, 1 / Math.tan(camAngle / 2) - 1] as Vector,
-		coa: [0, 0, 0],
-		up: [0, 1, 0],
-		near: 400,
-		far: 500,
-		angle: camAngle,
-	};
-	const vSphereCenter = [width / 2, height / 2];
-	const vSphereRadius = Math.min(...vSphereCenter);
-
-	const area = [
-		-vSphereRadius,
-		-vSphereRadius,
-		vSphereRadius,
-		vSphereRadius,
-	] as const;
-	const camera = setupCamera(area, 100, cam);
+	const transformations = [rotated([0, 1, 0], frame / 10)];
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {
@@ -216,42 +159,23 @@ export const RenderButton: React.FC = () => {
 				points: face.points,
 				shouldDrawLine: face.shouldDrawLine,
 				frame,
-				camera,
+				camera: getCamera(width, height),
 				color: face.color,
 				depth,
 				height,
 				width,
 				isStroke: face.isStroke,
 				fps,
-				z: 0,
+				centerPoint: face.centerPoint,
+				transformations,
 			});
 		})
 	);
 
-	const [topFace, bottomFace] = sortFacesZIndex(
-		mainFaces.map(({points, shouldDrawLine, color, isStroke}) =>
-			projectButtonPoints({
-				points,
-				frame,
-				camera,
-				color,
-				shouldDrawLine,
-				depth,
-				height,
-				width,
-				isStroke,
-				fps,
-				z: 0,
-			})
-		)
-	);
-
-	const textVisible = topFace.color === buttonColor;
-
 	const bBoxText = getBoundingBox(textPath);
 
 	const textProjected = projectButtonPoints({
-		camera,
+		camera: getCamera(width, height),
 		color: 'white',
 		depth,
 		fps,
@@ -261,10 +185,11 @@ export const RenderButton: React.FC = () => {
 		points: threeD,
 		shouldDrawLine: false,
 		width: bBoxText.x2 - bBoxText.x1,
-		z: -depth,
+		centerPoint: [0, 0, -depth / 2, 1],
+		transformations,
 	});
 
-	const allFacesSorted = sortFacesZIndex([...rotatedFaces]);
+	const allFacesSorted = sortFacesZIndex([...rotatedFaces, textProjected]);
 
 	return (
 		<AbsoluteFill>
@@ -276,31 +201,17 @@ export const RenderButton: React.FC = () => {
 				}}
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-					{[
-						bottomFace,
-						...allFacesSorted,
-						topFace,
-						textVisible
-							? {
-									color: 'white',
-									points: textProjected.points,
-									shouldDrawLine: false,
-									isStroke: false,
-							  }
-							: null,
-					]
-						.filter(truthy)
-						.map(({color, points, shouldDrawLine}, i) => {
-							return (
-								<Face
-									key={JSON.stringify(points) + i}
-									strokeColor="black"
-									color={color}
-									points={points}
-									shouldDrawLine={shouldDrawLine}
-								/>
-							);
-						})}
+					{allFacesSorted.map(({color, points, shouldDrawLine}, i) => {
+						return (
+							<Face
+								key={JSON.stringify(points) + i}
+								strokeColor="black"
+								color={color}
+								points={points}
+								shouldDrawLine={shouldDrawLine}
+							/>
+						);
+					})}
 				</svg>
 			</AbsoluteFill>
 			<CursorWithButton />

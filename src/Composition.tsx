@@ -5,24 +5,21 @@ import {
 	scalePath,
 } from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
-import {useCurrentFrame} from 'remotion';
-import {Camera, setupCamera, Vector} from './multiply';
+import {useCurrentFrame, useVideoConfig} from 'remotion';
+import {rotated} from './matrix';
 import {Face} from './Face';
-import {
-	FaceType,
-	projectPoints,
-	sortFacesZIndex,
-	translateSvgInstruction,
-} from './map-face';
+import {FaceType, sortFacesZIndex} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
-import {joinInbetweenTiles} from './join-inbetween-tiles';
-import {subdivideInstructions} from './subdivide-instruction';
+import {extrudeInstructions} from './join-inbetween-tiles';
+import {projectButtonPoints} from './RenderButton';
+import {getCamera} from './camera';
 
 const scale = 1;
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
 
 	const text = useText('4.0');
 	if (!text) {
@@ -32,11 +29,7 @@ export const MyComposition = () => {
 	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
 
-	const parsed = subdivideInstructions(
-		subdivideInstructions(
-			subdivideInstructions(turnInto3D(reduceInstructions(parsePath(scaled))))
-		)
-	);
+	const parsed = turnInto3D(reduceInstructions(parsePath(scaled)));
 
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
@@ -46,74 +39,35 @@ export const MyComposition = () => {
 		color: '#0b84f3',
 		shouldDrawLine: true,
 		isStroke: false,
+		centerPoint: [0, 0, 0, 1],
 	};
 	const depth = 20;
 
-	const mainFaces: FaceType[] = [
-		facePerSubpath,
-		{
-			...facePerSubpath,
-			points: facePerSubpath.points.map((p) => {
-				return translateSvgInstruction(p, 0, 0, -depth);
-			}),
-		},
-	];
-	const inbetweenFaces: FaceType[] = joinInbetweenTiles(
-		facePerSubpath.points,
+	const inbetweenFaces: FaceType[] = extrudeInstructions({
+		instructions: facePerSubpath,
 		depth,
-		'#000'
-	);
-
-	const camAngle = Math.PI / 12;
-
-	const cam: Camera = {
-		eye: [0, 0, 1 / Math.tan(camAngle / 2) - 1] as Vector,
-		coa: [0, 0, 0],
-		up: [0, 1, 0],
-		near: 400,
-		far: 500,
-		angle: camAngle,
-	};
-	const vSphereCenter = [width / 2, height / 2];
-	const vSphereRadius = Math.min(...vSphereCenter);
-
-	const area = [
-		-vSphereRadius,
-		-vSphereRadius,
-		vSphereRadius,
-		vSphereRadius,
-	] as const;
-	const camera = setupCamera(area, 100, cam);
+		sideColor: 'black',
+		frontFaceColor: 'red',
+		backFaceColor: 'blue',
+	});
 
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {
-			return projectPoints({
+			return projectButtonPoints({
 				points: face.points,
 				shouldDrawLine: face.shouldDrawLine,
 				frame,
-				camera,
+				camera: getCamera(width, height),
 				color: face.color,
 				depth,
 				height,
 				width,
 				isStroke: face.isStroke,
+				centerPoint: face.centerPoint,
+				fps,
+				transformations: [rotated([0, 1, 0], frame / 20)],
 			});
 		})
-	);
-	const [bottomFace, topFace] = sortFacesZIndex(
-		mainFaces.map(({points, shouldDrawLine, color, isStroke}) =>
-			projectPoints({
-				points,
-				frame,
-				camera,
-				color,
-				shouldDrawLine,
-				depth,
-				height,
-				width,
-				isStroke,
-			})
-		)
 	);
 
 	return (
@@ -124,7 +78,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{[bottomFace, ...rotatedFaces, topFace].map(
+			{sortFacesZIndex(rotatedFaces).map(
 				({color, points, shouldDrawLine}, i) => {
 					return (
 						<Face

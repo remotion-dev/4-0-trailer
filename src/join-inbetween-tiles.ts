@@ -1,6 +1,6 @@
 import {ThreeDReducedInstruction} from './3d-svg';
-import {FaceType, translateSvgInstruction} from './map-face';
-import {Vector4D} from './multiply';
+import {FaceType, transformFace, translateSvgInstruction} from './map-face';
+import {translated, Vector4D} from './matrix';
 import {truthy} from './truthy';
 
 function dotProduct(a: Vector4D, b: Vector4D): number {
@@ -106,18 +106,33 @@ const getIncomingVector = ({
 	throw new Error('Unknown instruction type');
 };
 
-export const joinInbetweenTiles = (
-	instructions: ThreeDReducedInstruction[],
-	depth: number,
-	color: string
-): FaceType[] => {
-	return instructions
+export const extrudeInstructions = ({
+	instructions,
+	depth,
+	sideColor,
+	frontFaceColor,
+	backFaceColor,
+}: {
+	instructions: FaceType;
+	depth: number;
+	sideColor: string;
+	frontFaceColor: string;
+	backFaceColor: string;
+}): FaceType[] => {
+	const frontFace = transformFace(instructions, [
+		translated([0, 0, depth / 2]),
+	]);
+	const backFace = transformFace(instructions, [
+		translated([0, 0, -depth / 2]),
+	]);
+	const {points} = frontFace;
+
+	const inbetween = points
 		.map((t, i): FaceType[] => {
 			const nextInstruction =
-				i === instructions.length - 1 ? instructions[0] : instructions[i + 1];
-			const previousInstructionIndex =
-				i === 0 ? instructions.length - 1 : i - 1;
-			const previousInstruction = instructions[previousInstructionIndex];
+				i === points.length - 1 ? points[0] : points[i + 1];
+			const previousInstructionIndex = i === 0 ? points.length - 1 : i - 1;
+			const previousInstruction = points[previousInstructionIndex];
 
 			const incomingVector = getIncomingVector({
 				previousInstruction,
@@ -173,9 +188,10 @@ export const joinInbetweenTiles = (
 			const d: FaceType[] = [
 				{
 					points: newInstructions,
-					color,
+					color: sideColor,
 					shouldDrawLine: false,
 					isStroke: false,
+					centerPoint: [0, 0, 0, 1] as Vector4D,
 				},
 				shouldDrawLine
 					? {
@@ -192,12 +208,19 @@ export const joinInbetweenTiles = (
 							color: 'transparent',
 							shouldDrawLine,
 							isStroke: true,
+							centerPoint: [0, 0, 0, 1] as Vector4D,
 					  }
 					: null,
 			].filter(truthy);
 			return d;
 		})
 		.flat(1);
+
+	return [
+		...inbetween,
+		{...frontFace, color: frontFaceColor},
+		{...backFace, color: backFaceColor},
+	];
 };
 
 const inverseInstruction = (

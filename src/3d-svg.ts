@@ -1,4 +1,4 @@
-import {Vector4D} from './multiply';
+import {Vector4D} from './matrix';
 
 export type ThreeDReducedInstruction =
 	| {
