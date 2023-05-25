@@ -49,6 +49,7 @@ export const MyComposition = () => {
 		sideColor: 'black',
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
+		drawSegmentLines: true,
 	});
 
 	const rotatedFaces = sortFacesZIndex(

@@ -149,6 +149,7 @@ export const RenderButton: React.FC = () => {
 		sideColor: 'black',
 		frontFaceColor: 'red',
 		backFaceColor: 'green',
+		drawSegmentLines: false,
 	});
 
 	const transformations = [rotated([0, 1, 0], frame / 10)];

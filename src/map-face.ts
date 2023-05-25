@@ -104,7 +104,6 @@ export const transformFace = (
 		}),
 		centerPoint: transformations.reduce((acc, t) => {
 			const result = multiplyMatrix(t, acc);
-			console.log('before', acc, 'after', result, 'transform', t);
 			return result;
 		}, face.centerPoint),
 	};

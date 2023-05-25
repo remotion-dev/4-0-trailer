@@ -1,6 +1,7 @@
 import {ThreeDReducedInstruction} from './3d-svg';
 import {FaceType, transformFace, translateSvgInstruction} from './map-face';
 import {translated, Vector4D} from './matrix';
+import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
 
 function dotProduct(a: Vector4D, b: Vector4D): number {
@@ -112,12 +113,14 @@ export const extrudeInstructions = ({
 	sideColor,
 	frontFaceColor,
 	backFaceColor,
+	drawSegmentLines,
 }: {
 	instructions: FaceType;
 	depth: number;
 	sideColor: string;
 	frontFaceColor: string;
 	backFaceColor: string;
+	drawSegmentLines: boolean;
 }): FaceType[] => {
 	const backFace = transformFace(instructions, [translated([0, 0, depth / 2])]);
 	const frontFace = transformFace(instructions, [
@@ -125,12 +128,16 @@ export const extrudeInstructions = ({
 	]);
 	const {points} = backFace;
 
-	const inbetween = points
+	const subdivided = subdivideInstructions(
+		subdivideInstructions(subdivideInstructions(subdivideInstructions(points)))
+	);
+
+	const inbetween = subdivided
 		.map((t, i): FaceType[] => {
 			const nextInstruction =
-				i === points.length - 1 ? points[0] : points[i + 1];
-			const previousInstructionIndex = i === 0 ? points.length - 1 : i - 1;
-			const previousInstruction = points[previousInstructionIndex];
+				i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
+			const previousInstructionIndex = i === 0 ? subdivided.length - 1 : i - 1;
+			const previousInstruction = subdivided[previousInstructionIndex];
 
 			const incomingVector = getIncomingVector({
 				previousInstruction,
@@ -181,7 +188,8 @@ export const extrudeInstructions = ({
 				},
 			];
 
-			const shouldDrawLine = !Number.isNaN(angle) && angle > 20;
+			const shouldDrawLine =
+				drawSegmentLines && !Number.isNaN(angle) && angle > 20;
 
 			const d: FaceType[] = [
 				{
@@ -189,7 +197,7 @@ export const extrudeInstructions = ({
 					color: sideColor,
 					shouldDrawLine: false,
 					isStroke: false,
-					centerPoint: [0, 0, 0, 1] as Vector4D,
+					centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
 				},
 				shouldDrawLine
 					? {
@@ -206,7 +214,7 @@ export const extrudeInstructions = ({
 							color: 'transparent',
 							shouldDrawLine,
 							isStroke: true,
-							centerPoint: [0, 0, 0, 1] as Vector4D,
+							centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
 					  }
 					: null,
 			].filter(truthy);
