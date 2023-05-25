@@ -1,72 +1,22 @@
 import {ThreeDReducedInstruction} from './3d-svg';
 import {
 	MatrixTransform4D,
+	multiplyMatrix,
 	multiplyMatrixAndSvgInstruction,
-	rotated,
-} from './multiply';
+	Vector4D,
+} from './matrix';
 
 export type FaceType = {
 	color: string;
 	points: ThreeDReducedInstruction[];
 	shouldDrawLine: boolean;
 	isStroke: boolean;
-};
-
-export const projectPoints = ({
-	points,
-	frame,
-	camera,
-	color,
-	shouldDrawLine,
-	depth,
-	height,
-	width,
-	isStroke,
-}: {
-	points: ThreeDReducedInstruction[];
-	frame: number;
-	camera: MatrixTransform4D;
-	color: string;
-	shouldDrawLine: boolean;
-	width: number;
-	height: number;
-	depth: number;
-	isStroke: boolean;
-}): FaceType => {
-	const projected = points
-		.map((p) => {
-			return translateSvgInstruction(p, -width / 2, -height / 2, depth / 2);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(rotated([0, 1, 0], frame / 20), p);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(rotated([1, 1, 0], frame / 40), p);
-		})
-		.map((p) => {
-			return multiplyMatrixAndSvgInstruction(camera, p);
-		});
-	return {
-		color,
-		points: projected,
-		shouldDrawLine,
-		isStroke,
-	};
+	centerPoint: Vector4D;
 };
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		const maxA =
-			Math.max(...a.points.map((p) => p.point[2])) + (a.isStroke ? 0.2 : 0);
-		const maxB =
-			Math.max(...b.points.map((p) => p.point[2])) + (b.isStroke ? 0.2 : 0);
-
-		const avgA =
-			a.points.reduce((acc, p) => acc + p.point[2], 0) / a.points.length;
-		const avgB =
-			b.points.reduce((acc, p) => acc + p.point[2], 0) / b.points.length;
-
-		return avgA + maxA - (avgB + maxB);
+		return b.centerPoint[2] - a.centerPoint[2];
 	});
 };
 
@@ -139,4 +89,23 @@ export const translateSvgInstruction = (
 		};
 	}
 	throw new Error('Unknown instruction type: ' + JSON.stringify(instruction));
+};
+
+export const transformFace = (
+	face: FaceType,
+	transformations: MatrixTransform4D[]
+): FaceType => {
+	return {
+		...face,
+		points: face.points.map((p) => {
+			return transformations.reduce((acc, t) => {
+				return multiplyMatrixAndSvgInstruction(t, acc);
+			}, p);
+		}),
+		centerPoint: transformations.reduce((acc, t) => {
+			const result = multiplyMatrix(t, acc);
+			console.log('before', acc, 'after', result, 'transform', t);
+			return result;
+		}, face.centerPoint),
+	};
 };
