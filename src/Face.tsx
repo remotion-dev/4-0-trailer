@@ -1,30 +1,21 @@
 import React from 'react';
-import {Vector4D} from './multiply';
+import {threeDIntoSvgPath, ThreeDReducedInstruction} from './3d-svg';
 
 export const Face: React.FC<{
-	points: Vector4D[];
+	points: ThreeDReducedInstruction[];
 	color: string;
 	shouldDrawLine: boolean;
-}> = ({color, points, shouldDrawLine}) => {
+	strokeColor: string;
+}> = ({color, points, shouldDrawLine, strokeColor}) => {
 	return (
 		<path
-			d={points
-				.map((p, i) => {
-					if (i === points.length - 1) {
-						return `Z`;
-					}
-					if (i === 0) {
-						return `M ${p[0]} ${p[1]}`;
-					}
-					return `L ${p[0]} ${p[1]}`;
-				})
-				.join(' ')}
+			d={threeDIntoSvgPath(points)}
 			fill={color}
 			strokeLinejoin="bevel"
-			strokeLinecap="butt"
-			stroke="black"
+			strokeLinecap="round"
+			stroke={strokeColor}
 			shapeRendering="crispEdges"
-			strokeWidth={shouldDrawLine ? 0.1 : 0}
+			strokeWidth={shouldDrawLine ? 10 : 0}
 		/>
 	);
 };

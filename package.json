@@ -12,7 +12,9 @@
 	"license": "UNLICENSED",
 	"dependencies": {
 		"@remotion/cli": "4.0.0-alpha8",
+		"@remotion/noise": "4.0.0-alpha8",
 		"@remotion/paths": "4.0.0-alpha8",
+		"@remotion/shapes": "4.0.0-alpha8",
 		"@types/opentype.js": "^1.3.4",
 		"opentype.js": "^1.3.4",
 		"react": "^18.0.0",
@@ -25,7 +27,8 @@
 		"@types/web": "^0.0.86",
 		"eslint": "^8.30.0",
 		"prettier": "^2.8.1",
-		"typescript": "^4.9.4"
+		"typescript": "^4.9.4",
+		"vitest": "0.24.3"
 	},
 	"packageManager": "npm@9.5.1"
 }
