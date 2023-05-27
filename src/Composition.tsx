@@ -7,13 +7,13 @@ import {
 import {getBoundingBox} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {rotated} from './matrix';
-import {FaceType, sortFacesZIndex} from './map-face';
+import {FaceType} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectPoints} from './RenderButton';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
+import {projectPoints} from './project-points';
 
 const scale = 1;
 
@@ -50,17 +50,15 @@ export const MyComposition = () => {
 		drawSegmentLines: true,
 	});
 
-	const rotatedFaces = sortFacesZIndex(
-		inbetweenFaces.map((face) => {
-			return projectPoints({
-				camera: getCamera(width, height),
-				height,
-				width,
-				face,
-				transformations: [rotated([0, 1, 0], frame / 20)],
-			});
-		})
-	);
+	const rotatedFaces = inbetweenFaces.map((face) => {
+		return projectPoints({
+			camera: getCamera(width, height),
+			height,
+			width,
+			face,
+			transformations: [rotated([0, 1, 0], frame / 20)],
+		});
+	});
 
 	return (
 		<svg

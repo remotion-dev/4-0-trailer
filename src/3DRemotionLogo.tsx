@@ -14,7 +14,7 @@ import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, transformFace} from './map-face';
 import {rotated, translated, Vector4D} from './matrix';
-import {projectPoints} from './RenderButton';
+import {projectPoints} from './project-points';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];

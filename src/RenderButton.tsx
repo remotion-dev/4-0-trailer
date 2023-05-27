@@ -20,58 +20,15 @@ import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {FaceType, sortFacesZIndex, translateSvgInstruction} from './map-face';
-import {
-	MatrixTransform4D,
-	multiplyMatrix,
-	multiplyMatrixAndSvgInstruction,
-	rotated,
-} from './matrix';
+import {FaceType, translateSvgInstruction} from './map-face';
+import {rotated} from './matrix';
+import {projectPoints} from './project-points';
 import {Sparks} from './Sparks';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3000, 1600];
 
 const maxDepth = 20;
-
-export const projectPoints = ({
-	camera,
-	height,
-	width,
-	transformations,
-	face,
-}: {
-	camera: MatrixTransform4D;
-	width: number;
-	height: number;
-	transformations: MatrixTransform4D[];
-	face: FaceType;
-}): FaceType => {
-	let projected = face.points.map((p) => {
-		return translateSvgInstruction(p, -width / 2, -height / 2, 0);
-	});
-
-	let newCenterPoint = face.centerPoint;
-
-	for (const transformation of transformations) {
-		projected = projected.map((p) =>
-			multiplyMatrixAndSvgInstruction(transformation, p)
-		);
-		newCenterPoint = multiplyMatrix(transformation, newCenterPoint);
-	}
-
-	projected = projected.map((p) => {
-		return multiplyMatrixAndSvgInstruction(camera, p);
-	});
-
-	return {
-		color: face.color,
-		points: projected,
-		shouldDrawLine: face.shouldDrawLine,
-		isStroke: face.isStroke,
-		centerPoint: newCenterPoint,
-	};
-};
 
 const buttonColor = '#0b84f3';
 
@@ -139,17 +96,15 @@ export const RenderButton: React.FC = () => {
 
 	const transformations = [rotated([0, 1, 0], frame / 10)];
 
-	const rotatedFaces = sortFacesZIndex(
-		inbetweenFaces.map((face) => {
-			return projectPoints({
-				camera: getCamera(width, height),
-				height,
-				width,
-				transformations,
-				face,
-			});
-		})
-	);
+	const rotatedFaces = inbetweenFaces.map((face) => {
+		return projectPoints({
+			camera: getCamera(width, height),
+			height,
+			width,
+			transformations,
+			face,
+		});
+	});
 
 	const bBoxText = getBoundingBox(textPath);
 
