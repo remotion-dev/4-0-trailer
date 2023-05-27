@@ -64,9 +64,8 @@ export const TriangleOut: React.FC = () => {
 		const projected = extruded.map((e) => {
 			return projectPoints({
 				camera: getCamera(width, height),
-				height,
-				width,
 				transformations: [
+					translated([-width / 2, -height / 2, 0]),
 					rotated([1, 0, 0], (i * frame) / 300),
 					rotated([0, 1, 0], frame / 100),
 				],

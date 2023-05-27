@@ -21,7 +21,7 @@ import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, translateSvgInstruction} from './map-face';
-import {rotated} from './matrix';
+import {rotated, translated} from './matrix';
 import {projectPoints} from './project-points';
 import {Sparks} from './Sparks';
 import {subdivideInstructions} from './subdivide-instruction';
@@ -99,8 +99,6 @@ export const RenderButton: React.FC = () => {
 	const rotatedFaces = inbetweenFaces.map((face) => {
 		return projectPoints({
 			camera: getCamera(width, height),
-			height,
-			width,
 			transformations,
 			face,
 		});
@@ -110,9 +108,14 @@ export const RenderButton: React.FC = () => {
 
 	const textProjected = projectPoints({
 		camera: getCamera(width, height),
-		height: bBoxText.y2 - bBoxText.y1,
-		width: bBoxText.x2 - bBoxText.x1,
-		transformations,
+		transformations: [
+			translated([
+				-(bBoxText.x2 - bBoxText.x1) / 2,
+				-(bBoxText.y2 - bBoxText.y1) / 2,
+				0,
+			]),
+			rotated([0, 1, 0], frame / 10),
+		],
 		face: {
 			centerPoint: [0, 0, -depth / 2, 1],
 			color: 'white',

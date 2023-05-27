@@ -6,7 +6,7 @@ import {
 } from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {rotated} from './matrix';
+import {rotated, translated} from './matrix';
 import {FaceType} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
@@ -53,10 +53,11 @@ export const MyComposition = () => {
 	const rotatedFaces = inbetweenFaces.map((face) => {
 		return projectPoints({
 			camera: getCamera(width, height),
-			height,
-			width,
 			face,
-			transformations: [rotated([0, 1, 0], frame / 20)],
+			transformations: [
+				translated([-width / 2, -height / 2, 0]),
+				rotated([0, 1, 0], frame / 20),
+			],
 		});
 	});
 

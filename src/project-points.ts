@@ -1,4 +1,4 @@
-import {FaceType, translateSvgInstruction} from './map-face';
+import {FaceType} from './map-face';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
@@ -7,20 +7,14 @@ import {
 
 export const projectPoints = ({
 	camera,
-	height,
-	width,
 	transformations,
 	face,
 }: {
 	camera: MatrixTransform4D;
-	width: number;
-	height: number;
 	transformations: MatrixTransform4D[];
 	face: FaceType;
 }): FaceType => {
-	let projected = face.points.map((p) => {
-		return translateSvgInstruction(p, -width / 2, -height / 2, 0);
-	});
+	let projected = face.points;
 
 	let newCenterPoint = face.centerPoint;
 
