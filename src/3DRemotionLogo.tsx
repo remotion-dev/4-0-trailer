@@ -7,13 +7,12 @@ import {
 } from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill} from 'remotion';
-import {useVideoConfig} from 'remotion';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
-import {Face} from './Face';
+import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {FaceType, sortFacesZIndex, transformFace} from './map-face';
+import {FaceType, transformFace} from './map-face';
 import {rotated, translated, Vector4D} from './matrix';
 import {projectPoints} from './RenderButton';
 import {subdivideInstructions} from './subdivide-instruction';
@@ -23,7 +22,6 @@ const scale = 1.5;
 
 export const TriangleOut: React.FC = () => {
 	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
 
 	const paths = new Array(3).fill(true).map((out, i) => {
 		const triangle = makeTriangle({
@@ -68,18 +66,11 @@ export const TriangleOut: React.FC = () => {
 				camera: getCamera(width, height),
 				height,
 				width,
-				centerPoint: e.centerPoint,
-				color: e.color,
-				depth,
-				fps,
-				frame,
-				isStroke: e.isStroke,
-				points: e.points,
-				shouldDrawLine: e.shouldDrawLine,
 				transformations: [
 					rotated([1, 0, 0], (i * frame) / 300),
 					rotated([0, 1, 0], frame / 100),
 				],
+				face: e,
 			});
 		});
 
@@ -93,17 +84,7 @@ export const TriangleOut: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-				{sortFacesZIndex(paths.flat(1)).map((p, i) => {
-					return (
-						<Face
-							key={JSON.stringify(p.points) + i}
-							points={p.points}
-							color={p.color}
-							shouldDrawLine={p.shouldDrawLine}
-							strokeColor="black"
-						/>
-					);
-				})}
+				<Faces faces={paths.flat(1)} />
 			</svg>
 		</AbsoluteFill>
 	);

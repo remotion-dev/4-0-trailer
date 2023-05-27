@@ -5,21 +5,20 @@ import {
 	scalePath,
 } from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
-import {useCurrentFrame, useVideoConfig} from 'remotion';
+import {useCurrentFrame} from 'remotion';
 import {rotated} from './matrix';
-import {Face} from './Face';
 import {FaceType, sortFacesZIndex} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectPoints} from './RenderButton';
 import {getCamera} from './camera';
+import {Faces} from './Faces';
 
 const scale = 1;
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
 
 	const text = useText('4.0');
 	if (!text) {
@@ -34,17 +33,16 @@ export const MyComposition = () => {
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
 
-	const facePerSubpath: FaceType = {
-		points: parsed,
-		color: '#0b84f3',
-		shouldDrawLine: true,
-		isStroke: false,
-		centerPoint: [0, 0, 0, 1],
-	};
 	const depth = 20;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
-		instructions: facePerSubpath,
+		instructions: {
+			points: parsed,
+			color: '#0b84f3',
+			shouldDrawLine: true,
+			isStroke: false,
+			centerPoint: [0, 0, 0, 1],
+		},
 		depth,
 		sideColor: 'black',
 		frontFaceColor: 'red',
@@ -55,17 +53,10 @@ export const MyComposition = () => {
 	const rotatedFaces = sortFacesZIndex(
 		inbetweenFaces.map((face) => {
 			return projectPoints({
-				points: face.points,
-				shouldDrawLine: face.shouldDrawLine,
-				frame,
 				camera: getCamera(width, height),
-				color: face.color,
-				depth,
 				height,
 				width,
-				isStroke: face.isStroke,
-				centerPoint: face.centerPoint,
-				fps,
+				face,
 				transformations: [rotated([0, 1, 0], frame / 20)],
 			});
 		})
@@ -79,17 +70,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{rotatedFaces.map(({color, points, shouldDrawLine}, i) => {
-				return (
-					<Face
-						key={JSON.stringify(points) + i}
-						strokeColor="black"
-						color={color}
-						points={points}
-						shouldDrawLine={shouldDrawLine}
-					/>
-				);
-			})}
+			<Faces faces={rotatedFaces} />
 		</svg>
 	);
 };
