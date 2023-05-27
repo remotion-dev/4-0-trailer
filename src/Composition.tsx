@@ -79,19 +79,17 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			{sortFacesZIndex(rotatedFaces).map(
-				({color, points, shouldDrawLine}, i) => {
-					return (
-						<Face
-							key={JSON.stringify(points) + i}
-							strokeColor="black"
-							color={color}
-							points={points}
-							shouldDrawLine={shouldDrawLine}
-						/>
-					);
-				}
-			)}
+			{rotatedFaces.map(({color, points, shouldDrawLine}, i) => {
+				return (
+					<Face
+						key={JSON.stringify(points) + i}
+						strokeColor="black"
+						color={color}
+						points={points}
+						shouldDrawLine={shouldDrawLine}
+					/>
+				);
+			})}
 		</svg>
 	);
 };
