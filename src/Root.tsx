@@ -2,6 +2,7 @@ import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {MyComposition} from './Composition';
 import {RenderButton} from './RenderButton';
+import {RenderProgress} from './RenderProgress';
 import {Sparks} from './Sparks';
 
 export const RemotionRoot: React.FC = () => {
@@ -34,6 +35,14 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Logo"
 				component={TriangleOut}
+				durationInFrames={1200}
+				fps={30}
+				width={1280}
+				height={720}
+			/>
+			<Composition
+				id="RenderProgress"
+				component={RenderProgress}
 				durationInFrames={1200}
 				fps={30}
 				width={1280}
