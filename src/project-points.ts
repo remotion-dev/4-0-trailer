@@ -6,16 +6,13 @@ import {
 } from './matrix';
 
 export const projectPoints = ({
-	camera,
 	transformations,
 	face,
 }: {
-	camera: MatrixTransform4D;
 	transformations: MatrixTransform4D[];
 	face: FaceType;
 }): FaceType => {
 	let projected = face.points;
-
 	let newCenterPoint = face.centerPoint;
 
 	for (const transformation of transformations) {
@@ -24,10 +21,6 @@ export const projectPoints = ({
 		);
 		newCenterPoint = multiplyMatrix(transformation, newCenterPoint);
 	}
-
-	projected = projected.map((p) => {
-		return multiplyMatrixAndSvgInstruction(camera, p);
-	});
 
 	return {
 		color: face.color,

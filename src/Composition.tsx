@@ -52,7 +52,6 @@ export const MyComposition = () => {
 
 	const rotatedFaces = inbetweenFaces.map((face) => {
 		return projectPoints({
-			camera: getCamera(width, height),
 			face,
 			transformations: [
 				translated([-width / 2, -height / 2, 0]),
@@ -69,7 +68,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces faces={rotatedFaces} />
+			<Faces faces={rotatedFaces} camera={getCamera(width, height)} />
 		</svg>
 	);
 };

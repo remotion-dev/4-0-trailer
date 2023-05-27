@@ -98,7 +98,6 @@ export const RenderButton: React.FC = () => {
 
 	const rotatedFaces = inbetweenFaces.map((face) => {
 		return projectPoints({
-			camera: getCamera(width, height),
 			transformations,
 			face,
 		});
@@ -107,7 +106,6 @@ export const RenderButton: React.FC = () => {
 	const bBoxText = getBoundingBox(textPath);
 
 	const textProjected = projectPoints({
-		camera: getCamera(width, height),
 		transformations: [
 			translated([
 				-(bBoxText.x2 - bBoxText.x1) / 2,
@@ -135,7 +133,10 @@ export const RenderButton: React.FC = () => {
 				}}
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-					<Faces faces={[...rotatedFaces, textProjected]} />
+					<Faces
+						camera={getCamera(width, height)}
+						faces={[...rotatedFaces, textProjected]}
+					/>
 				</svg>
 			</AbsoluteFill>
 			<CursorWithButton />

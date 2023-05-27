@@ -63,7 +63,6 @@ export const TriangleOut: React.FC = () => {
 		});
 		const projected = extruded.map((e) => {
 			return projectPoints({
-				camera: getCamera(width, height),
 				transformations: [
 					translated([-width / 2, -height / 2, 0]),
 					rotated([1, 0, 0], (i * frame) / 300),
@@ -83,7 +82,10 @@ export const TriangleOut: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-				<Faces faces={paths.flat(1)} />
+				<Faces
+					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
+					faces={paths.flat(1)}
+				/>
 			</svg>
 		</AbsoluteFill>
 	);
