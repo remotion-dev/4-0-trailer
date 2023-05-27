@@ -34,7 +34,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Logo"
 				component={TriangleOut}
-				durationInFrames={200}
+				durationInFrames={1200}
 				fps={30}
 				width={1280}
 				height={720}

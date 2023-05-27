@@ -1,13 +1,15 @@
-import {ReducedInstruction} from '@remotion/paths';
+import {Instruction, reduceInstructions} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
 
 export const turnInto3D = (
-	instructions: ReducedInstruction[]
+	instructions: Instruction[]
 ): ThreeDReducedInstruction[] => {
 	let lastMove: [number, number, number, number] = [0, 0, 0, 1];
 	const newInstructions: ThreeDReducedInstruction[] = [];
-	for (let i = 0; i < instructions.length; i++) {
-		const instruction = instructions[i];
+	const reduced = reduceInstructions(instructions);
+
+	for (let i = 0; i < reduced.length; i++) {
+		const instruction = reduced[i];
 		if (instruction.type === 'Z') {
 			newInstructions.push({
 				type: 'L',

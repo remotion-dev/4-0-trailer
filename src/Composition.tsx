@@ -1,9 +1,4 @@
-import {
-	parsePath,
-	reduceInstructions,
-	resetPath,
-	scalePath,
-} from '@remotion/paths';
+import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {rotated, translated} from './matrix';
@@ -28,7 +23,7 @@ export const MyComposition = () => {
 	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
 
-	const parsed = turnInto3D(reduceInstructions(parsePath(scaled)));
+	const parsed = turnInto3D(parsePath(scaled));
 
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;

@@ -1,9 +1,4 @@
-import {
-	parsePath,
-	reduceInstructions,
-	resetPath,
-	scalePath,
-} from '@remotion/paths';
+import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
@@ -43,7 +38,7 @@ export const RenderButton: React.FC = () => {
 
 	const bBox = getBoundingBox(shape.path);
 	const parsed = subdivideInstructions(
-		subdivideInstructions(turnInto3D(reduceInstructions(parsePath(shape.path))))
+		subdivideInstructions(turnInto3D(parsePath(shape.path)))
 	);
 
 	const press =
@@ -72,7 +67,7 @@ export const RenderButton: React.FC = () => {
 	const parsedText = parsePath(textPath);
 	const depth = maxDepth - press * maxDepth;
 
-	const threeD = turnInto3D(reduceInstructions(parsedText)).map((p) => {
+	const threeD = turnInto3D(parsedText).map((p) => {
 		return translateSvgInstruction(p, 0, 0, -depth / 2);
 	});
 
