@@ -12,6 +12,7 @@
 	"license": "UNLICENSED",
 	"dependencies": {
 		"@remotion/cli": "4.0.0-alpha9",
+		"@remotion/media-utils": "4.0.0-alpha9",
 		"@remotion/noise": "4.0.0-alpha9",
 		"@remotion/paths": "4.0.0-alpha9",
 		"@remotion/shapes": "4.0.0-alpha9",
