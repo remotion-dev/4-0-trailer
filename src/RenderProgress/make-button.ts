@@ -270,15 +270,15 @@ export const useButton = (
 
 	const scaled = resetPath(scalePath(text.path, 0.4, 0.4));
 	const boundingBoxText = getBoundingBox(scaled);
-	const centeredText = translatePath(
+	const leftAlignedText = translatePath(
 		scaled,
-		-boundingBoxText.x2 / 2,
+		-boxWidth / 2 + 20,
 		-boundingBoxText.y2 / 2
 	);
 
 	const textFace: FaceType = transformFace(
 		{
-			points: turnInto3D(parsePath(centeredText)),
+			points: turnInto3D(parsePath(leftAlignedText)),
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			isStroke: false,
