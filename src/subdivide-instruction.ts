@@ -1,5 +1,6 @@
+import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
-import {Vector4D} from './matrix';
+import {Vector2D, Vector4D} from './matrix';
 
 export const subdivideInstructions = (
 	instructions: ThreeDReducedInstruction[]
@@ -25,7 +26,7 @@ const subdivideInstruction = (
 	instruction: ThreeDReducedInstruction
 ) => {
 	if (instruction.type === 'C') {
-		return subdivideCInstruction(from, instruction);
+		return subdivide3DCInstruction(from, instruction);
 	}
 	if (instruction.type === 'L' || instruction.type === 'M') {
 		return subdivideLOrMInstruction(from, instruction);
@@ -60,7 +61,71 @@ const subdivideLOrMInstruction = (
 	return curves;
 };
 
-const subdivideCInstruction = (
+export const subdivide2DCInstruction = (
+	fromX: number,
+	fromY: number,
+	instruction: Instruction,
+	t: number
+) => {
+	if (instruction.type !== 'C') {
+		throw new Error('Expected C instruction');
+	}
+
+	const q0: Vector2D = [
+		(1 - t) * fromX + t * instruction.cp1x,
+		(1 - t) * fromY + t * instruction.cp1y,
+	];
+
+	const q1: Vector2D = [
+		(1 - t) * instruction.cp1x + t * instruction.cp2x,
+		(1 - t) * instruction.cp1y + t * instruction.cp2y,
+	];
+
+	const q2: Vector2D = [
+		(1 - t) * instruction.cp2x + t * instruction.x,
+		(1 - t) * instruction.cp2y + t * instruction.y,
+	];
+
+	const r0: Vector2D = [
+		(1 - t) * q0[0] + t * q1[0],
+		(1 - t) * q0[1] + t * q1[1],
+	];
+
+	const r1: Vector2D = [
+		(1 - t) * q1[0] + t * q2[0],
+		(1 - t) * q1[1] + t * q2[1],
+	];
+
+	const s0: Vector2D = [
+		(1 - t) * r0[0] + t * r1[0],
+		(1 - t) * r0[1] + t * r1[1],
+	];
+
+	const curves: [Instruction, Instruction] = [
+		{
+			type: 'C',
+			x: s0[0],
+			y: s0[1],
+			cp1x: q0[0],
+			cp1y: q0[1],
+			cp2x: r0[0],
+			cp2y: r0[1],
+		},
+		{
+			type: 'C',
+			x: instruction.x,
+			y: instruction.y,
+			cp1x: r1[0],
+			cp1y: r1[1],
+			cp2x: q2[0],
+			cp2y: q2[1],
+		},
+	];
+
+	return curves;
+};
+
+export const subdivide3DCInstruction = (
 	from: Vector4D,
 	instruction: ThreeDReducedInstruction
 ) => {

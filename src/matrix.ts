@@ -86,6 +86,7 @@ function mul(m1: number[], m2: number[], size: number): number[] {
 	return result;
 }
 
+export type Vector2D = [number, number];
 export type Vector = [number, number, number];
 export type Vector4D = [number, number, number, number];
 
