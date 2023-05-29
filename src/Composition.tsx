@@ -28,7 +28,7 @@ export const MyComposition = () => {
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
 
-	const depth = 20;
+	const depth = 200;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
 		instructions: {
@@ -48,10 +48,7 @@ export const MyComposition = () => {
 	const rotatedFaces = inbetweenFaces.map((face) => {
 		return projectPoints({
 			face,
-			transformations: [
-				translated([-width / 2, -height / 2, 0]),
-				rotated([0, 1, 0], frame / 20),
-			],
+			transformations: [translated([-width / 2, -height / 2, 0])],
 		});
 	});
 
@@ -63,7 +60,14 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces faces={rotatedFaces} camera={getCamera(width, height)} />
+			<Faces
+				faces={rotatedFaces}
+				camera={getCamera(width, height, [
+					Math.sin(frame / 100) * 10,
+					0,
+					Math.cos(frame / 100) * 10,
+				])}
+			/>
 		</svg>
 	);
 };

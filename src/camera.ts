@@ -12,15 +12,16 @@ import {
 
 const camAngle = Math.PI / 12;
 
-export const getCamera = (width: number, height: number) => {
+export const getCamera = (width: number, height: number, eye?: Vector) => {
 	const cam: Camera = {
-		eye: [0, 0, 1 / Math.tan(camAngle / 2) - 1] as Vector,
+		eye: eye ?? ([0, 0, 1] as Vector),
 		coa: [0, 0, 0],
 		up: [0, 1, 0],
 		near: 400,
 		far: 500,
 		angle: camAngle,
 	};
+	console.log(cam.eye);
 	const vSphereCenter = [width / 2, height / 2];
 	const vSphereRadius = Math.min(...vSphereCenter);
 
@@ -30,7 +31,7 @@ export const getCamera = (width: number, height: number) => {
 		vSphereRadius,
 		vSphereRadius,
 	] as const;
-	const camera = setupCamera(area, 100, cam);
+	const camera = setupCamera(area, 1000, cam);
 	return camera;
 };
 
