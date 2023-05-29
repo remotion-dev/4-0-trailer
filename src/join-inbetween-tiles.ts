@@ -1,6 +1,8 @@
 import {ThreeDReducedInstruction} from './3d-svg';
+import {STROKE_WIDTH} from './Face';
 import {FaceType, transformFace, translateSvgInstruction} from './map-face';
 import {translated, Vector4D} from './matrix';
+import {getOrthogonalVector, normalizeVector} from './normalize-vector';
 import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
 
@@ -132,6 +134,7 @@ export const extrudeInstructions = ({
 		subdivideInstructions(subdivideInstructions(subdivideInstructions(points)))
 	);
 
+	console.log('subdivided', subdivided);
 	const inbetween = subdivided
 		.map((t, i): FaceType[] => {
 			const nextInstruction =
@@ -151,40 +154,69 @@ export const extrudeInstructions = ({
 			const angle = angleBetweenVectors(incomingVector, outgoingVector);
 
 			const currentPoint = t.point;
+
 			const nextPoint = nextInstruction.point;
+
+			const vectorToNextPoint: Vector4D = [
+				nextPoint[0] - currentPoint[0],
+				nextPoint[1] - currentPoint[1],
+				nextPoint[2] - currentPoint[2],
+				nextPoint[3] - currentPoint[3],
+			];
+			const orthogonal = getOrthogonalVector(vectorToNextPoint);
+			const normalizedOrthogonal = normalizeVector(
+				orthogonal,
+				STROKE_WIDTH / 2
+			);
+			console.log({orthogonal, vectorToNextPoint, nextPoint, currentPoint});
+
+			const currentPointMovedToRight: Vector4D = [
+				currentPoint[0] + normalizedOrthogonal[0],
+				currentPoint[1] + normalizedOrthogonal[1],
+				currentPoint[2] + normalizedOrthogonal[2],
+				currentPoint[3] + normalizedOrthogonal[3],
+			];
+
+			const nextInstructionOffset = translateSvgInstruction(
+				nextInstruction,
+				normalizedOrthogonal[0],
+				normalizedOrthogonal[1],
+				normalizedOrthogonal[2]
+			);
+
 			const movingOver: Vector4D = [
-				nextPoint[0],
-				nextPoint[1],
-				nextPoint[2] - depth,
-				nextPoint[3],
+				nextInstructionOffset.point[0],
+				nextInstructionOffset.point[1],
+				nextInstructionOffset.point[2] - depth,
+				nextInstructionOffset.point[3],
 			];
 
 			const movingOverCurrent: Vector4D = [
-				t.point[0],
-				t.point[1],
-				t.point[2] - depth,
-				t.point[3],
+				currentPointMovedToRight[0],
+				currentPointMovedToRight[1],
+				currentPointMovedToRight[2] - depth,
+				currentPointMovedToRight[3],
 			];
 
 			const newInstructions: ThreeDReducedInstruction[] = [
 				{
 					type: 'M',
-					point: currentPoint,
+					point: currentPointMovedToRight,
 				},
-				nextInstruction,
+				nextInstructionOffset,
 				{
 					type: 'L',
 					point: movingOver,
 				},
 				translateSvgInstruction(
-					inverseInstruction(nextInstruction, currentPoint),
+					inverseInstruction(nextInstruction, currentPointMovedToRight),
 					0,
 					0,
 					-depth
 				),
 				{
 					type: 'L',
-					point: currentPoint,
+					point: currentPointMovedToRight,
 				},
 			];
 
