@@ -8,7 +8,6 @@ import {
 } from './map-face';
 import {translated, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
-import {truthy} from './truthy';
 
 export const extrudeInstructions = ({
 	depth,
@@ -44,53 +43,48 @@ export const extrudeInstructions = ({
 		)
 	);
 
-	const inbetween = subdivided
-		.map((t, i): FaceType[] => {
-			const nextInstruction =
-				i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
+	const inbetween = subdivided.map((t, i): FaceType => {
+		const nextInstruction =
+			i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
 
-			const currentPoint = t.point;
-			const nextPoint = nextInstruction.point;
-			const movingOver: Vector4D = [
-				nextPoint[0],
-				nextPoint[1],
-				nextPoint[2] - depth,
-				nextPoint[3],
-			];
+		const currentPoint = t.point;
+		const nextPoint = nextInstruction.point;
+		const movingOver: Vector4D = [
+			nextPoint[0],
+			nextPoint[1],
+			nextPoint[2] - depth,
+			nextPoint[3],
+		];
 
-			const newInstructions: ThreeDReducedInstruction[] = [
-				{
-					type: 'M',
-					point: currentPoint,
-				},
-				nextInstruction,
-				{
-					type: 'L',
-					point: movingOver,
-				},
-				translateSvgInstruction(
-					inverseInstruction(nextInstruction, currentPoint),
-					0,
-					0,
-					-depth
-				),
-				{
-					type: 'L',
-					point: currentPoint,
-				},
-			];
+		const newInstructions: ThreeDReducedInstruction[] = [
+			{
+				type: 'M',
+				point: currentPoint,
+			},
+			nextInstruction,
+			{
+				type: 'L',
+				point: movingOver,
+			},
+			translateSvgInstruction(
+				inverseInstruction(nextInstruction, currentPoint),
+				0,
+				0,
+				-depth
+			),
+			{
+				type: 'L',
+				point: currentPoint,
+			},
+		];
 
-			const d: FaceType[] = [
-				{
-					points: newInstructions,
-					color: sideColor,
-					shouldDrawLine: false,
-					centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
-				},
-			].filter(truthy);
-			return d;
-		})
-		.flat(1);
+		return {
+			points: newInstructions,
+			color: sideColor,
+			shouldDrawLine: false,
+			centerPoint: [0, 0, t.point[2] - depth / 2, 1],
+		};
+	});
 
 	return [
 		...inbetween,
