@@ -59,7 +59,7 @@ export const useButton = (
 		delay: 50 + delay,
 	});
 
-	const evolve = interpolate(frame, [0, 10], [0.8, 1], {
+	const evolve = interpolate(frame, [0, 40], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 	});
@@ -77,7 +77,11 @@ export const useButton = (
 	const lerpEndCurve = interpolate(
 		evolve,
 		[startOfEndCurve / boxWidth, 1],
-		[0, 1]
+		[0, 1],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+		}
 	);
 
 	const toRight: Instruction = {
@@ -123,11 +127,18 @@ export const useButton = (
 		throw new Error('Expected C');
 	}
 
-	const toBottom: Instruction = {
-		type: 'L',
-		x: hiddenBottomRightCorner.x,
-		y: hiddenBottomRightCorner.y,
-	};
+	const toBottom: Instruction =
+		lerpEndCurve > 0
+			? {
+					type: 'L',
+					x: hiddenBottomRightCorner.x,
+					y: hiddenBottomRightCorner.y,
+			  }
+			: {
+					type: 'L',
+					x: actualWidth,
+					y: boxHeight,
+			  };
 
 	const bottomLeftCorner: Instruction = {
 		type: 'C',
