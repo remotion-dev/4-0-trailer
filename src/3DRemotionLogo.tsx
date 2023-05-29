@@ -7,7 +7,6 @@ import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
 import {rotated, scaled, translated} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
 const scale = 1;
@@ -27,7 +26,7 @@ export const TriangleOut: React.FC = () => {
 		});
 		const path = resetPath(scalePath(triangle.path, scale, scale));
 		const reduced = parsePath(path);
-		const threeD = subdivideInstructions(turnInto3D(reduced));
+		const threeD = turnInto3D(reduced);
 
 		const boundingBox = getBoundingBox(path);
 		const width = boundingBox.x2 - boundingBox.x1;
