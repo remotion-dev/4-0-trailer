@@ -39,8 +39,6 @@ export const RenderButton: React.FC = () => {
 		subdivideInstructions(turnInto3D(parsePath(cursorPath)))
 	);
 
-	const cursorBoundingBox = getBoundingBox(cursorPath);
-
 	const parsed = subdivideInstructions(
 		subdivideInstructions(turnInto3D(parsePath(centeredButton)))
 	);
