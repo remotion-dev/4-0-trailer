@@ -3,7 +3,6 @@ import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
 import {rotated, scaled, translated} from './matrix';
@@ -25,8 +24,7 @@ export const TriangleOut: React.FC = () => {
 			edgeRoundness: 0.71,
 		});
 		const path = resetPath(scalePath(triangle.path, scale, scale));
-		const reduced = parsePath(path);
-		const threeD = turnInto3D(reduced);
+		const parsed = parsePath(path);
 
 		const boundingBox = getBoundingBox(path);
 		const width = boundingBox.x2 - boundingBox.x1;
@@ -42,7 +40,7 @@ export const TriangleOut: React.FC = () => {
 			sideColor: 'black',
 			frontFaceColor: color,
 			depth,
-			points: threeD,
+			points: parsed,
 			shouldDrawLine: true,
 		});
 		const projected = projectFaces({

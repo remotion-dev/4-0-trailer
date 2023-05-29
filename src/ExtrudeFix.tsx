@@ -5,7 +5,6 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {centerPath} from './center';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
 import {rotated} from './matrix';
@@ -19,9 +18,8 @@ export const ExtrudeFix: React.FC = () => {
 
 	const centered = centerPath(rect.path);
 
-	const parsed = turnInto3D(parsePath(centered));
 	const extrude = extrudeInstructions({
-		points: parsed,
+		points: parsePath(centered),
 		shouldDrawLine: true,
 		backFaceColor: 'green',
 		depth: 1,

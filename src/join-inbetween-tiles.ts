@@ -1,4 +1,6 @@
+import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
+import {turnInto3D} from './fix-z';
 import {
 	FaceType,
 	transformInstructions,
@@ -20,12 +22,13 @@ export const extrudeInstructions = ({
 	sideColor: string;
 	frontFaceColor: string;
 	backFaceColor: string;
-	points: ThreeDReducedInstruction[];
+	points: Instruction[];
 	shouldDrawLine: boolean;
 }): FaceType[] => {
+	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [0, 0, 0, 1],
-		points,
+		points: threeD,
 		shouldDrawLine,
 	};
 	const backFace = transformInstructions(instructions, [

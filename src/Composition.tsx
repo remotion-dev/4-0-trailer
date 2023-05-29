@@ -2,7 +2,6 @@ import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, projectFaces} from './map-face';
@@ -21,15 +20,13 @@ export const MyComposition = () => {
 	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
 
-	const parsed = turnInto3D(parsePath(scaled));
-
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
 
 	const depth = 200;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
-		points: parsed,
+		points: parsePath(scaled),
 		shouldDrawLine: true,
 		depth,
 		sideColor: 'black',

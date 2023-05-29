@@ -21,7 +21,6 @@ import {
 	translateSvgInstruction,
 } from './map-face';
 import {rotated, translated} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -45,14 +44,6 @@ export const RenderButton: React.FC = () => {
 
 	const centeredButton = centerPath(shape.path);
 
-	const cursor = subdivideInstructions(
-		subdivideInstructions(turnInto3D(parsePath(cursorPath)))
-	);
-
-	const parsed = subdivideInstructions(
-		subdivideInstructions(turnInto3D(parsePath(centeredButton)))
-	);
-
 	const text = useText('Render video');
 	if (!text) {
 		return null;
@@ -73,7 +64,7 @@ export const RenderButton: React.FC = () => {
 	const pushIn = Math.min(0, cursorDistance);
 
 	const _extrudedButton: FaceType[] = extrudeInstructions({
-		points: parsed,
+		points: parsePath(centeredButton),
 		shouldDrawLine: true,
 		depth: depth + pushIn,
 		sideColor: 'black',
@@ -87,7 +78,7 @@ export const RenderButton: React.FC = () => {
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
-		points: cursor,
+		points: parsePath(cursorPath),
 		shouldDrawLine: true,
 		depth: cursorDepth,
 		sideColor: 'black',

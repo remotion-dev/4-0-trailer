@@ -9,6 +9,7 @@ import {
 } from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {centerPath} from '../center';
 import {turnInto3D} from '../fix-z';
 import {useText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
@@ -233,9 +234,7 @@ export const useButton = (
 		sideColor: 'black',
 		frontFaceColor: 'black',
 		depth,
-		points: turnInto3D(
-			parsePath(translatePath(resetPath(rect.path), -width / 2, -height / 2))
-		),
+		points: parsePath(centerPath(rect.path)),
 		shouldDrawLine: true,
 	});
 

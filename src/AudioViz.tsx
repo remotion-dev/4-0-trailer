@@ -11,11 +11,9 @@ import {
 } from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
 import {rotated, translated} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
 
 const audio = staticFile('illstandmyground.mp3');
 const samples = 8;
@@ -69,7 +67,6 @@ export const AudioViz: React.FC = () => {
 		return amplitudes.map((ampli, i) => {
 			const circle = makeCircle({radius: 10});
 			const path = resetPath(circle.path);
-			const threeD = subdivideInstructions(turnInto3D(parsePath(path)));
 
 			const boundingBox = getBoundingBox(path);
 			const boxWidth = boundingBox.x2 - boundingBox.x1;
@@ -85,7 +82,7 @@ export const AudioViz: React.FC = () => {
 				sideColor: 'black',
 				frontFaceColor: color,
 				depth,
-				points: threeD,
+				points: parsePath(path),
 				shouldDrawLine: true,
 			});
 
