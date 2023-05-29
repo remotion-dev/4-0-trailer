@@ -1,7 +1,6 @@
 import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
-import {AbsoluteFill, interpolate, spring, useVideoConfig} from 'remotion';
-import {useCurrentFrame} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';

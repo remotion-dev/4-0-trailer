@@ -2,6 +2,7 @@ import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
+import {ExtrudeFix} from './ExtrudeFix';
 import {Main} from './Main';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
@@ -61,6 +62,14 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Main"
 				component={Main}
+				durationInFrames={1500}
+				fps={30}
+				width={1920}
+				height={1080}
+			/>
+			<Composition
+				id="ExtrudeFix"
+				component={ExtrudeFix}
 				durationInFrames={1500}
 				fps={30}
 				width={1920}
