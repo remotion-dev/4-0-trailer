@@ -8,6 +8,7 @@ import {
 } from './map-face';
 import {translated, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
+import {truthy} from './truthy';
 
 export const extrudeInstructions = ({
 	depth,
@@ -86,11 +87,27 @@ export const extrudeInstructions = ({
 		};
 	});
 
+	const frontFaceStroke: FaceType = {
+		...frontFace,
+		shouldDrawLine: true,
+		color: 'transparent',
+		centerPoint: [0, 0, frontFace.centerPoint[2] - 0.001, 1],
+	};
+
+	const backFaceStroke: FaceType = {
+		...backFace,
+		shouldDrawLine: true,
+		color: 'transparent',
+		centerPoint: [0, 0, backFace.centerPoint[2] + 0.001, 1],
+	};
+
 	return [
 		...inbetween,
-		{...frontFace, color: frontFaceColor},
-		{...backFace, color: backFaceColor},
-	];
+		{...frontFace, color: frontFaceColor, shouldDrawLine: false},
+		frontFace.shouldDrawLine ? frontFaceStroke : null,
+		{...backFace, color: backFaceColor, shouldDrawLine: false},
+		backFace.shouldDrawLine ? backFaceStroke : null,
+	].filter(truthy);
 };
 
 const inverseInstruction = (
