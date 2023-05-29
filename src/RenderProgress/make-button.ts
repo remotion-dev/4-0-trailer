@@ -252,7 +252,6 @@ export const useButton = (
 			),
 			color,
 			centerPoint: [0, 0, 0, 1] as Vector4D,
-			isStroke: false,
 			shouldDrawLine: false,
 		},
 		[translated([0, 0, -depth / 2 - 0.01])]
@@ -271,7 +270,6 @@ export const useButton = (
 			points: turnInto3D(parsePath(leftAlignedText)),
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
-			isStroke: false,
 			shouldDrawLine: false,
 		},
 		[rotated([1, 0, 0], Math.PI), translated([0, 0, depth / 2 + 0.01])]

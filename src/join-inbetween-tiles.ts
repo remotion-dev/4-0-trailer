@@ -25,7 +25,6 @@ export const extrudeInstructions = ({
 }): FaceType[] => {
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [0, 0, 0, 1],
-		isStroke: false,
 		points,
 		shouldDrawLine,
 	};
@@ -83,7 +82,6 @@ export const extrudeInstructions = ({
 					points: newInstructions,
 					color: sideColor,
 					shouldDrawLine: false,
-					isStroke: false,
 					centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
 				},
 			].filter(truthy);

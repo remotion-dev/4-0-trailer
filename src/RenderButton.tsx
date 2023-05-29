@@ -110,7 +110,6 @@ export const RenderButton: React.FC = () => {
 		{
 			centerPoint: [0, 0, 0, 1],
 			color: 'white',
-			isStroke: false,
 			points: centeredText,
 			shouldDrawLine: false,
 		},

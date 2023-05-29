@@ -11,7 +11,6 @@ export type FaceType = {
 	color: string;
 	points: ThreeDReducedInstruction[];
 	shouldDrawLine: boolean;
-	isStroke: boolean;
 	centerPoint: Vector4D;
 };
 

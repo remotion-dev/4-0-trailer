@@ -26,7 +26,6 @@ export const projectPoints = ({
 		color: face.color,
 		points: projected,
 		shouldDrawLine: face.shouldDrawLine,
-		isStroke: face.isStroke,
 		centerPoint: newCenterPoint,
 	};
 };
