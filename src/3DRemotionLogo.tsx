@@ -5,8 +5,8 @@ import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
+import {projectFaces} from './map-face';
 import {rotated, scaled, translated, Vector4D} from './matrix';
-import {projectPoints} from './project-points';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -52,18 +52,16 @@ export const TriangleOut: React.FC = () => {
 			},
 			drawSegmentLines: false,
 		});
-		const projected = extruded.map((e) => {
-			return projectPoints({
-				transformations: [
-					translated([0, 0, spread * i - spread]),
-					translated([-width / 2, -height / 2 + 20, 0]),
-					rotated([1, 0, 0], -(i * delayedFrame) / 300),
-					rotated([0, 1, 0], delayedFrame / 100),
-					rotated([0, 0, 1], delayedFrame / 100),
-					scaled([0.6 + zoomIn, 0.6 + zoomIn, 0.6 + zoomIn]),
-				],
-				face: e,
-			});
+		const projected = projectFaces({
+			transformations: [
+				translated([0, 0, spread * i - spread]),
+				translated([-width / 2, -height / 2 + 20, 0]),
+				rotated([1, 0, 0], -(i * delayedFrame) / 300),
+				rotated([0, 1, 0], delayedFrame / 100),
+				rotated([0, 0, 1], delayedFrame / 100),
+				scaled([0.6 + zoomIn, 0.6 + zoomIn, 0.6 + zoomIn]),
+			],
+			faces: extruded,
 		});
 
 		return projected;

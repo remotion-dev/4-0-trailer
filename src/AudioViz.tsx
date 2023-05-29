@@ -4,17 +4,17 @@ import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeCircle} from '@remotion/shapes';
 import {
 	AbsoluteFill,
+	Audio,
 	staticFile,
 	useCurrentFrame,
 	useVideoConfig,
-	Audio,
 } from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
+import {projectFaces} from './map-face';
 import {rotated, translated, Vector4D} from './matrix';
-import {projectPoints} from './project-points';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const audio = staticFile('illstandmyground.mp3');
@@ -97,21 +97,19 @@ export const AudioViz: React.FC = () => {
 
 			const spacing = boxWidth * 1.5;
 
-			return extruded.map((e) => {
-				return projectPoints({
-					transformations: [
-						translated([0, noise2D('seed', frame / 100, i) * 5, 0]),
-						translated([
-							-boxWidth / 2 + i * spacing - (spacing * (samples - 1)) / 2,
-							-boxHeight / 2,
-							-depth / 2,
-						]),
-						rotated([1, 0, 0], -noise2D('rotate2', frame / 800, 0) * 0.5),
-						rotated([1, 1, 0], -noise2D('rotate3', frame / 200, 0) * 0.5),
-						rotated([0, 0, 1], noise2D('rotate', frame / 400, 0) * 0.5),
-					],
-					face: e,
-				});
+			return projectFaces({
+				transformations: [
+					translated([0, noise2D('seed', frame / 100, i) * 5, 0]),
+					translated([
+						-boxWidth / 2 + i * spacing - (spacing * (samples - 1)) / 2,
+						-boxHeight / 2,
+						-depth / 2,
+					]),
+					rotated([1, 0, 0], -noise2D('rotate2', frame / 800, 0) * 0.5),
+					rotated([1, 1, 0], -noise2D('rotate3', frame / 200, 0) * 0.5),
+					rotated([0, 0, 1], noise2D('rotate', frame / 400, 0) * 0.5),
+				],
+				faces: extruded,
 			});
 		});
 	})();

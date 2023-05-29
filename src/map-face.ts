@@ -5,6 +5,7 @@ import {
 	multiplyMatrixAndSvgInstruction,
 	Vector4D,
 } from './matrix';
+import {projectPoints} from './project-points';
 
 export type FaceType = {
 	color: string;
@@ -107,4 +108,16 @@ export const transformFace = (
 			return result;
 		}, face.centerPoint),
 	};
+};
+
+export const projectFaces = ({
+	faces,
+	transformations,
+}: {
+	faces: FaceType[];
+	transformations: MatrixTransform4D[];
+}) => {
+	return faces.map((face) => {
+		return projectPoints({face, transformations});
+	});
 };

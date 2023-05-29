@@ -14,9 +14,13 @@ import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {FaceType, transformFace, translateSvgInstruction} from './map-face';
+import {
+	FaceType,
+	projectFaces,
+	transformFace,
+	translateSvgInstruction,
+} from './map-face';
 import {rotated, translated} from './matrix';
-import {projectPoints} from './project-points';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -84,11 +88,9 @@ export const RenderButton: React.FC = () => {
 		drawSegmentLines: false,
 	});
 
-	const extrudedTo0 = _extrudedButton.map((b) => {
-		return projectPoints({
-			face: b,
-			transformations: [translated([0, 0, -(depth + pushIn) / 2])],
-		});
+	const extrudedTo0 = projectFaces({
+		faces: _extrudedButton,
+		transformations: [translated([0, 0, -(depth + pushIn) / 2])],
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
@@ -128,16 +130,14 @@ export const RenderButton: React.FC = () => {
 		[translated([0, 0, -depth - 0.001 - pushIn])]
 	);
 
-	const movedCursor = extrudedCursor.map((cursor) => {
-		return projectPoints({
-			face: cursor,
-			transformations: [
-				rotated([0, 1, 0], Math.PI / 2),
-				rotated([1, 0, 0], -Math.PI / 4),
-				rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
-				translated([0, 0, Number(-depth - 0.001) - cursorDistance]),
-			],
-		});
+	const movedCursor = projectFaces({
+		faces: extrudedCursor,
+		transformations: [
+			rotated([0, 1, 0], Math.PI / 2),
+			rotated([1, 0, 0], -Math.PI / 4),
+			rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
+			translated([0, 0, Number(-depth - 0.001) - cursorDistance]),
+		],
 	});
 
 	const transformations = [
@@ -157,11 +157,9 @@ export const RenderButton: React.FC = () => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						camera={getCamera(viewBox[2], viewBox[3])}
-						faces={[...extrudedTo0, textFace, ...movedCursor].map((face) => {
-							return projectPoints({
-								transformations,
-								face,
-							});
+						faces={projectFaces({
+							transformations,
+							faces: [...extrudedTo0, textFace, ...movedCursor],
 						})}
 					/>
 				</svg>

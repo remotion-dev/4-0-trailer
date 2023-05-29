@@ -1,14 +1,12 @@
-import {parsePath, resetPath, scalePath} from '@remotion/paths';
-import {getBoundingBox} from '@remotion/paths';
+import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {translated} from './matrix';
-import {FaceType} from './map-face';
+import {getCamera} from './camera';
+import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {getCamera} from './camera';
-import {Faces} from './Faces';
-import {projectPoints} from './project-points';
+import {FaceType, projectFaces} from './map-face';
+import {translated} from './matrix';
 
 const scale = 1;
 
@@ -45,11 +43,9 @@ export const MyComposition = () => {
 		drawSegmentLines: true,
 	});
 
-	const rotatedFaces = inbetweenFaces.map((face) => {
-		return projectPoints({
-			face,
-			transformations: [translated([-width / 2, -height / 2, 0])],
-		});
+	const rotatedFaces = projectFaces({
+		faces: inbetweenFaces,
+		transformations: [translated([-width / 2, -height / 2, 0])],
 	});
 
 	return (

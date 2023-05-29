@@ -1,7 +1,3 @@
-import {spring} from 'remotion';
-import {useVideoConfig} from 'remotion';
-import {useCurrentFrame} from 'remotion';
-import {interpolate} from 'remotion';
 import {
 	getBoundingBox,
 	Instruction,
@@ -11,13 +7,13 @@ import {
 	serializeInstructions,
 	translatePath,
 } from '@remotion/paths';
+import {makeRect} from '@remotion/shapes';
+import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {turnInto3D} from '../fix-z';
 import {useText} from '../get-char';
-import {FaceType, transformFace} from '../map-face';
-import {rotated, translated, Vector4D} from '../matrix';
-import {makeRect} from '@remotion/shapes';
 import {extrudeInstructions} from '../join-inbetween-tiles';
-import {projectPoints} from '../project-points';
+import {FaceType, projectFaces, transformFace} from '../map-face';
+import {rotated, translated, Vector4D} from '../matrix';
 import {subdivide2DCInstruction} from '../subdivide-instruction';
 import {truthy} from '../truthy';
 
@@ -287,17 +283,10 @@ export const useButton = (
 		[rotated([1, 0, 0], Math.PI), translated([0, 0, depth / 2 + 0.01])]
 	);
 
-	const projected = [...extruded, progressFace].map((face) => {
-		return projectPoints({
-			transformations: [rotated([1, 0, 0], rotation)],
-			face,
-		});
-	});
-
-	const textFaceProjected = projectPoints({
+	const projected = projectFaces({
 		transformations: [rotated([1, 0, 0], rotation)],
-		face: textFace,
+		faces: [...extruded, progressFace, textFace],
 	});
 
-	return [...projected, textFaceProjected];
+	return projected;
 };
