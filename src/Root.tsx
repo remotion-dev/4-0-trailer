@@ -21,7 +21,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="RenderButton"
 				component={RenderButton}
-				durationInFrames={200}
+				durationInFrames={600}
 				fps={30}
 				width={1280}
 				height={720}
