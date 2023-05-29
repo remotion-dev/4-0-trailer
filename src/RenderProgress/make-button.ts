@@ -4,9 +4,11 @@ import {useCurrentFrame} from 'remotion';
 import {interpolate} from 'remotion';
 import {
 	getBoundingBox,
+	Instruction,
 	parsePath,
 	resetPath,
 	scalePath,
+	serializeInstructions,
 	translatePath,
 } from '@remotion/paths';
 import {turnInto3D} from '../fix-z';
@@ -17,6 +19,11 @@ import {makeRect} from '@remotion/shapes';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {projectPoints} from '../project-points';
 
+const outerCornerRadius = 30;
+const padding = 1;
+const outerWidth = 300;
+const outerHeight = 100;
+
 export const useButton = (
 	phrase: string,
 	depth: number,
@@ -26,8 +33,8 @@ export const useButton = (
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const rect = makeRect({
-		height: 100,
-		width: 300,
+		height: outerHeight,
+		width: outerWidth,
 		cornerRadius: 30,
 	});
 
@@ -49,11 +56,80 @@ export const useButton = (
 		delay: 10 + delay,
 	});
 
-	const frontFace = makeRect({
-		height: 98,
-		width: Math.max(40, 300 * evolve) - 2,
-		cornerRadius: 30,
-	});
+	const boxWidth = outerWidth - padding * 2;
+	const boxHeight = outerHeight - padding * 2;
+
+	const innerCornerRadius = outerCornerRadius - padding;
+
+	const cornerRadiusFactor = (4 / 3) * Math.tan(Math.PI / 8);
+
+	const paths: Instruction[] = [
+		{
+			type: 'M',
+			x: 0,
+			y: 0,
+		},
+		{
+			type: 'L',
+			x: boxWidth - innerCornerRadius,
+			y: 0,
+		},
+		{
+			type: 'C',
+			x: boxWidth,
+			y: innerCornerRadius,
+			cp1x:
+				boxWidth - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
+			cp1y: 0,
+			cp2x: boxWidth,
+			cp2y: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+		},
+		{
+			type: 'L',
+			x: boxWidth,
+			y: boxHeight - innerCornerRadius,
+		},
+		{
+			type: 'C',
+			x: boxWidth - innerCornerRadius,
+			y: boxHeight,
+			cp1x: boxWidth,
+			cp1y:
+				boxHeight - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
+			cp2x:
+				boxWidth - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
+			cp2y: boxHeight,
+		},
+		{
+			type: 'L',
+			x: innerCornerRadius,
+			y: boxHeight,
+		},
+		{
+			type: 'C',
+			x: 0,
+			y: boxHeight - innerCornerRadius,
+			cp1x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp1y: boxHeight,
+			cp2x: 0,
+			cp2y:
+				boxHeight - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
+		},
+		{
+			type: 'L',
+			x: 0,
+			y: innerCornerRadius,
+		},
+		{
+			type: 'C',
+			x: innerCornerRadius,
+			y: 0,
+			cp1x: 0,
+			cp1y: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp2x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp2y: 0,
+		},
+	];
 
 	const text = useText(phrase);
 
@@ -91,7 +167,7 @@ export const useButton = (
 			points: turnInto3D(
 				parsePath(
 					translatePath(
-						resetPath(frontFace.path),
+						resetPath(serializeInstructions(paths)),
 						-width / 2 + 1,
 						-height / 2 + 1
 					)
