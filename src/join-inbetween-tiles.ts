@@ -1,5 +1,9 @@
 import {ThreeDReducedInstruction} from './3d-svg';
-import {FaceType, transformFace, translateSvgInstruction} from './map-face';
+import {
+	FaceType,
+	transformInstructions,
+	translateSvgInstruction,
+} from './map-face';
 import {translated, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
@@ -108,28 +112,37 @@ const getIncomingVector = ({
 };
 
 export const extrudeInstructions = ({
-	instructions,
 	depth,
 	sideColor,
 	frontFaceColor,
 	backFaceColor,
-	drawSegmentLines,
+	points,
+	shouldDrawLine,
 }: {
-	instructions: FaceType;
 	depth: number;
 	sideColor: string;
 	frontFaceColor: string;
 	backFaceColor: string;
-	drawSegmentLines: boolean;
+	points: ThreeDReducedInstruction[];
+	shouldDrawLine: boolean;
 }): FaceType[] => {
-	const backFace = transformFace(instructions, [translated([0, 0, depth / 2])]);
-	const frontFace = transformFace(instructions, [
+	const instructions: Omit<FaceType, 'color'> = {
+		centerPoint: [0, 0, 0, 1],
+		isStroke: false,
+		points,
+		shouldDrawLine,
+	};
+	const backFace = transformInstructions(instructions, [
+		translated([0, 0, depth / 2]),
+	]);
+	const frontFace = transformInstructions(instructions, [
 		translated([0, 0, -depth / 2]),
 	]);
-	const {points} = backFace;
 
 	const subdivided = subdivideInstructions(
-		subdivideInstructions(subdivideInstructions(subdivideInstructions(points)))
+		subdivideInstructions(
+			subdivideInstructions(subdivideInstructions(backFace.points))
+		)
 	);
 
 	const inbetween = subdivided
@@ -188,9 +201,6 @@ export const extrudeInstructions = ({
 				},
 			];
 
-			const shouldDrawLine =
-				drawSegmentLines && !Number.isNaN(angle) && angle > 20;
-
 			const d: FaceType[] = [
 				{
 					points: newInstructions,
@@ -199,24 +209,6 @@ export const extrudeInstructions = ({
 					isStroke: false,
 					centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
 				},
-				shouldDrawLine
-					? {
-							points: [
-								{
-									type: 'M' as const,
-									point: currentPoint,
-								},
-								{
-									type: 'L' as const,
-									point: movingOverCurrent,
-								},
-							],
-							color: 'transparent',
-							shouldDrawLine,
-							isStroke: true,
-							centerPoint: [0, 0, t.point[2] - depth / 2, 1] as Vector4D,
-					  }
-					: null,
 			].filter(truthy);
 			return d;
 		})

@@ -14,7 +14,7 @@ import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
-import {rotated, translated, Vector4D} from './matrix';
+import {rotated, translated} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const audio = staticFile('illstandmyground.mp3');
@@ -85,14 +85,8 @@ export const AudioViz: React.FC = () => {
 				sideColor: 'black',
 				frontFaceColor: color,
 				depth,
-				instructions: {
-					centerPoint: [0, 0, 0, 1] as Vector4D,
-					color: 'black',
-					isStroke: false,
-					points: threeD,
-					shouldDrawLine: true,
-				},
-				drawSegmentLines: false,
+				points: threeD,
+				shouldDrawLine: true,
 			});
 
 			const spacing = boxWidth * 1.5;

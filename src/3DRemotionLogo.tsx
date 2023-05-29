@@ -6,7 +6,7 @@ import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
-import {rotated, scaled, translated, Vector4D} from './matrix';
+import {rotated, scaled, translated} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -43,14 +43,8 @@ export const TriangleOut: React.FC = () => {
 			sideColor: 'black',
 			frontFaceColor: color,
 			depth,
-			instructions: {
-				centerPoint: [0, 0, 0, 1] as Vector4D,
-				color: 'black',
-				isStroke: false,
-				points: threeD,
-				shouldDrawLine: true,
-			},
-			drawSegmentLines: false,
+			points: threeD,
+			shouldDrawLine: true,
 		});
 		const projected = projectFaces({
 			transformations: [

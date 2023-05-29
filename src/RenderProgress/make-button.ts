@@ -233,16 +233,10 @@ export const useButton = (
 		sideColor: 'black',
 		frontFaceColor: 'black',
 		depth,
-		instructions: {
-			centerPoint: [0, 0, 0, 1] as Vector4D,
-			color: 'black',
-			isStroke: false,
-			points: turnInto3D(
-				parsePath(translatePath(resetPath(rect.path), -width / 2, -height / 2))
-			),
-			shouldDrawLine: true,
-		},
-		drawSegmentLines: false,
+		points: turnInto3D(
+			parsePath(translatePath(resetPath(rect.path), -width / 2, -height / 2))
+		),
+		shouldDrawLine: true,
 	});
 
 	const progressFace: FaceType = transformFace(

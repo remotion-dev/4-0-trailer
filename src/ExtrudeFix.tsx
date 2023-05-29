@@ -21,16 +21,10 @@ export const ExtrudeFix: React.FC = () => {
 
 	const parsed = turnInto3D(parsePath(centered));
 	const extrude = extrudeInstructions({
-		instructions: {
-			color: 'red',
-			centerPoint: [0, 0, 0, 1],
-			isStroke: false,
-			points: parsed,
-			shouldDrawLine: true,
-		},
+		points: parsed,
+		shouldDrawLine: true,
 		backFaceColor: 'green',
 		depth: 1,
-		drawSegmentLines: false,
 		frontFaceColor: 'blue',
 		sideColor: 'yellow',
 	});

@@ -25,7 +25,6 @@ import {subdivideInstructions} from './subdivide-instruction';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
-const buttonColor = '#0b84f3';
 const cursorPath = scalePath(
 	resetPath('M7.5 271V16.5L197 181L84.5 183L7.5 271Z'),
 	0.25,
@@ -74,18 +73,12 @@ export const RenderButton: React.FC = () => {
 	const pushIn = Math.min(0, cursorDistance);
 
 	const _extrudedButton: FaceType[] = extrudeInstructions({
-		instructions: {
-			points: parsed,
-			color: buttonColor,
-			shouldDrawLine: true,
-			isStroke: false,
-			centerPoint: [0, 0, 0, 1],
-		},
+		points: parsed,
+		shouldDrawLine: true,
 		depth: depth + pushIn,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
-		drawSegmentLines: false,
 	});
 
 	const extrudedTo0 = projectFaces({
@@ -94,18 +87,12 @@ export const RenderButton: React.FC = () => {
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
-		instructions: {
-			points: cursor,
-			color: 'white',
-			shouldDrawLine: true,
-			isStroke: false,
-			centerPoint: [0, 0, 0, 1],
-		},
+		points: cursor,
+		shouldDrawLine: true,
 		depth: cursorDepth,
 		sideColor: 'black',
 		frontFaceColor: 'white',
 		backFaceColor: 'white',
-		drawSegmentLines: false,
 	});
 
 	const bBoxText = getBoundingBox(textPath);

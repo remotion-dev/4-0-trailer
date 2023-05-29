@@ -29,18 +29,12 @@ export const MyComposition = () => {
 	const depth = 200;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
-		instructions: {
-			points: parsed,
-			color: '#0b84f3',
-			shouldDrawLine: true,
-			isStroke: false,
-			centerPoint: [0, 0, 0, 1],
-		},
+		points: parsed,
+		shouldDrawLine: true,
 		depth,
 		sideColor: 'black',
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
-		drawSegmentLines: true,
 	});
 
 	const rotatedFaces = projectFaces({
