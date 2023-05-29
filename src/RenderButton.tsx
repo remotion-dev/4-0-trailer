@@ -109,9 +109,9 @@ export const RenderButton: React.FC = () => {
 		return projectPoints({
 			face: cursor,
 			transformations: [
-				translated([Number(depth / 2), 0, 0]),
 				rotated([0, 1, 0], Math.PI / 2),
 				rotated([1, 0, 0], -Math.PI / 4),
+				translated([0, 0, Number(-depth / 2 - 0.001)]),
 			],
 		});
 	});
