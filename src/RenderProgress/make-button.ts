@@ -18,23 +18,13 @@ import {rotated, translated, Vector4D} from '../matrix';
 import {makeRect} from '@remotion/shapes';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {projectPoints} from '../project-points';
-import {
-	subdivide2DCInstruction,
-	subdivide3DCInstruction,
-} from '../subdivide-instruction';
+import {subdivide2DCInstruction} from '../subdivide-instruction';
 import {truthy} from '../truthy';
 
 const outerCornerRadius = 30;
 const padding = 1;
 const outerWidth = 300;
 const outerHeight = 100;
-
-const lerp = (t: number, from: number, to: number) => {
-	if (t < 0) {
-		return from;
-	}
-	return from + (to - from) * t;
-};
 
 export const useButton = (
 	phrase: string,
@@ -56,12 +46,17 @@ export const useButton = (
 		config: {
 			damping: 200,
 		},
-		delay: 50 + delay,
+		delay: 40 + delay,
 	});
 
-	const evolve = interpolate(frame, [0, 40], [0, 1], {
-		extrapolateLeft: 'clamp',
-		extrapolateRight: 'clamp',
+	const evolve = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		durationInFrames: 40,
+		delay,
 	});
 
 	const boxWidth = outerWidth - padding * 2;
@@ -74,6 +69,16 @@ export const useButton = (
 	const cornerRadiusFactor = (4 / 3) * Math.tan(Math.PI / 8);
 
 	const startOfEndCurve = boxWidth - innerCornerRadius;
+	const lerpStartCurve = interpolate(
+		actualWidth,
+		[0, innerCornerRadius],
+		[0, 1],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+		}
+	);
+
 	const lerpEndCurve = interpolate(
 		evolve,
 		[startOfEndCurve / boxWidth, 1],
@@ -84,15 +89,40 @@ export const useButton = (
 		}
 	);
 
+	const start: Instruction = {
+		type: 'M',
+		x: 0,
+		y: innerCornerRadius,
+	};
+
+	const [topLeftCorner] = subdivide2DCInstruction(
+		start.x,
+		start.y,
+		{
+			type: 'C' as const,
+			x: innerCornerRadius,
+			y: 0,
+			cp1x: 0,
+			cp1y: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp2x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp2y: 0,
+		},
+		lerpStartCurve
+	);
+
+	if (topLeftCorner.type !== 'C') {
+		throw new Error('Expected C');
+	}
+
 	const toRight: Instruction = {
 		type: 'L',
-		x: Math.min(actualWidth, startOfEndCurve),
-		y: 0,
+		x: Math.max(topLeftCorner.x, Math.min(actualWidth, startOfEndCurve)),
+		y: topLeftCorner.y,
 	};
 
 	const [topRightCorner] = subdivide2DCInstruction(
-		toRight.x,
-		toRight.y,
+		boxWidth - innerCornerRadius,
+		0,
 		{
 			type: 'C',
 			x: boxWidth,
@@ -127,6 +157,32 @@ export const useButton = (
 		throw new Error('Expected C');
 	}
 
+	const toLeft: Instruction = {
+		type: 'L' as const,
+		x: Math.min(actualWidth, innerCornerRadius),
+		y: boxHeight,
+	};
+
+	const [hiddenBottomLeftCorner, bottomLeftCorner] = subdivide2DCInstruction(
+		innerCornerRadius,
+		boxHeight,
+		{
+			type: 'C',
+			x: 0,
+			y: boxHeight - innerCornerRadius,
+			cp1x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
+			cp1y: boxHeight,
+			cp2x: 0,
+			cp2y:
+				boxHeight - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
+		},
+		1 - lerpStartCurve
+	);
+
+	if (hiddenBottomLeftCorner.type !== 'C') {
+		throw new Error('Expected C');
+	}
+
 	const toBottom: Instruction =
 		lerpEndCurve > 0
 			? {
@@ -134,52 +190,31 @@ export const useButton = (
 					x: hiddenBottomRightCorner.x,
 					y: hiddenBottomRightCorner.y,
 			  }
+			: lerpStartCurve < 1
+			? {
+					type: 'L',
+					x: hiddenBottomLeftCorner.x,
+					y: hiddenBottomLeftCorner.y,
+			  }
 			: {
 					type: 'L',
 					x: actualWidth,
 					y: boxHeight,
 			  };
 
-	const bottomLeftCorner: Instruction = {
-		type: 'C',
-		x: 0,
-		y: boxHeight - innerCornerRadius,
-		cp1x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
-		cp1y: boxHeight,
-		cp2x: 0,
-		cp2y:
-			boxHeight - innerCornerRadius + innerCornerRadius * cornerRadiusFactor,
-	};
-
 	const paths: Instruction[] = [
-		{
-			type: 'M' as const,
-			x: 0,
-			y: 0,
-		},
-		toRight,
+		start,
+		topLeftCorner,
+		lerpStartCurve === 1 ? toRight : null,
 		lerpEndCurve > 0 ? topRightCorner : null,
 		toBottom,
 		lerpEndCurve > 0 ? bottomRightCorner : null,
-		{
-			type: 'L' as const,
-			x: innerCornerRadius,
-			y: boxHeight,
-		},
+		lerpStartCurve === 1 ? toLeft : null,
 		bottomLeftCorner,
 		{
 			type: 'L' as const,
 			x: 0,
 			y: innerCornerRadius,
-		},
-		{
-			type: 'C' as const,
-			x: innerCornerRadius,
-			y: 0,
-			cp1x: 0,
-			cp1y: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
-			cp2x: innerCornerRadius - innerCornerRadius * cornerRadiusFactor,
-			cp2y: 0,
 		},
 	].filter(truthy);
 
@@ -199,7 +234,7 @@ export const useButton = (
 
 	const extruded = extrudeInstructions({
 		backFaceColor: 'white',
-		sideColor: 'red',
+		sideColor: 'black',
 		frontFaceColor: 'black',
 		depth,
 		instructions: {
@@ -219,7 +254,7 @@ export const useButton = (
 			points: turnInto3D(
 				parsePath(
 					translatePath(
-						resetPath(serializeInstructions(paths)),
+						serializeInstructions(paths),
 						-width / 2 + 1,
 						-height / 2 + 1
 					)
