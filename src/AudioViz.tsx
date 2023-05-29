@@ -77,7 +77,7 @@ export const AudioViz: React.FC = () => {
 
 			const depthIn = 50 - Math.max(0, rearranged[i] + 0.1) * 40;
 			const depthOut = Math.max(0, rearranged[i] - 0.3) * 80;
-			const depth = i % 2 === 0 ? depthIn : depthOut;
+			const depth: number = i % 2 === 0 ? depthIn : depthOut;
 			const color = '#0b84f3';
 
 			const extruded = extrudeInstructions({

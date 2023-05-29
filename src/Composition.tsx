@@ -1,7 +1,7 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {getBoundingBox} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {rotated, translated} from './matrix';
+import {translated} from './matrix';
 import {FaceType} from './map-face';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';

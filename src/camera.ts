@@ -17,11 +17,10 @@ export const getCamera = (width: number, height: number, eye?: Vector) => {
 		eye: eye ?? ([0, 0, 1] as Vector),
 		coa: [0, 0, 0],
 		up: [0, 1, 0],
-		near: 400,
-		far: 500,
+		near: 200,
+		far: 1000,
 		angle: camAngle,
 	};
-	console.log(cam.eye);
 	const vSphereCenter = [width / 2, height / 2];
 	const vSphereRadius = Math.min(...vSphereCenter);
 
