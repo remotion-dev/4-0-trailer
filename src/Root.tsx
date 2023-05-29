@@ -2,6 +2,7 @@ import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
+import {Main} from './Main';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
 import {Sparks} from './Sparks';
@@ -53,6 +54,14 @@ export const RemotionRoot: React.FC = () => {
 				id="AudioViz"
 				component={AudioViz}
 				durationInFrames={1200}
+				fps={30}
+				width={1920}
+				height={1080}
+			/>
+			<Composition
+				id="Main"
+				component={Main}
+				durationInFrames={1500}
 				fps={30}
 				width={1920}
 				height={1080}

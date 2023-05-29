@@ -120,6 +120,10 @@ export type MatrixTransform4D = [
 	number
 ];
 
+export const scaled = function (vec: Vector) {
+	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
+};
+
 const rotatedUnitSinCos = function (
 	axisVec: Vector,
 	sinAngle: number,
