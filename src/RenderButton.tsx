@@ -1,7 +1,13 @@
 import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {
+	AbsoluteFill,
+	interpolate,
+	spring,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
 import {getCamera} from './camera';
 import {centerPath} from './center';
 import {Faces} from './Faces';
@@ -17,13 +23,14 @@ const viewBox = [-1600, -800, 3200, 1600];
 
 const buttonColor = '#0b84f3';
 const cursorPath = scalePath(
-	'M7.5 271V16.5L197 181L84.5 183L7.5 271Z',
-	0.15,
-	0.15
+	resetPath('M7.5 271V16.5L197 181L84.5 183L7.5 271Z'),
+	0.25,
+	0.25
 );
 
 export const RenderButton: React.FC = () => {
 	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
 	const shape = makeRect({
 		height: 60,
 		width: 200,
@@ -31,7 +38,7 @@ export const RenderButton: React.FC = () => {
 	});
 
 	const depth = 30;
-	const cursorDepth = 5;
+	const cursorDepth = 10;
 
 	const centeredButton = centerPath(shape.path);
 
@@ -51,7 +58,18 @@ export const RenderButton: React.FC = () => {
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
 	const parsedText = parsePath(textPath);
 
-	const extrudedButton: FaceType[] = extrudeInstructions({
+	const push = spring({
+		fps,
+		frame,
+		config: {},
+		durationInFrames: 200,
+	});
+
+	const cursorDistance = interpolate(push, [0, 1], [100, 0], {});
+
+	const pushIn = Math.min(0, cursorDistance);
+
+	const _extrudedButton: FaceType[] = extrudeInstructions({
 		instructions: {
 			points: parsed,
 			color: buttonColor,
@@ -59,11 +77,18 @@ export const RenderButton: React.FC = () => {
 			isStroke: false,
 			centerPoint: [0, 0, 0, 1],
 		},
-		depth,
+		depth: depth + pushIn,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
 		drawSegmentLines: false,
+	});
+
+	const extrudedTo0 = _extrudedButton.map((b) => {
+		return projectPoints({
+			face: b,
+			transformations: [translated([0, 0, -(depth + pushIn) / 2])],
+		});
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
@@ -100,7 +125,7 @@ export const RenderButton: React.FC = () => {
 			points: centeredText,
 			shouldDrawLine: false,
 		},
-		[translated([0, 0, -depth / 2 - 0.001])]
+		[translated([0, 0, -depth - 0.001 - pushIn])]
 	);
 
 	const movedCursor = extrudedCursor.map((cursor) => {
@@ -109,12 +134,16 @@ export const RenderButton: React.FC = () => {
 			transformations: [
 				rotated([0, 1, 0], Math.PI / 2),
 				rotated([1, 0, 0], -Math.PI / 4),
-				translated([0, 0, Number(-depth / 2 - 0.001)]),
+				rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
+				translated([0, 0, Number(-depth - 0.001) - cursorDistance]),
 			],
 		});
 	});
 
-	const transformations = [rotated([0, 1, 0], -Math.PI / 4 + frame / 100)];
+	const transformations = [
+		rotated([0, 1, 0], -Math.PI / 4 + frame / 100),
+		rotated([1, 0, 0], -Math.PI / 4 + frame / 300),
+	];
 
 	return (
 		<AbsoluteFill>
@@ -128,7 +157,7 @@ export const RenderButton: React.FC = () => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						camera={getCamera(viewBox[2], viewBox[3])}
-						faces={[...extrudedButton, textFace, ...movedCursor].map((face) => {
+						faces={[...extrudedTo0, textFace, ...movedCursor].map((face) => {
 							return projectPoints({
 								transformations,
 								face,
