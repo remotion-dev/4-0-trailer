@@ -12,6 +12,7 @@ export type FaceType = {
 	points: ThreeDReducedInstruction[];
 	shouldDrawLine: boolean;
 	centerPoint: Vector4D;
+	strokeWidth: number;
 };
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {

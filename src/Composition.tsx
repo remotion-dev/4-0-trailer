@@ -32,6 +32,7 @@ export const MyComposition = () => {
 		sideColor: 'black',
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
+		strokeWidth: 10,
 	});
 
 	const rotatedFaces = projectFaces({

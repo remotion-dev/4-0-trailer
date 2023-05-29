@@ -17,6 +17,7 @@ export const extrudeInstructions = ({
 	backFaceColor,
 	points,
 	shouldDrawLine,
+	strokeWidth,
 }: {
 	depth: number;
 	sideColor: string;
@@ -24,12 +25,14 @@ export const extrudeInstructions = ({
 	backFaceColor: string;
 	points: Instruction[];
 	shouldDrawLine: boolean;
+	strokeWidth: number;
 }): FaceType[] => {
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [0, 0, 0, 1],
 		points: threeD,
 		shouldDrawLine,
+		strokeWidth,
 	};
 	const backFace = transformInstructions(instructions, [
 		translated([0, 0, depth / 2]),
@@ -84,6 +87,7 @@ export const extrudeInstructions = ({
 			color: sideColor,
 			shouldDrawLine: false,
 			centerPoint: [0, 0, t.point[2] - depth / 2, 1],
+			strokeWidth,
 		};
 	});
 

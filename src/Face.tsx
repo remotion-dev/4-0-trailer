@@ -6,7 +6,8 @@ export const Face: React.FC<{
 	color: string;
 	shouldDrawLine: boolean;
 	strokeColor: string;
-}> = ({color, points, shouldDrawLine, strokeColor}) => {
+	strokeWidth: number;
+}> = ({color, points, shouldDrawLine, strokeColor, strokeWidth}) => {
 	return (
 		<path
 			d={threeDIntoSvgPath(points)}
@@ -15,7 +16,7 @@ export const Face: React.FC<{
 			strokeLinecap="round"
 			stroke={strokeColor}
 			shapeRendering="crispEdges"
-			strokeWidth={shouldDrawLine ? 10 : 0}
+			strokeWidth={shouldDrawLine ? strokeWidth : 0}
 		/>
 	);
 };

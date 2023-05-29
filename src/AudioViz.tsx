@@ -84,6 +84,7 @@ export const AudioViz: React.FC = () => {
 				depth,
 				points: parsePath(path),
 				shouldDrawLine: true,
+				strokeWidth: 10,
 			});
 
 			const spacing = boxWidth * 1.5;

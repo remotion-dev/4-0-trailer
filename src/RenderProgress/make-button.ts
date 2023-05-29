@@ -236,6 +236,7 @@ export const useButton = (
 		depth,
 		points: parsePath(centerPath(rect.path)),
 		shouldDrawLine: true,
+		strokeWidth: 10,
 	});
 
 	const progressFace: FaceType = transformFace(
@@ -252,6 +253,7 @@ export const useButton = (
 			color,
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
+			strokeWidth: 10,
 		},
 		[translated([0, 0, -depth / 2 - 0.01])]
 	);
@@ -270,6 +272,7 @@ export const useButton = (
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
+			strokeWidth: 10,
 		},
 		[rotated([1, 0, 0], Math.PI), translated([0, 0, depth / 2 + 0.01])]
 	);

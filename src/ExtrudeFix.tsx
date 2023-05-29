@@ -25,6 +25,7 @@ export const ExtrudeFix: React.FC = () => {
 		depth: 1,
 		frontFaceColor: 'blue',
 		sideColor: 'yellow',
+		strokeWidth: 1,
 	});
 
 	const final = projectFaces({
