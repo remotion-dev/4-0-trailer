@@ -1,12 +1,10 @@
-import {useState} from 'react';
-import {cancelRender, continueRender, delayRender} from 'remotion';
-import {staticFile} from 'remotion';
 import {BoundingBox, Font, load} from 'opentype.js';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {cancelRender, continueRender, delayRender, staticFile} from 'remotion';
 
 const fontSize = 100;
 
-export const useText = (text: string) => {
+export const useText = (text: string, size = fontSize) => {
 	const [font, setFont] = useState<Font | null>(() => {
 		return null;
 	});
@@ -35,14 +33,14 @@ export const useText = (text: string) => {
 			return;
 		}
 
-		const path = font.getPath(text, 0, 0, fontSize, {});
+		const path = font.getPath(text, 0, 0, size, {});
 
 		setPath({
 			boundingBox: path.getBoundingBox(),
 			path: path.toPathData(1),
 		});
 		continueRender(handle);
-	}, [font, handle, text]);
+	}, [font, handle, size, text]);
 
 	return path;
 };
