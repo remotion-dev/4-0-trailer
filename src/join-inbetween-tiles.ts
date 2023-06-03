@@ -1,4 +1,11 @@
-import {Instruction} from '@remotion/paths';
+import {
+	getBoundingBox,
+	Instruction,
+	parsePath,
+	scalePath,
+	serializeInstructions,
+	translatePath,
+} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
@@ -34,10 +41,36 @@ export const extrudeInstructions = ({
 		shouldDrawLine,
 		strokeWidth,
 	};
+
+	const strokePathBox = getBoundingBox(serializeInstructions(points));
+	const width = strokePathBox.x2 - strokePathBox.x1;
+	const height = strokePathBox.y2 - strokePathBox.y1;
+	const area = width * height;
+	const desiredArea = (width - strokeWidth) * (height - strokeWidth);
+	const ratio = desiredArea / area;
+	const borderPath = translatePath(
+		scalePath(serializeInstructions(points), ratio, ratio),
+		strokeWidth,
+		strokeWidth
+	);
+
+	const backFaceBorder: Omit<FaceType, 'color'> = {
+		centerPoint: [0, 0, 0, 1],
+		points: turnInto3D(parsePath(borderPath)),
+		shouldDrawLine,
+		strokeWidth,
+	};
+
 	const backFace = transformInstructions(instructions, [
 		translated([0, 0, depth / 2]),
 	]);
+	const backFaceStrokeFace = transformInstructions(backFaceBorder, [
+		translated([0, 0, depth / 2]),
+	]);
 	const frontFace = transformInstructions(instructions, [
+		translated([0, 0, -depth / 2]),
+	]);
+	const frontFaceStrokeFace = transformInstructions(backFaceBorder, [
 		translated([0, 0, -depth / 2]),
 	]);
 
@@ -92,14 +125,14 @@ export const extrudeInstructions = ({
 	});
 
 	const frontFaceStroke: FaceType = {
-		...frontFace,
+		...frontFaceStrokeFace,
 		shouldDrawLine: true,
 		color: 'transparent',
 		centerPoint: [0, 0, frontFace.centerPoint[2] - 0.001, 1],
 	};
 
 	const backFaceStroke: FaceType = {
-		...backFace,
+		...backFaceStrokeFace,
 		shouldDrawLine: true,
 		color: 'transparent',
 		centerPoint: [0, 0, backFace.centerPoint[2] + 0.001, 1],
@@ -107,10 +140,10 @@ export const extrudeInstructions = ({
 
 	return [
 		...inbetween,
-		{...frontFace, color: frontFaceColor, shouldDrawLine: false},
-		frontFace.shouldDrawLine ? frontFaceStroke : null,
-		{...backFace, color: backFaceColor, shouldDrawLine: false},
-		backFace.shouldDrawLine ? backFaceStroke : null,
+		{...frontFace, color: frontFaceColor, shouldDrawLine: true},
+		// FrontFace.shouldDrawLine ? frontFaceStroke : null,
+		{...backFace, color: backFaceColor, shouldDrawLine: true},
+		// BackFace.shouldDrawLine ? backFaceStroke : null,
 	].filter(truthy);
 };
 

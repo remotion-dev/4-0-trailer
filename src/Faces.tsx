@@ -12,14 +12,17 @@ export const Faces: React.FC<{
 	return (
 		<>
 			{sorted.map(({points, color, shouldDrawLine, strokeWidth}, i) => {
+				const multiplied = points.map((p) => {
+					const result = multiplyMatrixAndSvgInstruction(camera, p);
+					return result;
+				});
+
 				return (
 					<Face
 						key={JSON.stringify(points) + i}
 						strokeColor="black"
 						color={color}
-						points={points.map((p) => {
-							return multiplyMatrixAndSvgInstruction(camera, p);
-						})}
+						points={multiplied}
 						shouldDrawLine={shouldDrawLine}
 						strokeWidth={strokeWidth}
 					/>

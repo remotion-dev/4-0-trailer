@@ -12,8 +12,8 @@ import {rotated} from './matrix';
 export const ExtrudeFix: React.FC = () => {
 	const frame = useCurrentFrame();
 	const rect = makeRect({
-		height: 1,
-		width: 1,
+		height: 10,
+		width: 10,
 	});
 
 	const centered = centerPath(rect.path);
@@ -22,10 +22,10 @@ export const ExtrudeFix: React.FC = () => {
 		points: parsePath(centered),
 		shouldDrawLine: true,
 		backFaceColor: 'green',
-		depth: 1,
+		depth: 10,
 		frontFaceColor: 'blue',
 		sideColor: 'yellow',
-		strokeWidth: 1,
+		strokeWidth: 10,
 	});
 
 	const final = projectFaces({
@@ -39,8 +39,8 @@ export const ExtrudeFix: React.FC = () => {
 
 	return (
 		<AbsoluteFill>
-			<svg viewBox="-10 -10 20 20">
-				<Faces camera={getCamera(20, 20)} faces={final} />
+			<svg viewBox="-100 -100 200 200">
+				<Faces camera={getCamera(10, 10)} faces={final} />
 			</svg>
 		</AbsoluteFill>
 	);
