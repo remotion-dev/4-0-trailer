@@ -67,11 +67,7 @@ export const extrudeInstructions = ({
 	// 	translated([0, 0, -depth / 2]),
 	// ]);
 
-	const subdivided = subdivideInstructions(
-		subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(backFace.points))
-		)
-	);
+	const subdivided = subdivideInstructions(backFace.points);
 
 	const inbetween = subdivided.map((t, i): FaceType => {
 		const nextInstruction =
