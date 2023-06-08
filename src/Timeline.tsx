@@ -1,8 +1,9 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
+import {BLUE} from './colors';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
@@ -14,14 +15,16 @@ const cursorHandlerPath = scalePath(
 	0.08
 );
 
-const BLUE = '#0b84f3';
-const GREEN = 'rgb(16 171 58)';
+type Track = {
+	x: number;
+	y: number;
+};
 
-console.log(cursorHandlerPath);
 export const Timeline: React.FC = () => {
 	const {width, height} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
 	const frame = useCurrentFrame();
+	const xRotation = frame / 100;
 
 	const face1 = projectFaces({
 		faces: extrudeInstructions({
@@ -46,8 +49,9 @@ export const Timeline: React.FC = () => {
 			shouldDrawLine: true,
 			strokeWidth: 8,
 		}),
-		transformations: [translated([30, 22, 0])],
+		transformations: [translated([40, 20, 0])],
 	});
+
 	const face3 = projectFaces({
 		faces: extrudeInstructions({
 			depth: 20,
@@ -58,7 +62,7 @@ export const Timeline: React.FC = () => {
 			shouldDrawLine: true,
 			strokeWidth: 8,
 		}),
-		transformations: [translated([60, 44, 0])],
+		transformations: [translated([80, 40, 0])],
 	});
 
 	const cursor = projectFaces({
@@ -71,23 +75,21 @@ export const Timeline: React.FC = () => {
 			sideColor: 'black',
 			strokeWidth: 8,
 		}),
-		transformations: [translated([-8 + frame, 0, -10])],
+		transformations: [translated([frame - 6, -10, -10])],
 	});
 
 	return (
-		<AbsoluteFill>
-			<svg viewBox={viewBox.join(' ')}>
-				<Faces
-					camera={getCamera(viewBox[2], viewBox[3])}
-					faces={projectFaces({
-						transformations: [
-							translated([-frame, 0, 0]),
-							rotated([-1, 0, 0], frame / 100),
-						],
-						faces: [...face1, ...face2, ...face3, ...cursor],
-					})}
-				/>
-			</svg>
-		</AbsoluteFill>
+		<svg viewBox={viewBox.join(' ')}>
+			<Faces
+				camera={getCamera(viewBox[2], viewBox[3])}
+				faces={projectFaces({
+					transformations: [
+						translated([-30, -30, 0]),
+						rotated([-1, 0, 0], xRotation),
+					],
+					faces: [...face1, ...face2, ...face3, ...cursor],
+				})}
+			/>
+		</svg>
 	);
 };

@@ -79,10 +79,12 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const pushIn = Math.min(0, cursorDistance);
 
+	const actualDepth = depth + pushIn;
+
 	const _extrudedButton: FaceType[] = extrudeInstructions({
 		points: parsePath(centeredButton),
 		shouldDrawLine: true,
-		depth: depth + pushIn,
+		depth: actualDepth,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
@@ -107,7 +109,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const textFace = transformFace(
 		{
-			centerPoint: [0, 0, 0, 1],
+			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
 			color: 'white',
 			points: centeredText,
 			shouldDrawLine: false,

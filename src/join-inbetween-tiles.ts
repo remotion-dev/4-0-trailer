@@ -1,4 +1,5 @@
-import {Instruction} from '@remotion/paths';
+import {Instruction, reduceInstructions} from '@remotion/paths';
+import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
 import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
@@ -27,9 +28,15 @@ export const extrudeInstructions = ({
 	shouldDrawLine: boolean;
 	strokeWidth: number;
 }): FaceType[] => {
+	const boundingBox = getBoundingBoxFromInstructions(
+		reduceInstructions(points)
+	);
+	const centerX = (boundingBox.x2 - boundingBox.x1) / 2;
+	const centerY = (boundingBox.y2 - boundingBox.y1) / 2;
+
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
-		centerPoint: [0, 0, 0, 1],
+		centerPoint: [centerX, centerY, 0, 1],
 		points: threeD,
 		shouldDrawLine,
 		strokeWidth,
@@ -67,8 +74,11 @@ export const extrudeInstructions = ({
 	// 	translated([0, 0, -depth / 2]),
 	// ]);
 
-	const subdivided = subdivideInstructions(backFace.points);
-
+	const subdivided = subdivideInstructions(
+		subdivideInstructions(
+			subdivideInstructions(subdivideInstructions(backFace.points))
+		)
+	);
 	const inbetween = subdivided.map((t, i): FaceType => {
 		const nextInstruction =
 			i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];

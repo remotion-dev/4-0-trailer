@@ -10,6 +10,7 @@ import {
 } from 'remotion';
 import {getCamera} from './camera';
 import {centerPath} from './center';
+import {BLUE} from './colors';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {useText} from './get-char';
@@ -68,7 +69,7 @@ export const RenderButton: React.FC = () => {
 		shouldDrawLine: true,
 		depth: depth + pushIn,
 		sideColor: 'black',
-		frontFaceColor: '#0b84f3',
+		frontFaceColor: BLUE,
 		backFaceColor: 'black',
 		strokeWidth: 10,
 	});
