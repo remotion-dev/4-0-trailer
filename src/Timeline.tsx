@@ -3,7 +3,7 @@ import {makeRect} from '@remotion/shapes';
 import React from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
-import {BLUE} from './colors';
+import {BLUE, GREEN} from './colors';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';

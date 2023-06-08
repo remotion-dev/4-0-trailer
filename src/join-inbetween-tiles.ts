@@ -8,7 +8,6 @@ import {
 	translateSvgInstruction,
 } from './map-face';
 import {translated, Vector4D} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
 
 export const extrudeInstructions = ({
@@ -31,8 +30,8 @@ export const extrudeInstructions = ({
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
 	);
-	const centerX = (boundingBox.x2 - boundingBox.x1) / 2;
-	const centerY = (boundingBox.y2 - boundingBox.y1) / 2;
+	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
+	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
 
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
@@ -74,11 +73,7 @@ export const extrudeInstructions = ({
 	// 	translated([0, 0, -depth / 2]),
 	// ]);
 
-	const subdivided = subdivideInstructions(
-		subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(backFace.points))
-		)
-	);
+	const subdivided = backFace.points;
 	const inbetween = subdivided.map((t, i): FaceType => {
 		const nextInstruction =
 			i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
@@ -114,11 +109,13 @@ export const extrudeInstructions = ({
 			},
 		];
 
+		// When extruding, let's consider the whole inbetween as a plane and use the
+		// center point of that plane as the center point for each face for z-sorting.
 		return {
 			points: newInstructions,
 			color: sideColor,
 			shouldDrawLine: false,
-			centerPoint: [0, 0, t.point[2] - depth / 2, 1],
+			centerPoint: [centerX, centerY, 0, 1],
 			strokeWidth,
 		};
 	});
