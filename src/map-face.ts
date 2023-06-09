@@ -17,7 +17,41 @@ export type FaceType = {
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
+		let lowestDistancePair: null | {
+			distance: number;
+			instructions: [ThreeDReducedInstruction, ThreeDReducedInstruction];
+		} = null;
+
+		for (const aInstruction of a.points) {
+			for (const bInstruction of b.points) {
+				// TODO: Only takes the end point into account
+				const distanceX = bInstruction.point[0] - aInstruction.point[0];
+				const distanceY = bInstruction.point[1] - aInstruction.point[1];
+				const distanceZ = bInstruction.point[2] - aInstruction.point[2];
+				const distance = Math.sqrt(
+					distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ
+				);
+
+				if (
+					lowestDistancePair === null ||
+					distance < lowestDistancePair.distance
+				) {
+					lowestDistancePair = {
+						distance,
+						instructions: [aInstruction, bInstruction],
+					};
+				}
+			}
+		}
+
+		if (lowestDistancePair === null) {
+			throw new Error('No distance pair found');
+		}
+
+		return (
+			lowestDistancePair.instructions[1].point[2] -
+			lowestDistancePair.instructions[0].point[2]
+		);
 	});
 };
 
