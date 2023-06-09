@@ -28,7 +28,7 @@ export const turnInto3D = (
 			newInstructions.push({
 				point: [instruction.x, instruction.y, 0, 1],
 				type: 'M',
-				_startPoint: startPoint,
+				_startPoint: [instruction.x, instruction.y, 0, 1],
 			});
 		} else if (instruction.type === 'L') {
 			newInstructions.push({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Face} from './Face';
 import {FaceType, sortFacesZIndex} from './map-face';
 import {MatrixTransform4D, multiplyMatrixAndSvgInstruction} from './matrix';
@@ -7,7 +7,7 @@ export const Faces: React.FC<{
 	faces: FaceType[];
 	camera: MatrixTransform4D;
 }> = ({camera, faces}) => {
-	const sorted = sortFacesZIndex(faces);
+	const sorted = useMemo(() => sortFacesZIndex(faces), [faces]);
 
 	return (
 		<>

@@ -55,10 +55,16 @@ export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 			throw new Error('No distance pair found');
 		}
 
-		return (
-			lowestDistancePair.instructions[1].point[2] -
-			lowestDistancePair.instructions[0].point[2]
-		);
+		const firstCenterPointZ =
+			(lowestDistancePair.instructions[0].point[2] +
+				lowestDistancePair.instructions[0]._startPoint[2]) /
+			2;
+		const secondCenterPointZ =
+			(lowestDistancePair.instructions[1].point[2] +
+				lowestDistancePair.instructions[1]._startPoint[2]) /
+			2;
+
+		return secondCenterPointZ - firstCenterPointZ;
 	});
 };
 

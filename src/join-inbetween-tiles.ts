@@ -30,9 +30,7 @@ export const extrudeInstructions = ({
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		points: subdivideInstructions(
-			subdivideInstructions(
-				subdivideInstructions(subdivideInstructions(threeD))
-			)
+			subdivideInstructions(subdivideInstructions(threeD))
 		),
 		shouldDrawLine,
 		strokeWidth,
@@ -111,8 +109,6 @@ export const extrudeInstructions = ({
 			},
 		];
 
-		// When extruding, let's consider the whole inbetween as a plane and use the
-		// center point of that plane as the center point for each face for z-sorting.
 		return {
 			points: newInstructions,
 			color: sideColor,
