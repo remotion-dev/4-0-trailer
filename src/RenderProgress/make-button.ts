@@ -14,7 +14,7 @@ import {turnInto3D} from '../fix-z';
 import {useText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {FaceType, projectFaces, transformFace} from '../map-face';
-import {rotated, translated} from '../matrix';
+import {rotated, translated, Vector4D} from '../matrix';
 import {subdivide2DCInstruction} from '../subdivide-instruction';
 import {truthy} from '../truthy';
 
@@ -251,6 +251,7 @@ export const useButton = (
 				)
 			),
 			color,
+			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
@@ -269,6 +270,7 @@ export const useButton = (
 		{
 			points: turnInto3D(parsePath(leftAlignedText)),
 			color: 'black',
+			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
