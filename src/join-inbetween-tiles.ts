@@ -37,7 +37,11 @@ export const extrudeInstructions = ({
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [centerX, centerY, 0, 1],
-		points: threeD,
+		points: subdivideInstructions(
+			subdivideInstructions(
+				subdivideInstructions(subdivideInstructions(threeD))
+			)
+		),
 		shouldDrawLine,
 		strokeWidth,
 	};
@@ -74,14 +78,11 @@ export const extrudeInstructions = ({
 	// 	translated([0, 0, -depth / 2]),
 	// ]);
 
-	const subdivided = subdivideInstructions(
-		subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(backFace.points))
-		)
-	);
-	const inbetween = subdivided.map((t, i): FaceType => {
+	const inbetween = backFace.points.map((t, i): FaceType => {
 		const nextInstruction =
-			i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
+			i === backFace.points.length - 1
+				? backFace.points[0]
+				: backFace.points[i + 1];
 
 		const currentPoint = t.point;
 		const nextPoint = nextInstruction.point;
