@@ -4,6 +4,7 @@ import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
+import {Timeline} from './Timeline';
 
 export const Main: React.FC = () => {
 	return (
@@ -12,6 +13,9 @@ export const Main: React.FC = () => {
 			<Series>
 				<Series.Sequence durationInFrames={9 * 30}>
 					<TriangleOut />
+				</Series.Sequence>
+				<Series.Sequence durationInFrames={7 * 30}>
+					<Timeline />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={4 * 30}>
 					<RenderButton />

@@ -8,6 +8,7 @@ import {
 	translateSvgInstruction,
 } from './map-face';
 import {translated, Vector4D} from './matrix';
+import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
 
 export const extrudeInstructions = ({
@@ -73,7 +74,11 @@ export const extrudeInstructions = ({
 	// 	translated([0, 0, -depth / 2]),
 	// ]);
 
-	const subdivided = backFace.points;
+	const subdivided = subdivideInstructions(
+		subdivideInstructions(
+			subdivideInstructions(subdivideInstructions(backFace.points))
+		)
+	);
 	const inbetween = subdivided.map((t, i): FaceType => {
 		const nextInstruction =
 			i === subdivided.length - 1 ? subdivided[0] : subdivided[i + 1];
