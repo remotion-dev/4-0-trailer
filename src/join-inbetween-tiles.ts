@@ -37,9 +37,7 @@ export const extrudeInstructions = ({
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [centerX, centerY, 0, 1],
-		points: subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(threeD))
-		),
+		points: subdivideInstructions(threeD),
 		shouldDrawLine,
 		strokeWidth,
 	};
@@ -92,7 +90,7 @@ export const extrudeInstructions = ({
 		];
 
 		const translatedInstruction = translateSvgInstruction(
-			inverseInstruction(nextInstruction, currentPoint),
+			inverseInstruction(nextInstruction),
 			0,
 			0,
 			-depth
@@ -113,7 +111,7 @@ export const extrudeInstructions = ({
 			{
 				type: 'L',
 				point: currentPoint,
-				_startPoint: translatedInstruction._startPoint,
+				_startPoint: translatedInstruction.point,
 			},
 		];
 
@@ -150,38 +148,37 @@ export const extrudeInstructions = ({
 };
 
 const inverseInstruction = (
-	instruction: ThreeDReducedInstruction,
-	comingFrom: Vector4D
+	instruction: ThreeDReducedInstruction
 ): ThreeDReducedInstruction => {
 	if (instruction.type === 'M') {
 		return {
 			type: 'M',
-			point: comingFrom,
-			_startPoint: comingFrom,
+			point: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'L') {
 		return {
 			type: 'L',
-			point: comingFrom,
-			_startPoint: instruction._startPoint,
+			point: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'C') {
 		return {
 			type: 'C',
-			point: comingFrom,
+			point: instruction._startPoint,
 			cp1: instruction.cp2,
 			cp2: instruction.cp1,
-			_startPoint: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'Q') {
 		return {
 			type: 'Q',
-			point: comingFrom,
+			point: instruction._startPoint,
 			cp: instruction.cp,
-			_startPoint: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	throw new Error('Unknown instruction type');

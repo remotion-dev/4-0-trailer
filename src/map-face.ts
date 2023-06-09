@@ -17,28 +17,20 @@ export type FaceType = {
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
+		const lowestDistancePair: null | {
+			distance: number;
+			instructions: [ThreeDReducedInstruction, ThreeDReducedInstruction];
+		} = null;
+
+		const avgAZ = a.points.reduce((acc, cur) => {
+			return acc + (cur.point[2] + cur._startPoint[2]) / 2;
+		}, 0);
+		const avgBZ = b.points.reduce((acc, cur) => {
+			return acc + (cur.point[2] + cur._startPoint[2]) / 2;
+		}, 0);
+
+		return avgBZ - avgAZ;
 	});
-};
-
-// https://chat.openai.com/share/205f3aa8-f2f5-4b54-b25c-a58fe753fb3c
-export const moveCenterPoint = (
-	centerPointA: Vector4D,
-	centerPointB: Vector4D,
-	normalVectorA: Vector4D
-): Vector4D => {
-	const d =
-		normalVectorA[0] * centerPointA[0] +
-		normalVectorA[1] * centerPointA[1] +
-		normalVectorA[2] * centerPointA[2];
-
-	const z =
-		(d -
-			normalVectorA[0] * centerPointB[0] -
-			normalVectorA[1] * centerPointB[1]) /
-		normalVectorA[2];
-
-	return [centerPointB[0], centerPointB[1], z, 1];
 };
 
 export const translateSvgInstruction = (
@@ -57,10 +49,10 @@ export const translateSvgInstruction = (
 				instruction.point[3],
 			],
 			_startPoint: [
-				instruction.point[0] + x,
-				instruction.point[1] + y,
-				instruction.point[2] + z,
-				instruction.point[3],
+				instruction._startPoint[0] + x,
+				instruction._startPoint[1] + y,
+				instruction._startPoint[2] + z,
+				instruction._startPoint[3],
 			],
 		};
 	}

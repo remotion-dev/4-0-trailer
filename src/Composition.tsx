@@ -5,7 +5,7 @@ import {Faces} from './Faces';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, projectFaces} from './map-face';
-import {translated} from './matrix';
+import {rotated, translated} from './matrix';
 
 const scale = 1;
 
@@ -23,7 +23,7 @@ export const MyComposition = () => {
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
 
-	const depth = 200;
+	const depth = 20;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
 		points: parsePath(scaled),
@@ -37,7 +37,10 @@ export const MyComposition = () => {
 
 	const rotatedFaces = projectFaces({
 		faces: inbetweenFaces,
-		transformations: [translated([-width / 2, -height / 2, 0])],
+		transformations: [
+			translated([-width / 2, -height / 2, 0]),
+			rotated([0, 1, 0], frame / 100),
+		],
 	});
 
 	return (
@@ -48,14 +51,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces
-				faces={rotatedFaces}
-				camera={getCamera(width, height, [
-					Math.sin(frame / 100) * 10,
-					0,
-					Math.cos(frame / 100) * 10,
-				])}
-			/>
+			<Faces faces={rotatedFaces} camera={getCamera(width, height)} />
 		</svg>
 	);
 };

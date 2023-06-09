@@ -50,14 +50,14 @@ export const Timeline: React.FC = () => {
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 40,
+			x: 60,
 			frontColor: GREEN,
 			backColor: 'black',
 			width: 150,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 40,
+			x: 60,
 			frontColor: BLUE,
 			backColor: 'black',
 			width: 300,
@@ -93,7 +93,7 @@ export const Timeline: React.FC = () => {
 			sideColor: 'black',
 			strokeWidth: 8,
 		}),
-		transformations: [translated([frame - 6, -12, -LAYER_DEPTH / 2 - 0.0001])],
+		transformations: [translated([frame - 6, -12, -LAYER_DEPTH / 2 - 1])],
 	});
 
 	const facesMapped = useMemo(() => {
@@ -113,7 +113,7 @@ export const Timeline: React.FC = () => {
 					transformations: [
 						translated([-frame * 0.8, -30, 0]),
 						rotated([-1, 0, 0], xRotation),
-						rotated([0, 1, 1], -0.1),
+						rotated([0, 1, 0], interpolate(frame, [0, 3000], [0, -Math.PI])),
 						scaled([scale, scale, scale]),
 					],
 					faces: facesMapped,
