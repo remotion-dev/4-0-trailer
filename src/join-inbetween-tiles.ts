@@ -93,25 +93,29 @@ export const extrudeInstructions = ({
 			nextPoint[3],
 		];
 
+		const translatedInstruction = translateSvgInstruction(
+			inverseInstruction(nextInstruction, currentPoint),
+			0,
+			0,
+			-depth
+		);
 		const newInstructions: ThreeDReducedInstruction[] = [
 			{
 				type: 'M',
 				point: currentPoint,
+				_startPoint: currentPoint,
 			},
 			nextInstruction,
 			{
 				type: 'L',
 				point: movingOver,
+				_startPoint: nextInstruction.point,
 			},
-			translateSvgInstruction(
-				inverseInstruction(nextInstruction, currentPoint),
-				0,
-				0,
-				-depth
-			),
+			translatedInstruction,
 			{
 				type: 'L',
 				point: currentPoint,
+				_startPoint: translatedInstruction._startPoint,
 			},
 		];
 
@@ -157,12 +161,14 @@ const inverseInstruction = (
 		return {
 			type: 'M',
 			point: comingFrom,
+			_startPoint: comingFrom,
 		};
 	}
 	if (instruction.type === 'L') {
 		return {
 			type: 'L',
 			point: comingFrom,
+			_startPoint: instruction._startPoint,
 		};
 	}
 	if (instruction.type === 'C') {
@@ -171,6 +177,7 @@ const inverseInstruction = (
 			point: comingFrom,
 			cp1: instruction.cp2,
 			cp2: instruction.cp1,
+			_startPoint: instruction._startPoint,
 		};
 	}
 	if (instruction.type === 'Q') {
@@ -178,6 +185,7 @@ const inverseInstruction = (
 			type: 'Q',
 			point: comingFrom,
 			cp: instruction.cp,
+			_startPoint: instruction._startPoint,
 		};
 	}
 	throw new Error('Unknown instruction type');

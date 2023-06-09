@@ -24,10 +24,23 @@ export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 
 		for (const aInstruction of a.points) {
 			for (const bInstruction of b.points) {
-				// TODO: Only takes the end point into account
-				const distanceX = bInstruction.point[0] - aInstruction.point[0];
-				const distanceY = bInstruction.point[1] - aInstruction.point[1];
-				const distanceZ = bInstruction.point[2] - aInstruction.point[2];
+				const bCenterPointX =
+					(bInstruction.point[0] + bInstruction._startPoint[0]) / 2;
+				const bCenterPointY =
+					(bInstruction.point[1] + bInstruction._startPoint[1]) / 2;
+				const bCenterPointZ =
+					(bInstruction.point[2] + bInstruction._startPoint[2]) / 2;
+				const aCenterPointX =
+					(aInstruction.point[0] + aInstruction._startPoint[0]) / 2;
+				const aCenterPointY =
+					(aInstruction.point[1] + aInstruction._startPoint[1]) / 2;
+				const aCenterPointZ =
+					(aInstruction.point[2] + aInstruction._startPoint[2]) / 2;
+
+				const distanceX = bCenterPointX - aCenterPointX;
+				const distanceY = bCenterPointY - aCenterPointY;
+				const distanceZ = bCenterPointZ - aCenterPointZ;
+
 				const distance = Math.sqrt(
 					distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ
 				);
@@ -70,6 +83,12 @@ export const translateSvgInstruction = (
 				instruction.point[2] + z,
 				instruction.point[3],
 			],
+			_startPoint: [
+				instruction.point[0] + x,
+				instruction.point[1] + y,
+				instruction.point[2] + z,
+				instruction.point[3],
+			],
 		};
 	}
 	if (instruction.type === 'L') {
@@ -81,6 +100,12 @@ export const translateSvgInstruction = (
 				instruction.point[2] + z,
 				instruction.point[3],
 			],
+			_startPoint: [
+				instruction._startPoint[0] + x,
+				instruction._startPoint[1] + y,
+				instruction._startPoint[2] + z,
+				instruction._startPoint[3],
+			],
 		};
 	}
 	if (instruction.type === 'C') {
@@ -91,6 +116,12 @@ export const translateSvgInstruction = (
 				instruction.point[1] + y,
 				instruction.point[2] + z,
 				instruction.point[3],
+			],
+			_startPoint: [
+				instruction._startPoint[0] + x,
+				instruction._startPoint[1] + y,
+				instruction._startPoint[2] + z,
+				instruction._startPoint[3],
 			],
 			cp1: [
 				instruction.cp1[0] + x,
@@ -114,6 +145,12 @@ export const translateSvgInstruction = (
 				instruction.point[1] + y,
 				instruction.point[2] + z,
 				instruction.point[3],
+			],
+			_startPoint: [
+				instruction._startPoint[0] + x,
+				instruction._startPoint[1] + y,
+				instruction._startPoint[2] + z,
+				instruction._startPoint[3],
 			],
 			cp: [
 				instruction.cp[0] + x,
