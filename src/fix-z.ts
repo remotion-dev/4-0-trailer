@@ -15,7 +15,7 @@ export const turnInto3D = (
 
 		const startPoint: Vector4D = lastInstruction
 			? lastInstruction.point
-			: [0, 0, 0, 1];
+			: lastMove;
 
 		if (instruction.type === 'Z') {
 			newInstructions.push({

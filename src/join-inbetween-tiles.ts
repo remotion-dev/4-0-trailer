@@ -1,5 +1,4 @@
-import {Instruction, reduceInstructions} from '@remotion/paths';
-import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
+import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
@@ -28,15 +27,8 @@ export const extrudeInstructions = ({
 	shouldDrawLine: boolean;
 	strokeWidth: number;
 }): FaceType[] => {
-	const boundingBox = getBoundingBoxFromInstructions(
-		reduceInstructions(points)
-	);
-	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
-	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
-
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
-		centerPoint: [centerX, centerY, 0, 1],
 		points: subdivideInstructions(
 			subdivideInstructions(
 				subdivideInstructions(subdivideInstructions(threeD))
@@ -115,7 +107,7 @@ export const extrudeInstructions = ({
 			{
 				type: 'L',
 				point: currentPoint,
-				_startPoint: translatedInstruction._startPoint,
+				_startPoint: translatedInstruction.point,
 			},
 		];
 
@@ -125,7 +117,6 @@ export const extrudeInstructions = ({
 			points: newInstructions,
 			color: sideColor,
 			shouldDrawLine: false,
-			centerPoint: [centerX, centerY, 0, 1],
 			strokeWidth,
 		};
 	});
@@ -161,14 +152,14 @@ const inverseInstruction = (
 		return {
 			type: 'M',
 			point: comingFrom,
-			_startPoint: comingFrom,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'L') {
 		return {
 			type: 'L',
 			point: comingFrom,
-			_startPoint: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'C') {
@@ -177,7 +168,7 @@ const inverseInstruction = (
 			point: comingFrom,
 			cp1: instruction.cp2,
 			cp2: instruction.cp1,
-			_startPoint: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	if (instruction.type === 'Q') {
@@ -185,7 +176,7 @@ const inverseInstruction = (
 			type: 'Q',
 			point: comingFrom,
 			cp: instruction.cp,
-			_startPoint: instruction._startPoint,
+			_startPoint: instruction.point,
 		};
 	}
 	throw new Error('Unknown instruction type');

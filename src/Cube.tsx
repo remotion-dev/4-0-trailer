@@ -109,7 +109,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const textFace = transformFace(
 		{
-			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
 			color: 'white',
 			points: centeredText,
 			shouldDrawLine: false,

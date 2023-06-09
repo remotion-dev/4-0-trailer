@@ -102,7 +102,6 @@ export const RenderButton: React.FC = () => {
 
 	const textFace = transformFace(
 		{
-			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: centeredText,
 			shouldDrawLine: false,

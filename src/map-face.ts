@@ -1,17 +1,11 @@
 import {ThreeDReducedInstruction} from './3d-svg';
-import {
-	MatrixTransform4D,
-	multiplyMatrix,
-	multiplyMatrixAndSvgInstruction,
-	Vector4D,
-} from './matrix';
+import {MatrixTransform4D, multiplyMatrixAndSvgInstruction} from './matrix';
 import {projectPoints} from './project-points';
 
 export type FaceType = {
 	color: string;
 	points: ThreeDReducedInstruction[];
 	shouldDrawLine: boolean;
-	centerPoint: Vector4D;
 	strokeWidth: number;
 };
 
@@ -84,10 +78,10 @@ export const translateSvgInstruction = (
 				instruction.point[3],
 			],
 			_startPoint: [
-				instruction.point[0] + x,
-				instruction.point[1] + y,
-				instruction.point[2] + z,
-				instruction.point[3],
+				instruction._startPoint[0] + x,
+				instruction._startPoint[1] + y,
+				instruction._startPoint[2] + z,
+				instruction._startPoint[3],
 			],
 		};
 	}
@@ -174,10 +168,6 @@ export const transformFace = (
 				return multiplyMatrixAndSvgInstruction(t, acc);
 			}, p);
 		}),
-		centerPoint: transformations.reduce((acc, t) => {
-			const result = multiplyMatrix(t, acc);
-			return result;
-		}, face.centerPoint),
 	};
 };
 
@@ -192,10 +182,6 @@ export const transformInstructions = (
 				return multiplyMatrixAndSvgInstruction(t, acc);
 			}, p);
 		}),
-		centerPoint: transformations.reduce((acc, t) => {
-			const result = multiplyMatrix(t, acc);
-			return result;
-		}, face.centerPoint),
 	};
 };
 
