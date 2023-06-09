@@ -159,6 +159,10 @@ export const normalize = function (v: Vector): Vector {
 	return mulScalar(v, 1 / vectorLength(v));
 };
 
+export const normalize4d = function (v: Vector4D): Vector4D {
+	return mulScalar(v, 1 / vectorLength(v));
+};
+
 const vectorLength = function (v: number[]) {
 	return Math.sqrt(lengthSquared(v));
 };
@@ -166,7 +170,7 @@ const vectorLength = function (v: number[]) {
 const lengthSquared = function (v: number[]) {
 	return dot(v, v);
 };
-const dot = function (a: number[], b: number[]) {
+export const dot = function (a: number[], b: number[]) {
 	if (a.length !== b.length) {
 		throw new Error(
 			`Cannot perform dot product on arrays of different length (${a.length} vs ${b.length})`

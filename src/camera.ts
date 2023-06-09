@@ -8,6 +8,7 @@ import {
 	stride,
 	translated4d,
 	Vector,
+	Vector4D,
 } from './matrix';
 
 const camAngle = Math.PI / 12;
@@ -93,10 +94,16 @@ const cross = function (a: Vector, b: Vector): Vector {
 	];
 };
 
-const sub = function (a: Vector, b: Vector): Vector {
+export const sub = function (a: Vector, b: Vector): Vector {
 	return a.map((v, i) => {
 		return v - b[i];
 	}) as Vector;
+};
+
+export const sub4d = function (a: Vector4D, b: Vector4D): Vector4D {
+	return a.map((v, i) => {
+		return v - b[i];
+	}) as Vector4D;
 };
 
 const mustInvert = function (m: MatrixTransform4D): MatrixTransform4D {
