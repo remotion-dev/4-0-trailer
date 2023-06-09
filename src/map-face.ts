@@ -17,61 +17,28 @@ export type FaceType = {
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		let lowestDistancePair: null | {
-			distance: number;
-			instructions: [ThreeDReducedInstruction, ThreeDReducedInstruction];
-		} = null;
-
-		for (const aInstruction of a.points) {
-			for (const bInstruction of b.points) {
-				const bCenterPointX =
-					(bInstruction.point[0] + bInstruction._startPoint[0]) / 2;
-				const bCenterPointY =
-					(bInstruction.point[1] + bInstruction._startPoint[1]) / 2;
-				const bCenterPointZ =
-					(bInstruction.point[2] + bInstruction._startPoint[2]) / 2;
-				const aCenterPointX =
-					(aInstruction.point[0] + aInstruction._startPoint[0]) / 2;
-				const aCenterPointY =
-					(aInstruction.point[1] + aInstruction._startPoint[1]) / 2;
-				const aCenterPointZ =
-					(aInstruction.point[2] + aInstruction._startPoint[2]) / 2;
-
-				const distanceX = bCenterPointX - aCenterPointX;
-				const distanceY = bCenterPointY - aCenterPointY;
-				const distanceZ = bCenterPointZ - aCenterPointZ;
-
-				const distance = Math.sqrt(
-					distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ
-				);
-
-				if (
-					lowestDistancePair === null ||
-					distance < lowestDistancePair.distance
-				) {
-					lowestDistancePair = {
-						distance,
-						instructions: [aInstruction, bInstruction],
-					};
-				}
-			}
-		}
-
-		if (lowestDistancePair === null) {
-			throw new Error('No distance pair found');
-		}
-
-		const firstCenterPointZ =
-			(lowestDistancePair.instructions[0].point[2] +
-				lowestDistancePair.instructions[0]._startPoint[2]) /
-			2;
-		const secondCenterPointZ =
-			(lowestDistancePair.instructions[1].point[2] +
-				lowestDistancePair.instructions[1]._startPoint[2]) /
-			2;
-
-		return secondCenterPointZ - firstCenterPointZ;
+		return b.centerPoint[2] - a.centerPoint[2];
 	});
+};
+
+// https://chat.openai.com/share/205f3aa8-f2f5-4b54-b25c-a58fe753fb3c
+export const moveCenterPoint = (
+	centerPointA: Vector4D,
+	centerPointB: Vector4D,
+	normalVectorA: Vector4D
+): Vector4D => {
+	const d =
+		normalVectorA[0] * centerPointA[0] +
+		normalVectorA[1] * centerPointA[1] +
+		normalVectorA[2] * centerPointA[2];
+
+	const z =
+		(d -
+			normalVectorA[0] * centerPointB[0] -
+			normalVectorA[1] * centerPointB[1]) /
+		normalVectorA[2];
+
+	return [centerPointB[0], centerPointB[1], z, 1];
 };
 
 export const translateSvgInstruction = (

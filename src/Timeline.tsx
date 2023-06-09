@@ -1,6 +1,6 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
@@ -96,6 +96,10 @@ export const Timeline: React.FC = () => {
 		transformations: [translated([frame - 6, -12, -LAYER_DEPTH / 2 - 0.0001])],
 	});
 
+	const facesMapped = useMemo(() => {
+		return [...facesProject.flat(1), ...cursor];
+	}, [cursor, facesProject]);
+
 	return (
 		<svg
 			style={{
@@ -109,11 +113,10 @@ export const Timeline: React.FC = () => {
 					transformations: [
 						translated([-frame * 0.8, -30, 0]),
 						rotated([-1, 0, 0], xRotation),
-						rotated([0, 1, 0], -0.3 + frame / 100),
 						rotated([0, 1, 1], -0.1),
 						scaled([scale, scale, scale]),
 					],
-					faces: [...facesProject.flat(1), ...cursor],
+					faces: facesMapped,
 				})}
 			/>
 		</svg>
