@@ -59,7 +59,7 @@ export const RenderButton: React.FC = () => {
 
 	const transformations = [
 		rotateY(-Math.PI / 4 + frame / 100),
-		rotateX(-Math.PI / 4 + frame / 300),
+		rotateX(-Math.PI / 4 + frame / 600),
 	];
 
 	const push = spring({
