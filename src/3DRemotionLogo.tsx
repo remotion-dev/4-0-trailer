@@ -5,7 +5,15 @@ import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
-import {rotated, scaled, translateX, translateY, translateZ} from './matrix';
+import {
+	rotateX,
+	rotateY,
+	rotateZ,
+	scaled,
+	translateX,
+	translateY,
+	translateZ,
+} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 const scale = 1;
@@ -49,9 +57,9 @@ export const TriangleOut: React.FC = () => {
 				translateZ(spread * i - spread),
 				translateX(-width / 2),
 				translateY(-height / 2 + 20),
-				rotated([1, 0, 0], -(i * delayedFrame) / 300),
-				rotated([0, 1, 0], delayedFrame / 100),
-				rotated([0, 0, 1], delayedFrame / 100),
+				rotateX(-(i * delayedFrame) / 300),
+				rotateY(delayedFrame / 100),
+				rotateZ(delayedFrame / 100),
 				scaled([0.6 + zoomIn, 0.6 + zoomIn, 0.6 + zoomIn]),
 			],
 			faces: extruded,

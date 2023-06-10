@@ -30,7 +30,7 @@ import {
 	transformFace,
 	translateSvgInstruction,
 } from './map-face';
-import {rotated, translateY, translateZ} from './matrix';
+import {rotateX, rotateY, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -126,8 +126,8 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	});
 
 	const transformations = [
-		rotated([0, 1, 0], (-Math.PI / 4 + frame / 100) * (1 - intrude)),
-		rotated([1, 0, 0], (-Math.PI / 4 + frame / 300) * (1 - intrude)),
+		rotateY((-Math.PI / 4 + frame / 100) * (1 - intrude)),
+		rotateX((-Math.PI / 4 + frame / 300) * (1 - intrude)),
 		translateY(interpolate(spr, [0, 1], [500, 0])),
 		translateY(interpolate(intrude, [0, 1], [0, -20])),
 	];

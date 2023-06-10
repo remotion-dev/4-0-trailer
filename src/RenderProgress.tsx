@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
-import {rotated, translateY} from './matrix';
+import {rotateX, rotateY, rotateZ, translateY} from './matrix';
 import {useButton} from './RenderProgress/make-button';
 import {truthy} from './truthy';
 
@@ -15,9 +15,10 @@ export const RenderProgress: React.FC = () => {
 
 	const commonTransformations = [
 		translateY(-frame * 1.5 + 50),
-		rotated([1, 0, 1], -Math.PI / 5),
-		rotated([0, 0, 1], frame / 1400),
-		rotated([0, 1, 0], -frame / 600),
+		rotateX(-Math.PI / 5),
+		rotateZ(-Math.PI / 5),
+		rotateZ(frame / 1400),
+		rotateY(-frame / 600),
 	];
 
 	const button = useButton('one.mp4', depth, color, 0, commonTransformations);

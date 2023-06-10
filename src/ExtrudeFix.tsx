@@ -7,7 +7,7 @@ import {centerPath} from './center';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
-import {rotated} from './matrix';
+import {rotateX, rotateY, rotateZ} from './matrix';
 
 export const ExtrudeFix: React.FC = () => {
 	const frame = useCurrentFrame();
@@ -31,9 +31,9 @@ export const ExtrudeFix: React.FC = () => {
 	const final = projectFaces({
 		faces: extrude,
 		transformations: [
-			rotated([1, 0, 0], frame / 30),
-			rotated([0, 1, 0], frame / 60),
-			rotated([0, 0, 1], frame / 90),
+			rotateX(frame / 30),
+			rotateY(frame / 60),
+			rotateZ(frame / 90),
 		],
 	});
 

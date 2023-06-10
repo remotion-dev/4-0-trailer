@@ -21,7 +21,7 @@ import {
 	transformFace,
 	translateSvgInstruction,
 } from './map-face';
-import {rotated, translateZ} from './matrix';
+import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -54,8 +54,8 @@ export const RenderButton: React.FC = () => {
 	const parsedText = parsePath(textPath);
 
 	const transformations = [
-		rotated([0, 1, 0], -Math.PI / 4 + frame / 100),
-		rotated([1, 0, 0], -Math.PI / 4 + frame / 300),
+		rotateY(-Math.PI / 4 + frame / 100),
+		rotateX(-Math.PI / 4 + frame / 300),
 	];
 
 	const push = spring({
@@ -119,9 +119,9 @@ export const RenderButton: React.FC = () => {
 	const movedCursor = projectFaces({
 		faces: extrudedCursor,
 		transformations: [
-			rotated([0, 1, 0], Math.PI / 2),
-			rotated([1, 0, 0], -Math.PI / 4),
-			rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
+			rotateY(Math.PI / 2),
+			rotateX(-Math.PI / 4),
+			rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
 			translateZ(Number(-depth - 0.001) - cursorDistance),
 			...transformations,
 		],

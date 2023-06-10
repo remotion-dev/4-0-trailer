@@ -13,7 +13,14 @@ import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {projectFaces} from './map-face';
-import {rotated, translateX, translateY, translateZ} from './matrix';
+import {
+	rotateX,
+	rotateY,
+	rotateZ,
+	translateX,
+	translateY,
+	translateZ,
+} from './matrix';
 
 const audio = staticFile('illstandmyground.mp3');
 const samples = 8;
@@ -97,9 +104,9 @@ export const AudioViz: React.FC = () => {
 					),
 					translateY(-boxHeight / 2),
 					translateZ(-depth / 2),
-					rotated([1, 0, 0], -noise2D('rotate2', frame / 800, 0) * 0.5),
-					rotated([1, 1, 0], -noise2D('rotate3', frame / 200, 0) * 0.5),
-					rotated([0, 0, 1], noise2D('rotate', frame / 400, 0) * 0.5),
+					rotateX(-noise2D('rotate2', frame / 800, 0) * 0.5),
+					rotateY(-noise2D('rotate3', frame / 200, 0) * 0.5),
+					rotateZ(noise2D('rotate', frame / 400, 0) * 0.5),
 				],
 				faces: extruded,
 			});

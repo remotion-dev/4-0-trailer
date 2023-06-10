@@ -90,15 +90,22 @@ export type Vector2D = [number, number];
 export type Vector = [number, number, number];
 export type Vector4D = [number, number, number, number];
 
-export const rotated = function (
-	axisVec: Vector,
-	radians: number
-): MatrixTransform4D {
+const rotated = function (axisVec: Vector, radians: number): MatrixTransform4D {
 	return rotatedUnitSinCos(
 		normalize(axisVec),
 		Math.sin(radians),
 		Math.cos(radians)
 	);
+};
+
+export const rotateX = (radians: number) => {
+	return rotated([1, 0, 0], radians);
+};
+export const rotateY = (radians: number) => {
+	return rotated([0, 1, 0], radians);
+};
+export const rotateZ = (radians: number) => {
+	return rotated([0, 0, 1], radians);
 };
 
 export type MatrixTransform4D = [
