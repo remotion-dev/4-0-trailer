@@ -104,6 +104,9 @@ export const Timeline: React.FC = () => {
 						fps,
 						from: 1,
 						to: 0,
+						config: {
+							damping: 200,
+						},
 						durationInFrames: 50,
 					}) * 200
 				),

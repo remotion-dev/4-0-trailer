@@ -27,6 +27,7 @@ export const Face: React.FC<{
 				mask={shouldDrawLine ? `url(#${id})` : undefined}
 				strokeLinecap="round"
 				stroke={strokeColor}
+				shapeRendering="crispEdges"
 				strokeWidth={shouldDrawLine ? strokeWidth : 0}
 			/>
 		</>
