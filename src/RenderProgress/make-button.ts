@@ -8,10 +8,11 @@ import {
 	translatePath,
 } from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
-import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {Font} from 'opentype.js';
+import {interpolate, spring} from 'remotion';
 import {centerPath} from '../center';
 import {turnInto3D} from '../fix-z';
-import {getText, useFont} from '../get-char';
+import {getText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {
 	FaceType,
@@ -28,15 +29,25 @@ const padding = 1;
 const outerWidth = 300;
 const outerHeight = 100;
 
-export const useButton = (
-	phrase: string,
-	depth: number,
-	color: string,
-	delay: number,
-	transformations: MatrixTransform4D[]
-): ThreeDelement | null => {
-	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
+export const getButton = ({
+	font,
+	phrase,
+	depth,
+	color,
+	delay,
+	transformations,
+	frame,
+	fps,
+}: {
+	font: Font;
+	phrase: string;
+	depth: number;
+	color: string;
+	delay: number;
+	transformations: MatrixTransform4D[];
+	frame: number;
+	fps: number;
+}): ThreeDelement => {
 	const rect = makeRect({
 		height: outerHeight,
 		width: outerWidth,
@@ -220,11 +231,6 @@ export const useButton = (
 			y: innerCornerRadius,
 		},
 	].filter(truthy);
-
-	const font = useFont();
-	if (!font) {
-		return null;
-	}
 
 	const text = getText({font, text: phrase});
 

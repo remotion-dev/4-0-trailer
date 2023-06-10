@@ -1,10 +1,10 @@
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
+import {useFont} from './get-char';
 import {rotateX, rotateY, rotateZ, translateY} from './matrix';
-import {useButton} from './RenderProgress/make-button';
-import {truthy} from './truthy';
+import {getButton} from './RenderProgress/make-button';
 
 const viewBox = [-1600, -800, 3200, 1600];
 const color = '#0b84f3';
@@ -12,6 +12,7 @@ const depth = 20;
 
 export const RenderProgress: React.FC = () => {
 	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
 
 	const commonTransformations = [
 		translateY(-frame * 1.5 + 50),
@@ -20,22 +21,23 @@ export const RenderProgress: React.FC = () => {
 		rotateZ(frame / 1400),
 		rotateY(-frame / 600),
 	];
+	const font = useFont();
+	if (!font) {
+		return null;
+	}
 
-	const button = useButton('one.mp4', depth, color, 0, commonTransformations);
-	const button2 = useButton('two.mp4', depth, color, 40, [
-		translateY(120),
-		...commonTransformations,
-	]);
-	const button3 = useButton('three.mp4', depth, color, 80, [
-		translateY(240),
-		...commonTransformations,
-	]);
-	const button4 = useButton('four.mp4', depth, color, 120, [
-		translateY(360),
-		...commonTransformations,
-	]);
-
-	const rendered = [button, button2, button3, button4].filter(truthy);
+	const rendered = new Array(4).fill(true).map((_, i) => {
+		return getButton({
+			font,
+			phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4'][i],
+			depth,
+			color,
+			delay: i * 40,
+			transformations: [translateY(i * 120), ...commonTransformations],
+			frame,
+			fps,
+		});
+	});
 
 	return (
 		<AbsoluteFill
