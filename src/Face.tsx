@@ -5,17 +5,16 @@ import {threeDIntoSvgPath, ThreeDReducedInstruction} from './3d-svg';
 export const Face: React.FC<{
 	points: ThreeDReducedInstruction[];
 	color: string;
-	shouldDrawLine: boolean;
 	strokeColor: string;
 	strokeWidth: number;
-}> = ({color, points, shouldDrawLine, strokeColor, strokeWidth}) => {
+}> = ({color, points, strokeColor, strokeWidth}) => {
 	const [id] = useState(() => random(null).toString().replace('.', ''));
 	const d = threeDIntoSvgPath(points);
 
 	return (
 		<>
 			<defs>
-				{shouldDrawLine ? (
+				{strokeWidth ? (
 					<mask id={id}>
 						<path d={d} fill="white" />
 					</mask>
@@ -24,11 +23,11 @@ export const Face: React.FC<{
 			<path
 				d={d}
 				fill={color}
-				mask={shouldDrawLine ? `url(#${id})` : undefined}
+				mask={strokeWidth ? `url(#${id})` : undefined}
 				strokeLinecap="round"
 				stroke={strokeColor}
 				shapeRendering="crispEdges"
-				strokeWidth={shouldDrawLine ? strokeWidth : 0}
+				strokeWidth={strokeWidth}
 			/>
 		</>
 	);

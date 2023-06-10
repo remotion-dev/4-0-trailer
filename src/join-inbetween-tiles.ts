@@ -38,7 +38,6 @@ export const extrudeInstructions = ({
 		points: subdivideInstructions(
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
-		shouldDrawLine: true,
 		strokeWidth,
 	};
 
@@ -93,9 +92,8 @@ export const extrudeInstructions = ({
 		return {
 			points: newInstructions,
 			color: sideColor,
-			shouldDrawLine: false,
 			centerPoint: [centerX, centerY, 0, 1],
-			strokeWidth,
+			strokeWidth: 0,
 		};
 	});
 

@@ -9,7 +9,6 @@ import {
 export type FaceType = {
 	color: string;
 	points: ThreeDReducedInstruction[];
-	shouldDrawLine: boolean;
 	centerPoint: Vector4D;
 	strokeWidth: number;
 };
