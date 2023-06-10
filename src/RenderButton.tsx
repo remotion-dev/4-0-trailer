@@ -53,6 +53,11 @@ export const RenderButton: React.FC = () => {
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
 	const parsedText = parsePath(textPath);
 
+	const transformations = [
+		rotated([0, 1, 0], -Math.PI / 4 + frame / 100),
+		rotated([1, 0, 0], -Math.PI / 4 + frame / 300),
+	];
+
 	const push = spring({
 		fps,
 		frame,
@@ -76,7 +81,10 @@ export const RenderButton: React.FC = () => {
 
 	const extrudedTo0 = projectFaces({
 		faces: _extrudedButton,
-		transformations: [translated([0, 0, -(depth + pushIn) / 2])],
+		transformations: [
+			translated([0, 0, -(depth + pushIn) / 2]),
+			...transformations,
+		],
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
@@ -118,13 +126,9 @@ export const RenderButton: React.FC = () => {
 			rotated([1, 0, 0], -Math.PI / 4),
 			rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
 			translated([0, 0, Number(-depth - 0.001) - cursorDistance]),
+			...transformations,
 		],
 	});
-
-	const transformations = [
-		rotated([0, 1, 0], -Math.PI / 4 + frame / 100),
-		rotated([1, 0, 0], -Math.PI / 4 + frame / 300),
-	];
 
 	return (
 		<AbsoluteFill>
@@ -137,11 +141,16 @@ export const RenderButton: React.FC = () => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
+						sort
 						camera={getCamera(viewBox[2], viewBox[3])}
-						faces={projectFaces({
-							transformations,
-							faces: [...extrudedTo0, textFace, ...movedCursor],
-						})}
+						elements={[
+							extrudedTo0,
+							movedCursor,
+							projectFaces({
+								transformations,
+								faces: [textFace],
+							}),
+						]}
 					/>
 				</svg>
 			</AbsoluteFill>

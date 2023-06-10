@@ -179,11 +179,15 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
+						sort
 						camera={getCamera(viewBox[2], viewBox[3])}
-						faces={projectFaces({
-							transformations,
-							faces: [...extrudedTo0, textFace],
-						})}
+						elements={[
+							extrudedTo0,
+							projectFaces({
+								transformations,
+								faces: [textFace],
+							}),
+						]}
 					/>
 				</svg>
 			</AbsoluteFill>

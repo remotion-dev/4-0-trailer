@@ -73,8 +73,9 @@ export const TriangleOut: React.FC = () => {
 				}}
 			>
 				<Faces
+					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					faces={paths.flat(1)}
+					elements={paths.flat(1).reverse()}
 				/>
 			</svg>
 		</AbsoluteFill>

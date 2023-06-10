@@ -17,19 +17,7 @@ export type FaceType = {
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		const lowestDistancePair: null | {
-			distance: number;
-			instructions: [ThreeDReducedInstruction, ThreeDReducedInstruction];
-		} = null;
-
-		const avgAZ = a.points.reduce((acc, cur) => {
-			return acc + (cur.point[2] + cur._startPoint[2]) / 2;
-		}, 0);
-		const avgBZ = b.points.reduce((acc, cur) => {
-			return acc + (cur.point[2] + cur._startPoint[2]) / 2;
-		}, 0);
-
-		return avgBZ - avgAZ;
+		return b.centerPoint[2] - a.centerPoint[2];
 	});
 };
 
@@ -164,14 +152,87 @@ export const transformInstructions = (
 	};
 };
 
+export type ThreeDelement = {
+	faces: FaceType[];
+};
+
 export const projectFaces = ({
 	faces,
 	transformations,
 }: {
 	faces: FaceType[];
 	transformations: MatrixTransform4D[];
+}): ThreeDelement => {
+	return {
+		faces: sortFacesZIndex(
+			faces.map((face) => {
+				return projectPoints({face, transformations});
+			})
+		),
+	};
+};
+
+export const getBoundingBox = (
+	element: ThreeDelement
+): [Vector4D, Vector4D, Vector4D, Vector4D] => {
+	const allX = element.faces.map((e) => {
+		return e.points.map((p) => p.point[0]);
+	});
+	const allY = element.faces.map((e) => {
+		return e.points.map((p) => p.point[1]);
+	});
+	const allZ = element.faces.map((e) => {
+		return e.points.map((p) => p.point[2]);
+	});
+
+	const minX = Math.min(...allX.flat());
+	const maxX = Math.max(...allX.flat());
+	const minY = Math.min(...allY.flat());
+
+	const maxY = Math.max(...allY.flat());
+	const minZ = Math.min(...allZ.flat());
+	const maxZ = Math.max(...allZ.flat());
+
+	return [
+		// TODO: Sketchy
+		[minX, minY, minZ, 1],
+		[minX, minY, maxZ, 1],
+		[maxX, maxY, maxZ, 1],
+		[maxX, maxY, minZ, 1],
+	];
+};
+
+export const sortElements = (elements: ThreeDelement[]) => {
+	return elements.slice().sort((a, b) => {
+		// Const firstQuad = getBoundingBox(a);
+		// const secondQuad = getBoundingBox(b);
+
+		// Const overlap = quadrilateralsOverlap(
+		// 	new Quad3D(firstQuad),
+		// 	new Quad3D(secondQuad)
+		// );
+
+		const aZ =
+			a.faces.reduce((acc, f) => {
+				return acc + f.centerPoint[2];
+			}, 0) / a.faces.length;
+		const bZ =
+			b.faces.reduce((acc, f) => {
+				return acc + f.centerPoint[2];
+			}, 0) / b.faces.length;
+
+		return bZ - aZ;
+	});
+};
+
+export const projectElements = ({
+	threeDElements,
+	transformations,
+}: {
+	threeDElements: ThreeDelement[];
+	transformations: MatrixTransform4D[];
 }) => {
-	return faces.map((face) => {
-		return projectPoints({face, transformations});
+	return threeDElements.map(({faces}) => {
+		return projectFaces({faces, transformations});
 	});
 };

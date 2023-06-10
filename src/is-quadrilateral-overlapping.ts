@@ -1,7 +1,7 @@
 import {sub4d} from './camera';
 import {dot, normalize4d, Vector4D} from './matrix';
 
-class Quad3D {
+export class Quad3D {
 	constructor(public vertices: Vector4D[]) {
 		if (vertices.length !== 4)
 			throw new Error('Quadrilateral must have 4 vertices');

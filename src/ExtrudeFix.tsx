@@ -40,7 +40,7 @@ export const ExtrudeFix: React.FC = () => {
 	return (
 		<AbsoluteFill>
 			<svg viewBox="-100 -100 200 200">
-				<Faces camera={getCamera(10, 10)} faces={final} />
+				<Faces sort camera={getCamera(10, 10)} elements={[final]} />
 			</svg>
 		</AbsoluteFill>
 	);

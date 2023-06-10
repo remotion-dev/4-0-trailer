@@ -6,7 +6,7 @@ import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectFaces} from './map-face';
+import {projectElements, projectFaces} from './map-face';
 import {rotated, scaled, translated} from './matrix';
 
 const cursorHandlerPath = scalePath(
@@ -97,7 +97,7 @@ export const Timeline: React.FC = () => {
 	});
 
 	const facesMapped = useMemo(() => {
-		return [...facesProject.flat(1), ...cursor];
+		return [...facesProject.flat(1), cursor];
 	}, [cursor, facesProject]);
 
 	return (
@@ -108,15 +108,16 @@ export const Timeline: React.FC = () => {
 			viewBox={viewBox.join(' ')}
 		>
 			<Faces
+				sort={false}
 				camera={getCamera(viewBox[2], viewBox[3])}
-				faces={projectFaces({
+				elements={projectElements({
 					transformations: [
 						translated([-frame * 0.8, -30, 0]),
 						rotated([-1, 0, 0], xRotation),
 						rotated([0, 1, 0], interpolate(frame, [0, 3000], [0, -Math.PI])),
 						scaled([scale, scale, scale]),
 					],
-					faces: facesMapped,
+					threeDElements: facesMapped,
 				})}
 			/>
 		</svg>

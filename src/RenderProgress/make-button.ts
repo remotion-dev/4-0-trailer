@@ -13,8 +13,13 @@ import {centerPath} from '../center';
 import {turnInto3D} from '../fix-z';
 import {useText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
-import {FaceType, projectFaces, transformFace} from '../map-face';
-import {rotated, translated, Vector4D} from '../matrix';
+import {
+	FaceType,
+	projectFaces,
+	ThreeDelement,
+	transformFace,
+} from '../map-face';
+import {MatrixTransform4D, rotated, translated, Vector4D} from '../matrix';
 import {subdivide2DCInstruction} from '../subdivide-instruction';
 import {truthy} from '../truthy';
 
@@ -27,8 +32,9 @@ export const useButton = (
 	phrase: string,
 	depth: number,
 	color: string,
-	delay: number
-) => {
+	delay: number,
+	transformations: MatrixTransform4D[]
+): ThreeDelement | null => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const rect = makeRect({
@@ -218,7 +224,7 @@ export const useButton = (
 	const text = useText(phrase);
 
 	if (!text) {
-		return [];
+		return null;
 	}
 
 	const path = resetPath(rect.path);
@@ -278,7 +284,7 @@ export const useButton = (
 	);
 
 	const projected = projectFaces({
-		transformations: [rotated([1, 0, 0], rotation)],
+		transformations: [rotated([1, 0, 0], rotation), ...transformations],
 		faces: [...extruded, progressFace, textFace],
 	});
 

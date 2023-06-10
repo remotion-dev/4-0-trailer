@@ -115,12 +115,13 @@ export const AudioViz: React.FC = () => {
 			<Audio src={audio} />
 			<svg viewBox={viewBox.join(' ')}>
 				<Faces
+					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1], [
 						Math.sin(frame / 100) * 10,
 						0,
 						Math.cos(frame / 100) * 10,
 					])}
-					faces={paths.flat(1)}
+					elements={paths.flat(1)}
 				/>
 			</svg>
 		</AbsoluteFill>
