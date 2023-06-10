@@ -15,9 +15,9 @@ export const Faces: React.FC<{
 
 	return (
 		<>
-			{sorted.map((element) => {
+			{sorted.map((element, i) => {
 				return (
-					<>
+					<React.Fragment key={i}>
 						{element.map(({points, color, shouldDrawLine, strokeWidth}, i) => {
 							const multiplied = points.map((p) => {
 								const result = multiplyMatrixAndSvgInstruction(camera, p);
@@ -35,7 +35,7 @@ export const Faces: React.FC<{
 								/>
 							);
 						})}
-					</>
+					</React.Fragment>
 				);
 			})}
 		</>

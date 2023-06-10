@@ -33,7 +33,7 @@ export const MyComposition = () => {
 		sideColor: 'green',
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
-		strokeWidth: 20,
+		strokeWidth: 10,
 	});
 
 	const rotatedFaces = sortFacesZIndex(
@@ -46,6 +46,8 @@ export const MyComposition = () => {
 			],
 		})
 	);
+
+	console.log({camera: getCamera(width, height)});
 
 	return (
 		<svg

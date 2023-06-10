@@ -4,11 +4,10 @@ import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
 	FaceType,
-	transformFace,
 	transformInstructions,
 	translateSvgInstruction,
 } from './map-face';
-import {scaled, translateZ, Vector4D} from './matrix';
+import {translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
 export const extrudeInstructions = ({
@@ -29,9 +28,7 @@ export const extrudeInstructions = ({
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
 	);
-	console.log({boundingBox, strokeWidth});
 
-	const scale = 1; // TODO: Determine by how much
 	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
 	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
 
@@ -102,20 +99,16 @@ export const extrudeInstructions = ({
 		};
 	});
 
-	const scaledFrontFace = transformFace({
-		face: {...unscaledFrontFace, color: frontFaceColor},
-		transformations: [scaled([scale, scale, 1])],
-	});
-	const scaledBackFace = transformFace({
-		face: {...unscaledBackFace, color: backFaceColor},
-		transformations: [scaled([scale, scale, 1])],
-	});
+	const scaledFrontFace: FaceType = {
+		...unscaledFrontFace,
+		color: frontFaceColor,
+	};
+	const scaledBackFace: FaceType = {
+		...unscaledBackFace,
+		color: backFaceColor,
+	};
 
-	return [
-		...inbetween,
-		{...scaledFrontFace, color: frontFaceColor},
-		{...scaledBackFace, color: backFaceColor},
-	];
+	return [...inbetween, scaledFrontFace, scaledBackFace];
 };
 
 const inverseInstruction = (
