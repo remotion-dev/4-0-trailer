@@ -126,7 +126,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
 			color: 'white',
 			points: centeredText,
-			strokeWidth: 10,
+			strokeWidth: 0,
 		},
 		transformations: [translateZ(-depth - 0.001 - pushIn)],
 	});
