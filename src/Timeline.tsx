@@ -1,7 +1,7 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
-import {interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
 import {Faces} from './Faces';
@@ -30,8 +30,9 @@ export const Timeline: React.FC = () => {
 	const {width, height} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
 	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
 	const xRotation = interpolate(frame, [-200, 200], [0, Math.PI / 4]);
-	const scale = interpolate(frame, [0, 300], [1.5, 1]);
+	const scale = interpolate(frame, [0, 300], [1.3, 1.8]);
 
 	const faces: Track[] = [
 		{
@@ -62,6 +63,13 @@ export const Timeline: React.FC = () => {
 			backColor: 'black',
 			width: 300,
 		},
+		{
+			depth: LAYER_DEPTH,
+			x: 30,
+			frontColor: BLUE,
+			backColor: 'black',
+			width: 300,
+		},
 	];
 
 	const facesProject = faces.map((f, i) => {
@@ -79,7 +87,21 @@ export const Timeline: React.FC = () => {
 				shouldDrawLine: true,
 				strokeWidth: 8,
 			}),
-			transformations: [translated([f.x, (TRACK_HEIGHT + 2) * i, 0])],
+			transformations: [
+				translated([f.x, (TRACK_HEIGHT + 2) * i, 0]),
+				translated([
+					0,
+					0,
+					spring({
+						frame,
+						delay: i * 20,
+						fps,
+						from: 1,
+						to: 0,
+						durationInFrames: 50,
+					}) * 200,
+				]),
+			],
 		});
 	});
 
@@ -114,6 +136,7 @@ export const Timeline: React.FC = () => {
 					transformations: [
 						translated([-frame * 0.8, -30, 0]),
 						rotated([-1, 0, 0], xRotation),
+						rotated([0, 0, 1], -frame / 1000),
 						rotated([0, 1, 0], interpolate(frame, [0, 3000], [0, -Math.PI])),
 						scaled([scale, scale, scale]),
 					],

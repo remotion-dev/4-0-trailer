@@ -37,7 +37,9 @@ export const extrudeInstructions = ({
 	const threeD = turnInto3D(points);
 	const instructions: Omit<FaceType, 'color'> = {
 		centerPoint: [centerX, centerY, 0, 1],
-		points: subdivideInstructions(threeD),
+		points: subdivideInstructions(
+			subdivideInstructions(subdivideInstructions(threeD))
+		),
 		shouldDrawLine,
 		strokeWidth,
 	};
