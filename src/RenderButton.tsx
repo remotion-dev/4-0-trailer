@@ -17,8 +17,9 @@ import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {
 	FaceType,
-	projectFaces,
+	sortFacesZIndex,
 	transformFace,
+	transformFaces,
 	translateSvgInstruction,
 } from './map-face';
 import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
@@ -80,7 +81,7 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 10,
 	});
 
-	const extrudedTo0 = projectFaces({
+	const extrudedTo0 = transformFaces({
 		faces: _extrudedButton,
 		transformations: [translateZ(-(depth + pushIn) / 2), ...transformations],
 	});
@@ -106,18 +107,18 @@ export const RenderButton: React.FC = () => {
 		);
 	});
 
-	const textFace = transformFace(
-		{
+	const textFace = transformFace({
+		face: {
 			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: centeredText,
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[translateZ(-depth - 0.001 - pushIn)]
-	);
+		transformations: [translateZ(-depth - 0.001 - pushIn)],
+	});
 
-	const movedCursor = projectFaces({
+	const movedCursor = transformFaces({
 		faces: extrudedCursor,
 		transformations: [
 			rotateY(Math.PI / 2),
@@ -142,12 +143,14 @@ export const RenderButton: React.FC = () => {
 						sort
 						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
-							extrudedTo0,
-							movedCursor,
-							projectFaces({
-								transformations,
-								faces: [textFace],
-							}),
+							sortFacesZIndex(extrudedTo0),
+							sortFacesZIndex(movedCursor),
+							sortFacesZIndex(
+								transformFaces({
+									transformations,
+									faces: [textFace],
+								})
+							),
 						]}
 					/>
 				</svg>

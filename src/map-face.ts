@@ -5,7 +5,6 @@ import {
 	multiplyMatrixAndSvgInstruction,
 	Vector4D,
 } from './matrix';
-import {projectPoints} from './project-points';
 
 export type FaceType = {
 	color: string;
@@ -116,10 +115,13 @@ export const translateSvgInstruction = (
 	throw new Error('Unknown instruction type: ' + JSON.stringify(instruction));
 };
 
-export const transformFace = (
-	face: FaceType,
-	transformations: MatrixTransform4D[]
-): FaceType => {
+export const transformFace = ({
+	face,
+	transformations,
+}: {
+	face: FaceType;
+	transformations: MatrixTransform4D[];
+}): FaceType => {
 	return {
 		...face,
 		points: face.points.map((p) => {
@@ -132,6 +134,18 @@ export const transformFace = (
 			return result;
 		}, face.centerPoint),
 	};
+};
+
+export const transformFaces = ({
+	faces,
+	transformations,
+}: {
+	faces: FaceType[];
+	transformations: MatrixTransform4D[];
+}) => {
+	return faces.map((face) => {
+		return transformFace({face, transformations});
+	});
 };
 
 export const transformInstructions = (
@@ -152,36 +166,16 @@ export const transformInstructions = (
 	};
 };
 
-export type ThreeDelement = {
-	faces: FaceType[];
-};
-
-export const projectFaces = ({
-	faces,
-	transformations,
-}: {
-	faces: FaceType[];
-	transformations: MatrixTransform4D[];
-}): ThreeDelement => {
-	return {
-		faces: sortFacesZIndex(
-			faces.map((face) => {
-				return projectPoints({face, transformations});
-			})
-		),
-	};
-};
-
 export const getBoundingBox = (
-	element: ThreeDelement
+	faces: FaceType[]
 ): [Vector4D, Vector4D, Vector4D, Vector4D] => {
-	const allX = element.faces.map((e) => {
+	const allX = faces.map((e) => {
 		return e.points.map((p) => p.point[0]);
 	});
-	const allY = element.faces.map((e) => {
+	const allY = faces.map((e) => {
 		return e.points.map((p) => p.point[1]);
 	});
-	const allZ = element.faces.map((e) => {
+	const allZ = faces.map((e) => {
 		return e.points.map((p) => p.point[2]);
 	});
 
@@ -202,7 +196,7 @@ export const getBoundingBox = (
 	];
 };
 
-export const sortElements = (elements: ThreeDelement[]) => {
+export const sortElements = (elements: FaceType[][]) => {
 	return elements.slice().sort((a, b) => {
 		// Const firstQuad = getBoundingBox(a);
 		// const secondQuad = getBoundingBox(b);
@@ -213,26 +207,14 @@ export const sortElements = (elements: ThreeDelement[]) => {
 		// );
 
 		const aZ =
-			a.faces.reduce((acc, f) => {
+			a.reduce((acc, f) => {
 				return acc + f.centerPoint[2];
-			}, 0) / a.faces.length;
+			}, 0) / a.length;
 		const bZ =
-			b.faces.reduce((acc, f) => {
+			b.reduce((acc, f) => {
 				return acc + f.centerPoint[2];
-			}, 0) / b.faces.length;
+			}, 0) / b.length;
 
 		return bZ - aZ;
-	});
-};
-
-export const projectElements = ({
-	threeDElements,
-	transformations,
-}: {
-	threeDElements: ThreeDelement[];
-	transformations: MatrixTransform4D[];
-}) => {
-	return threeDElements.map(({faces}) => {
-		return projectFaces({faces, transformations});
 	});
 };

@@ -4,7 +4,7 @@ import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectFaces} from './map-face';
+import {sortFacesZIndex, transformFaces} from './map-face';
 import {
 	rotateX,
 	rotateY,
@@ -52,7 +52,7 @@ export const TriangleOut: React.FC = () => {
 			shouldDrawLine: true,
 			strokeWidth: 10,
 		});
-		const projected = projectFaces({
+		const projected = transformFaces({
 			transformations: [
 				translateZ(spread * i - spread),
 				translateX(-width / 2),
@@ -65,7 +65,7 @@ export const TriangleOut: React.FC = () => {
 			faces: extruded,
 		});
 
-		return projected;
+		return sortFacesZIndex(projected);
 	});
 
 	return (
@@ -84,7 +84,7 @@ export const TriangleOut: React.FC = () => {
 				<Faces
 					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					elements={paths.flat(1).reverse()}
+					elements={paths.reverse()}
 				/>
 			</svg>
 		</AbsoluteFill>

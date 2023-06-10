@@ -26,8 +26,9 @@ import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {
 	FaceType,
-	projectFaces,
+	sortFacesZIndex,
 	transformFace,
+	transformFaces,
 	translateSvgInstruction,
 } from './map-face';
 import {rotateX, rotateY, translateY, translateZ} from './matrix';
@@ -91,33 +92,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		strokeWidth: 10,
 	});
 
-	const extrudedTo0 = projectFaces({
-		faces: _extrudedButton,
-		transformations: [translateZ(-(depth + pushIn) / 2)],
-	});
-
-	const bBoxText = getBoundingBox(textPath);
-
-	const centeredText = turnInto3D(parsedText).map((turn) => {
-		return translateSvgInstruction(
-			turn,
-			-(bBoxText.x2 - bBoxText.x1) / 2,
-			-(bBoxText.y2 - bBoxText.y1) / 2,
-			0
-		);
-	});
-
-	const textFace = transformFace(
-		{
-			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
-			color: 'white',
-			points: centeredText,
-			shouldDrawLine: false,
-			strokeWidth: 10,
-		},
-		[translateZ(-depth - 0.001 - pushIn)]
-	);
-
 	const intrude = spring({
 		fps,
 		frame,
@@ -131,6 +105,33 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		translateY(interpolate(spr, [0, 1], [500, 0])),
 		translateY(interpolate(intrude, [0, 1], [0, -20])),
 	];
+
+	const extrudedTo0 = transformFaces({
+		faces: _extrudedButton,
+		transformations: [...transformations, translateZ(-(depth + pushIn) / 2)],
+	});
+
+	const bBoxText = getBoundingBox(textPath);
+
+	const centeredText = turnInto3D(parsedText).map((turn) => {
+		return translateSvgInstruction(
+			turn,
+			-(bBoxText.x2 - bBoxText.x1) / 2,
+			-(bBoxText.y2 - bBoxText.y1) / 2,
+			0
+		);
+	});
+
+	const textFace = transformFace({
+		face: {
+			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
+			color: 'white',
+			points: centeredText,
+			shouldDrawLine: false,
+			strokeWidth: 10,
+		},
+		transformations: [translateZ(-depth - 0.001 - pushIn)],
+	});
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200]);
 
@@ -182,11 +183,13 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 						sort
 						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
-							extrudedTo0,
-							projectFaces({
-								transformations,
-								faces: [textFace],
-							}),
+							sortFacesZIndex(extrudedTo0),
+							sortFacesZIndex(
+								transformFaces({
+									transformations,
+									faces: [textFace],
+								})
+							),
 						]}
 					/>
 				</svg>

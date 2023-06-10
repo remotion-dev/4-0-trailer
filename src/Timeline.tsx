@@ -6,7 +6,7 @@ import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectElements, projectFaces} from './map-face';
+import {sortFacesZIndex, transformFaces} from './map-face';
 import {
 	rotateX,
 	rotateY,
@@ -81,7 +81,7 @@ export const Timeline: React.FC = () => {
 	];
 
 	const facesProject = faces.map((f, i) => {
-		return projectFaces({
+		return transformFaces({
 			faces: extrudeInstructions({
 				depth: 20,
 				backFaceColor: f.backColor,
@@ -112,7 +112,7 @@ export const Timeline: React.FC = () => {
 		});
 	});
 
-	const cursor = projectFaces({
+	const cursor = transformFaces({
 		faces: extrudeInstructions({
 			depth: 2,
 			backFaceColor: 'black',
@@ -130,7 +130,7 @@ export const Timeline: React.FC = () => {
 	});
 
 	const facesMapped = useMemo(() => {
-		return [...facesProject.flat(1), cursor];
+		return [...facesProject, cursor];
 	}, [cursor, facesProject]);
 
 	return (
@@ -143,16 +143,20 @@ export const Timeline: React.FC = () => {
 			<Faces
 				sort={false}
 				camera={getCamera(viewBox[2], viewBox[3])}
-				elements={projectElements({
-					transformations: [
-						translateX(-frame * 0.6),
-						translateY(-30),
-						rotateX(-xRotation),
-						rotateZ(-frame / 1500),
-						rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
-						scaled([scale, scale, scale]),
-					],
-					threeDElements: facesMapped,
+				elements={facesMapped.map((element) => {
+					return sortFacesZIndex(
+						transformFaces({
+							transformations: [
+								translateX(-frame * 0.6),
+								translateY(-30),
+								rotateX(-xRotation),
+								rotateZ(-frame / 1500),
+								rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
+								scaled([scale, scale, scale]),
+							],
+							faces: element,
+						})
+					);
 				})}
 			/>
 		</svg>

@@ -12,7 +12,7 @@ import {
 import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {projectFaces} from './map-face';
+import {sortFacesZIndex, transformFaces} from './map-face';
 import {
 	rotateX,
 	rotateY,
@@ -96,7 +96,7 @@ export const AudioViz: React.FC = () => {
 
 			const spacing = boxWidth * 1.5;
 
-			return projectFaces({
+			return transformFaces({
 				transformations: [
 					translateY(noise2D('seed', frame / 100, i) * 5),
 					translateX(
@@ -128,7 +128,7 @@ export const AudioViz: React.FC = () => {
 						0,
 						Math.cos(frame / 100) * 10,
 					])}
-					elements={paths.flat(1)}
+					elements={paths.map((p) => sortFacesZIndex(p))}
 				/>
 			</svg>
 		</AbsoluteFill>

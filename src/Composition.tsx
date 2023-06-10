@@ -4,7 +4,7 @@ import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {FaceType, projectFaces} from './map-face';
+import {FaceType, sortFacesZIndex, transformFaces} from './map-face';
 import {rotateY, translateX, translateY} from './matrix';
 
 const scale = 1;
@@ -37,14 +37,16 @@ export const MyComposition = () => {
 		strokeWidth: 10,
 	});
 
-	const rotatedFaces = projectFaces({
-		faces: inbetweenFaces,
-		transformations: [
-			translateX(-width / 2),
-			translateY(-height / 2),
-			rotateY(frame / 100),
-		],
-	});
+	const rotatedFaces = sortFacesZIndex(
+		transformFaces({
+			faces: inbetweenFaces,
+			transformations: [
+				translateX(-width / 2),
+				translateY(-height / 2),
+				rotateY(frame / 100),
+			],
+		})
+	);
 
 	return (
 		<svg

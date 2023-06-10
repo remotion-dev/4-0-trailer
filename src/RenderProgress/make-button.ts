@@ -16,9 +16,9 @@ import {getText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {
 	FaceType,
-	projectFaces,
-	ThreeDelement,
+	sortFacesZIndex,
 	transformFace,
+	transformFaces,
 } from '../map-face';
 import {MatrixTransform4D, rotateX, translateZ, Vector4D} from '../matrix';
 import {subdivide2DCInstruction} from '../subdivide-instruction';
@@ -47,7 +47,7 @@ export const getButton = ({
 	transformations: MatrixTransform4D[];
 	frame: number;
 	fps: number;
-}): ThreeDelement => {
+}): FaceType[] => {
 	const rect = makeRect({
 		height: outerHeight,
 		width: outerWidth,
@@ -252,8 +252,8 @@ export const getButton = ({
 		strokeWidth: 10,
 	});
 
-	const progressFace: FaceType = transformFace(
-		{
+	const progressFace: FaceType = transformFace({
+		face: {
 			points: turnInto3D(
 				parsePath(
 					translatePath(
@@ -268,8 +268,8 @@ export const getButton = ({
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[translateZ(-depth / 2 - 0.01)]
-	);
+		transformations: [translateZ(-depth / 2 - 0.01)],
+	});
 
 	const scaled = resetPath(scalePath(text.path, 0.4, 0.4));
 	const boundingBoxText = getBoundingBox(scaled);
@@ -279,21 +279,21 @@ export const getButton = ({
 		-boundingBoxText.y2 / 2
 	);
 
-	const textFace: FaceType = transformFace(
-		{
+	const textFace: FaceType = transformFace({
+		face: {
 			points: turnInto3D(parsePath(leftAlignedText)),
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[rotateX(Math.PI), translateZ(depth / 2 + 0.01)]
-	);
+		transformations: [rotateX(Math.PI), translateZ(depth / 2 + 0.01)],
+	});
 
-	const projected = projectFaces({
+	const projected = transformFaces({
 		transformations: [rotateX(rotation), ...transformations],
 		faces: [...extruded, progressFace, textFace],
 	});
 
-	return projected;
+	return sortFacesZIndex(projected);
 };
