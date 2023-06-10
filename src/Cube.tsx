@@ -22,7 +22,7 @@ import {getCamera} from './camera';
 import {centerPath} from './center';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
-import {useText} from './get-char';
+import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {
 	FaceType,
@@ -59,11 +59,11 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const depth = 20;
 
 	const centeredButton = centerPath(shape.path);
-
-	const text = useText(String(step), 70);
-	if (!text) {
+	const font = useFont();
+	if (!font) {
 		return null;
 	}
+	const text = getText({font, text: String(step), size: 70});
 
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
 	const parsedText = parsePath(textPath);

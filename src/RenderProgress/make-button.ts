@@ -11,7 +11,7 @@ import {makeRect} from '@remotion/shapes';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {centerPath} from '../center';
 import {turnInto3D} from '../fix-z';
-import {useText} from '../get-char';
+import {getText, useFont} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
 import {
 	FaceType,
@@ -221,11 +221,12 @@ export const useButton = (
 		},
 	].filter(truthy);
 
-	const text = useText(phrase);
-
-	if (!text) {
+	const font = useFont();
+	if (!font) {
 		return null;
 	}
+
+	const text = getText({font, text: phrase});
 
 	const path = resetPath(rect.path);
 

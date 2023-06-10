@@ -2,7 +2,7 @@ import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
-import {useText} from './get-char';
+import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, projectFaces} from './map-face';
 import {rotateY, translateX, translateY} from './matrix';
@@ -12,10 +12,12 @@ const scale = 1;
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
 
-	const text = useText('4.0');
-	if (!text) {
+	const font = useFont();
+	if (!font) {
 		return null;
 	}
+
+	const text = getText({font, text: '4.0'});
 
 	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
