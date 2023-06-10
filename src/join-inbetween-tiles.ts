@@ -4,6 +4,7 @@ import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
 	FaceType,
+	sortFacesZIndex,
 	transformInstructions,
 	translateSvgInstruction,
 } from './map-face';
@@ -106,7 +107,7 @@ export const extrudeInstructions = ({
 		color: backFaceColor,
 	};
 
-	return [...inbetween, scaledFrontFace, scaledBackFace];
+	return sortFacesZIndex([...inbetween, scaledFrontFace, scaledBackFace]);
 };
 
 const inverseInstruction = (
