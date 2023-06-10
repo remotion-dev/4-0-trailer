@@ -248,7 +248,7 @@ export const getButton = ({
 		frontFaceColor: 'black',
 		depth,
 		points: parsePath(centerPath(rect.path)),
-		strokeWidth: 10,
+		strokeWidth: 20,
 	});
 
 	const progressFace: FaceType = transformFace({
@@ -265,9 +265,9 @@ export const getButton = ({
 			color,
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
-			strokeWidth: 10,
+			strokeWidth: 20,
 		},
-		transformations: [translateZ(-depth / 2 - 0.01)],
+		transformations: [translateZ(-depth / 2 - 0.0001)],
 	});
 
 	const scaled = resetPath(scalePath(text.path, 0.4, 0.4));
@@ -284,9 +284,9 @@ export const getButton = ({
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			shouldDrawLine: false,
-			strokeWidth: 10,
+			strokeWidth: 0,
 		},
-		transformations: [rotateX(Math.PI), translateZ(depth / 2 + 0.01)],
+		transformations: [rotateX(Math.PI), translateZ(depth / 2 + 0.0001)],
 	});
 
 	const projected = transformFaces({
