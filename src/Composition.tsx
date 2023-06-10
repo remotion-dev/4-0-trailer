@@ -5,7 +5,7 @@ import {Faces} from './Faces';
 import {useText} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, projectFaces} from './map-face';
-import {rotated, translated} from './matrix';
+import {rotated, translateX, translateY} from './matrix';
 
 const scale = 1;
 
@@ -38,7 +38,8 @@ export const MyComposition = () => {
 	const rotatedFaces = projectFaces({
 		faces: inbetweenFaces,
 		transformations: [
-			translated([-width / 2, -height / 2, 0]),
+			translateX(-width / 2),
+			translateY(-height / 2),
 			rotated([0, 1, 0], frame / 100),
 		],
 	});

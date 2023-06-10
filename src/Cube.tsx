@@ -30,7 +30,7 @@ import {
 	transformFace,
 	translateSvgInstruction,
 } from './map-face';
-import {rotated, translated} from './matrix';
+import {rotated, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -93,7 +93,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const extrudedTo0 = projectFaces({
 		faces: _extrudedButton,
-		transformations: [translated([0, 0, -(depth + pushIn) / 2])],
+		transformations: [translateZ(-(depth + pushIn) / 2)],
 	});
 
 	const bBoxText = getBoundingBox(textPath);
@@ -115,7 +115,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[translated([0, 0, -depth - 0.001 - pushIn])]
+		[translateZ(-depth - 0.001 - pushIn)]
 	);
 
 	const intrude = spring({
@@ -128,8 +128,8 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const transformations = [
 		rotated([0, 1, 0], (-Math.PI / 4 + frame / 100) * (1 - intrude)),
 		rotated([1, 0, 0], (-Math.PI / 4 + frame / 300) * (1 - intrude)),
-		translated([0, interpolate(spr, [0, 1], [500, 0]), 0]),
-		translated([0, interpolate(intrude, [0, 1], [0, -20]), 0]),
+		translateY(interpolate(spr, [0, 1], [500, 0])),
+		translateY(interpolate(intrude, [0, 1], [0, -20])),
 	];
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200]);

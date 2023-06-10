@@ -21,7 +21,7 @@ import {
 	transformFace,
 	translateSvgInstruction,
 } from './map-face';
-import {rotated, translated} from './matrix';
+import {rotated, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -81,10 +81,7 @@ export const RenderButton: React.FC = () => {
 
 	const extrudedTo0 = projectFaces({
 		faces: _extrudedButton,
-		transformations: [
-			translated([0, 0, -(depth + pushIn) / 2]),
-			...transformations,
-		],
+		transformations: [translateZ(-(depth + pushIn) / 2), ...transformations],
 	});
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
@@ -116,7 +113,7 @@ export const RenderButton: React.FC = () => {
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[translated([0, 0, -depth - 0.001 - pushIn])]
+		[translateZ(-depth - 0.001 - pushIn)]
 	);
 
 	const movedCursor = projectFaces({
@@ -125,7 +122,7 @@ export const RenderButton: React.FC = () => {
 			rotated([0, 1, 0], Math.PI / 2),
 			rotated([1, 0, 0], -Math.PI / 4),
 			rotated([0, 0, 1], -interpolate(push, [0, 1], [Math.PI * 2, 0])),
-			translated([0, 0, Number(-depth - 0.001) - cursorDistance]),
+			translateZ(Number(-depth - 0.001) - cursorDistance),
 			...transformations,
 		],
 	});

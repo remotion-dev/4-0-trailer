@@ -185,7 +185,7 @@ export const dot = function (a: number[], b: number[]) {
 		});
 };
 
-export const translated = function (vec: Vector) {
+const translated = function (vec: Vector) {
 	return stride({
 		v: vec,
 		m: identity4(),
@@ -193,6 +193,18 @@ export const translated = function (vec: Vector) {
 		offset: 3,
 		colStride: 0,
 	});
+};
+
+export const translateX = (x: number) => {
+	return translated([x, 0, 0]);
+};
+
+export const translateY = (y: number) => {
+	return translated([0, y, 0]);
+};
+
+export const translateZ = (z: number) => {
+	return translated([0, 0, z]);
 };
 
 export type Camera = {

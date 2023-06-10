@@ -19,7 +19,7 @@ import {
 	ThreeDelement,
 	transformFace,
 } from '../map-face';
-import {MatrixTransform4D, rotated, translated, Vector4D} from '../matrix';
+import {MatrixTransform4D, rotated, translateZ, Vector4D} from '../matrix';
 import {subdivide2DCInstruction} from '../subdivide-instruction';
 import {truthy} from '../truthy';
 
@@ -261,7 +261,7 @@ export const useButton = (
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[translated([0, 0, -depth / 2 - 0.01])]
+		[translateZ(-depth / 2 - 0.01)]
 	);
 
 	const scaled = resetPath(scalePath(text.path, 0.4, 0.4));
@@ -280,7 +280,7 @@ export const useButton = (
 			shouldDrawLine: false,
 			strokeWidth: 10,
 		},
-		[rotated([1, 0, 0], Math.PI), translated([0, 0, depth / 2 + 0.01])]
+		[rotated([1, 0, 0], Math.PI), translateZ(depth / 2 + 0.01)]
 	);
 
 	const projected = projectFaces({

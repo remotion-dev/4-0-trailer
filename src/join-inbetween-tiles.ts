@@ -7,7 +7,7 @@ import {
 	transformInstructions,
 	translateSvgInstruction,
 } from './map-face';
-import {translated, Vector4D} from './matrix';
+import {translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 import {truthy} from './truthy';
 
@@ -63,14 +63,12 @@ export const extrudeInstructions = ({
 	// 	strokeWidth,
 	// };
 
-	const backFace = transformInstructions(instructions, [
-		translated([0, 0, depth / 2]),
-	]);
+	const backFace = transformInstructions(instructions, [translateZ(depth / 2)]);
 	// Const backFaceStrokeFace = transformInstructions(backFaceBorder, [
 	// 	translated([0, 0, depth / 2]),
 	// ]);
 	const frontFace = transformInstructions(instructions, [
-		translated([0, 0, -depth / 2]),
+		translateZ(-depth / 2),
 	]);
 	// Const frontFaceStrokeFace = transformInstructions(backFaceBorder, [
 	// 	translated([0, 0, -depth / 2]),
