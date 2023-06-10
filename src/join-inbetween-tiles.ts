@@ -4,12 +4,12 @@ import {ThreeDReducedInstruction} from './3d-svg';
 import {turnInto3D} from './fix-z';
 import {
 	FaceType,
+	transformFace,
 	transformInstructions,
 	translateSvgInstruction,
 } from './map-face';
-import {translateZ, Vector4D} from './matrix';
+import {scaled, translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
-import {truthy} from './truthy';
 
 export const extrudeInstructions = ({
 	depth,
@@ -17,7 +17,6 @@ export const extrudeInstructions = ({
 	frontFaceColor,
 	backFaceColor,
 	points,
-	shouldDrawLine,
 	strokeWidth,
 }: {
 	depth: number;
@@ -25,12 +24,14 @@ export const extrudeInstructions = ({
 	frontFaceColor: string;
 	backFaceColor: string;
 	points: Instruction[];
-	shouldDrawLine: boolean;
 	strokeWidth: number;
 }): FaceType[] => {
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
 	);
+	console.log({boundingBox, strokeWidth});
+
+	const scale = 1; // TODO: Determine by how much
 	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
 	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
 
@@ -40,45 +41,22 @@ export const extrudeInstructions = ({
 		points: subdivideInstructions(
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
-		shouldDrawLine,
+		shouldDrawLine: true,
 		strokeWidth,
 	};
 
-	// Const strokePathBox = getBoundingBox(serializeInstructions(points));
-	// const width = strokePathBox.x2 - strokePathBox.x1;
-	// const height = strokePathBox.y2 - strokePathBox.y1;
-	// const area = width * height;
-	// const desiredArea = (width - strokeWidth) * (height - strokeWidth);
-	// const ratio = desiredArea / area;
-	// Const borderPath = translatePath(
-	// 	scalePath(serializeInstructions(points), ratio, ratio),
-	// 	strokeWidth,
-	// 	strokeWidth
-	// );
-
-	// Const backFaceBorder: Omit<FaceType, 'color'> = {
-	// 	centerPoint: [0, 0, 0, 1],
-	// 	points: turnInto3D(parsePath(borderPath)),
-	// 	shouldDrawLine,
-	// 	strokeWidth,
-	// };
-
-	const backFace = transformInstructions(instructions, [translateZ(depth / 2)]);
-	// Const backFaceStrokeFace = transformInstructions(backFaceBorder, [
-	// 	translated([0, 0, depth / 2]),
-	// ]);
-	const frontFace = transformInstructions(instructions, [
+	const unscaledBackFace = transformInstructions(instructions, [
+		translateZ(depth / 2),
+	]);
+	const unscaledFrontFace = transformInstructions(instructions, [
 		translateZ(-depth / 2),
 	]);
-	// Const frontFaceStrokeFace = transformInstructions(backFaceBorder, [
-	// 	translated([0, 0, -depth / 2]),
-	// ]);
 
-	const inbetween = backFace.points.map((t, i): FaceType => {
+	const inbetween = unscaledBackFace.points.map((t, i): FaceType => {
 		const nextInstruction =
-			i === backFace.points.length - 1
-				? backFace.points[0]
-				: backFace.points[i + 1];
+			i === unscaledBackFace.points.length - 1
+				? unscaledBackFace.points[0]
+				: unscaledBackFace.points[i + 1];
 
 		const currentPoint = t.point;
 		const nextPoint = nextInstruction.point;
@@ -124,27 +102,20 @@ export const extrudeInstructions = ({
 		};
 	});
 
-	// Const frontFaceStroke: FaceType = {
-	// 	...frontFaceStrokeFace,
-	// 	shouldDrawLine: true,
-	// 	color: 'transparent',
-	// 	centerPoint: [0, 0, frontFace.centerPoint[2] - 0.001, 1],
-	// };
-
-	// const backFaceStroke: FaceType = {
-	// 	...backFaceStrokeFace,
-	// 	shouldDrawLine: true,
-	// 	color: 'transparent',
-	// 	centerPoint: [0, 0, backFace.centerPoint[2] + 0.001, 1],
-	// };
+	const scaledFrontFace = transformFace({
+		face: {...unscaledFrontFace, color: frontFaceColor},
+		transformations: [scaled([scale, scale, 1])],
+	});
+	const scaledBackFace = transformFace({
+		face: {...unscaledBackFace, color: backFaceColor},
+		transformations: [scaled([scale, scale, 1])],
+	});
 
 	return [
 		...inbetween,
-		{...frontFace, color: frontFaceColor, shouldDrawLine: true},
-		// FrontFace.shouldDrawLine ? frontFaceStroke : null,
-		{...backFace, color: backFaceColor, shouldDrawLine: true},
-		// BackFace.shouldDrawLine ? backFaceStroke : null,
-	].filter(truthy);
+		{...scaledFrontFace, color: frontFaceColor},
+		{...scaledBackFace, color: backFaceColor},
+	];
 };
 
 const inverseInstruction = (

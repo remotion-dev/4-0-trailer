@@ -90,7 +90,6 @@ export const AudioViz: React.FC = () => {
 				frontFaceColor: color,
 				depth,
 				points: parsePath(path),
-				shouldDrawLine: true,
 				strokeWidth: 10,
 			});
 

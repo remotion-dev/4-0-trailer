@@ -248,7 +248,6 @@ export const getButton = ({
 		frontFaceColor: 'black',
 		depth,
 		points: parsePath(centerPath(rect.path)),
-		shouldDrawLine: true,
 		strokeWidth: 10,
 	});
 

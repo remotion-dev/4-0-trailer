@@ -92,7 +92,6 @@ export const Timeline: React.FC = () => {
 					cornerRadius: 2,
 				}).instructions,
 				sideColor: 'black',
-				shouldDrawLine: true,
 				strokeWidth: 8,
 			}),
 			transformations: [
@@ -118,7 +117,6 @@ export const Timeline: React.FC = () => {
 			backFaceColor: 'black',
 			frontFaceColor: 'red',
 			points: parsePath(resetPath(cursorHandlerPath)),
-			shouldDrawLine: true,
 			sideColor: 'black',
 			strokeWidth: 8,
 		}),

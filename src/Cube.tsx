@@ -84,7 +84,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const _extrudedButton: FaceType[] = extrudeInstructions({
 		points: parsePath(centeredButton),
-		shouldDrawLine: true,
 		depth: actualDepth,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',

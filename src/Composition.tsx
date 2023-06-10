@@ -17,7 +17,7 @@ export const MyComposition = () => {
 		return null;
 	}
 
-	const text = getText({font, text: '4.0'});
+	const text = getText({font, text: '4'});
 
 	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
 	const bBox = getBoundingBox(scaled);
@@ -29,12 +29,11 @@ export const MyComposition = () => {
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
 		points: parsePath(scaled),
-		shouldDrawLine: true,
 		depth,
-		sideColor: 'black',
+		sideColor: 'green',
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
-		strokeWidth: 10,
+		strokeWidth: 20,
 	});
 
 	const rotatedFaces = sortFacesZIndex(

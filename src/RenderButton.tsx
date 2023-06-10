@@ -73,7 +73,6 @@ export const RenderButton: React.FC = () => {
 
 	const _extrudedButton: FaceType[] = extrudeInstructions({
 		points: parsePath(centeredButton),
-		shouldDrawLine: true,
 		depth: depth + pushIn,
 		sideColor: 'black',
 		frontFaceColor: BLUE,
@@ -88,7 +87,6 @@ export const RenderButton: React.FC = () => {
 
 	const extrudedCursor: FaceType[] = extrudeInstructions({
 		points: parsePath(cursorPath),
-		shouldDrawLine: true,
 		depth: cursorDepth,
 		sideColor: 'black',
 		frontFaceColor: 'white',

@@ -49,7 +49,6 @@ export const TriangleOut: React.FC = () => {
 			frontFaceColor: color,
 			depth,
 			points: parsed,
-			shouldDrawLine: true,
 			strokeWidth: 10,
 		});
 		const projected = transformFaces({

@@ -20,7 +20,6 @@ export const ExtrudeFix: React.FC = () => {
 
 	const extrude = extrudeInstructions({
 		points: parsePath(centered),
-		shouldDrawLine: true,
 		backFaceColor: 'green',
 		depth: 10,
 		frontFaceColor: 'blue',

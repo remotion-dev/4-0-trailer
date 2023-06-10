@@ -64,7 +64,6 @@ test('Simple extrusion ', () => {
 		depth: 10,
 		frontFaceColor: 'blue',
 		points: instructions,
-		shouldDrawLine: false,
 		sideColor: 'black',
 		strokeWidth: 0,
 	});
