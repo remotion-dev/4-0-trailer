@@ -17,7 +17,7 @@ export const Main: React.FC = () => {
 				<Series.Sequence durationInFrames={7 * 30}>
 					<Timeline />
 				</Series.Sequence>
-				<Series.Sequence durationInFrames={4 * 30}>
+				<Series.Sequence durationInFrames={7 * 30}>
 					<RenderButton />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>

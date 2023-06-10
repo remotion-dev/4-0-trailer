@@ -100,14 +100,14 @@ export const Timeline: React.FC = () => {
 				translateZ(
 					spring({
 						frame,
-						delay: i * 20,
+						delay: i * 20 - 40,
 						fps,
 						from: 1,
 						to: 0,
 						config: {
 							damping: 200,
 						},
-						durationInFrames: 50,
+						durationInFrames: 80,
 					}) * 200
 				),
 			],

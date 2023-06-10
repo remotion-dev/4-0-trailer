@@ -27,9 +27,11 @@ import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 const viewBox = [-1600, -800, 3200, 1600];
 
 const cursorPath = scalePath(
-	resetPath('M7.5 271V16.5L197 181L84.5 183L7.5 271Z'),
-	0.25,
-	0.25
+	resetPath(
+		'M32 32L0 46.9V432l29 31.8 96.1-117.2 48.2 102.7 13.6 29 57.9-27.2-13.6-29L183.3 320H320l-.1-42L32 32z'
+	),
+	0.1,
+	0.1
 );
 
 export const RenderButton: React.FC = () => {
@@ -64,7 +66,7 @@ export const RenderButton: React.FC = () => {
 		fps,
 		frame,
 		config: {},
-		durationInFrames: 200,
+		durationInFrames: 600,
 	});
 
 	const cursorDistance = interpolate(push, [0, 1], [100, 0], {});
