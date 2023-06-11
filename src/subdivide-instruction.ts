@@ -54,8 +54,8 @@ const subdivideLOrMInstruction = (
 	];
 
 	const curves: [ThreeDReducedInstruction, ThreeDReducedInstruction] = [
-		{type: instruction.type, point: q0, _startPoint: from},
-		{type: instruction.type, point: instruction.point, _startPoint: q0},
+		{type: instruction.type, point: q0},
+		{type: instruction.type, point: instruction.point},
 	];
 
 	return curves;
@@ -178,8 +178,8 @@ const subdivide3DCInstruction = (
 	];
 
 	const curves: [ThreeDReducedInstruction, ThreeDReducedInstruction] = [
-		{type: 'C', point: s0, cp1: q0, cp2: r0, _startPoint: from},
-		{type: 'C', point: instruction.point, cp1: r1, cp2: q2, _startPoint: s0},
+		{type: 'C', point: s0, cp1: q0, cp2: r0},
+		{type: 'C', point: instruction.point, cp1: r1, cp2: q2},
 	];
 
 	return curves;
@@ -217,8 +217,8 @@ const subdivideQInstruction = (
 
 	const newInstructions: [ThreeDReducedInstruction, ThreeDReducedInstruction] =
 		[
-			{type: 'Q', point: r0, cp: q0, _startPoint: from},
-			{type: 'Q', point: instruction.point, cp: q1, _startPoint: r0},
+			{type: 'Q', point: r0, cp: q0},
+			{type: 'Q', point: instruction.point, cp: q1},
 		];
 
 	return newInstructions;

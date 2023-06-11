@@ -81,7 +81,6 @@ export const TriangleOut: React.FC = () => {
 				}}
 			>
 				<Faces
-					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
 					elements={paths.reverse()}
 				/>

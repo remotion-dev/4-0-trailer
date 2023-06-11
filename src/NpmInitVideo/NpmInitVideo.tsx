@@ -156,7 +156,7 @@ export const NpmIniVideo: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces sort={false} camera={getCamera(width, height)} elements={all} />
+				<Faces camera={getCamera(width, height)} elements={all} />
 			</svg>
 		</AbsoluteFill>
 	);

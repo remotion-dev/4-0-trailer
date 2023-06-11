@@ -121,7 +121,6 @@ export const AudioViz: React.FC = () => {
 			<Audio src={audio} />
 			<svg viewBox={viewBox.join(' ')}>
 				<Faces
-					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1], [
 						Math.sin(frame / 100) * 10,
 						0,

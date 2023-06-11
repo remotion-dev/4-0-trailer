@@ -1,20 +1,15 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {Face} from './Face';
-import {FaceType, sortElements} from './map-face';
+import {FaceType} from './map-face';
 import {MatrixTransform4D, multiplyMatrixAndSvgInstruction} from './matrix';
 
 export const Faces: React.FC<{
 	elements: FaceType[][];
 	camera: MatrixTransform4D;
-	sort: boolean;
-}> = ({camera, elements, sort}) => {
-	const sorted = useMemo(() => {
-		return sort ? sortElements(elements) : elements;
-	}, [elements, sort]);
-
+}> = ({camera, elements}) => {
 	return (
 		<>
-			{sorted.map((element, i) => {
+			{elements.map((element, i) => {
 				return (
 					<React.Fragment key={i}>
 						{element.map(({points, color, strokeWidth}, i) => {

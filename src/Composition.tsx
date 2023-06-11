@@ -57,11 +57,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces
-				elements={[rotatedFaces]}
-				sort={false}
-				camera={getCamera(width, height)}
-			/>
+			<Faces elements={[rotatedFaces]} camera={getCamera(width, height)} />
 		</svg>
 	);
 };

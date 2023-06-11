@@ -179,7 +179,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
-						sort
 						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
 							sortFacesZIndex(extrudedTo0),

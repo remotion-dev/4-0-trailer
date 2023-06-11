@@ -239,7 +239,6 @@ export function multiplyMatrixAndSvgInstruction(
 			cp1: multiplyMatrix(matrix, point.cp1),
 			cp2: multiplyMatrix(matrix, point.cp2),
 			point: multiplyMatrix(matrix, point.point),
-			_startPoint: multiplyMatrix(matrix, point._startPoint),
 		};
 	}
 	if (point.type === 'Q') {
@@ -247,21 +246,18 @@ export function multiplyMatrixAndSvgInstruction(
 			type: 'Q',
 			cp: multiplyMatrix(matrix, point.cp),
 			point: multiplyMatrix(matrix, point.point),
-			_startPoint: multiplyMatrix(matrix, point._startPoint),
 		};
 	}
 	if (point.type === 'M') {
 		return {
 			type: 'M',
 			point: multiplyMatrix(matrix, point.point),
-			_startPoint: multiplyMatrix(matrix, point._startPoint),
 		};
 	}
 	if (point.type === 'L') {
 		return {
 			type: 'L',
 			point: multiplyMatrix(matrix, point.point),
-			_startPoint: multiplyMatrix(matrix, point._startPoint),
 		};
 	}
 	throw new Error('Unknown instruction type: ' + JSON.stringify(point));

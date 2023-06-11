@@ -142,7 +142,6 @@ export const Timeline: React.FC = () => {
 			viewBox={viewBox.join(' ')}
 		>
 			<Faces
-				sort={false}
 				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return sortFacesZIndex(

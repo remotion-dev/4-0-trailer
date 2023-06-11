@@ -50,7 +50,6 @@ export const RenderProgress: React.FC = () => {
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 				<Faces
-					sort
 					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
 					elements={rendered}
 				/>

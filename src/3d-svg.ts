@@ -3,25 +3,21 @@ import {Vector4D} from './matrix';
 export type ThreeDReducedInstruction =
 	| {
 			type: 'M';
-			_startPoint: Vector4D;
 			point: Vector4D;
 	  }
 	| {
 			type: 'L';
-			_startPoint: Vector4D;
 			point: Vector4D;
 	  }
 	| {
 			type: 'C';
 			cp1: Vector4D;
 			cp2: Vector4D;
-			_startPoint: Vector4D;
 			point: Vector4D;
 	  }
 	| {
 			type: 'Q';
 			cp: Vector4D;
-			_startPoint: Vector4D;
 			point: Vector4D;
 	  };
 
