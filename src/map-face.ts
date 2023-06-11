@@ -1,18 +1,10 @@
 import {ThreeDReducedInstruction} from './3d-svg';
+import {FaceType} from './face-type';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
 	multiplyMatrixAndSvgInstruction,
-	Vector4D,
 } from './matrix';
-
-export type FaceType = {
-	color: string;
-	points: ThreeDReducedInstruction[];
-	centerPoint: Vector4D;
-	strokeWidth: number;
-	strokeColor: string;
-};
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {

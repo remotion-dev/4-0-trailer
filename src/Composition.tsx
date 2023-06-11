@@ -1,10 +1,11 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
+import {FaceType} from './face-type';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {FaceType, sortFacesZIndex, transformFaces} from './map-face';
+import {sortFacesZIndex, transformFaces} from './map-face';
 import {rotateY} from './matrix';
 
 export const MyComposition = () => {

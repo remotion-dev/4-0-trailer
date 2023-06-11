@@ -9,15 +9,11 @@ import {makeRect} from '@remotion/shapes';
 import {Font} from 'opentype.js';
 import {interpolate, spring} from 'remotion';
 import {centerPath} from '../center';
+import {FaceType} from '../face-type';
 import {turnInto3D} from '../fix-z';
 import {getText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	transformFaces,
-} from '../map-face';
+import {sortFacesZIndex, transformFace, transformFaces} from '../map-face';
 import {MatrixTransform4D, rotateX, translateZ, Vector4D} from '../matrix';
 import {makeRoundedProgress} from './make-rounded-progress';
 

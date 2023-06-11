@@ -5,11 +5,12 @@ import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from '../camera';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
+import {FaceType} from '../face-type';
 import {Faces} from '../Faces';
 import {turnInto3D} from '../fix-z';
 import {getText, useFont} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
-import {FaceType, transformFace, transformFaces} from '../map-face';
+import {transformFace, transformFaces} from '../map-face';
 import {
 	MatrixTransform4D,
 	rotateX,

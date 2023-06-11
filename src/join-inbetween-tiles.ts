@@ -1,9 +1,9 @@
 import {Instruction, reduceInstructions} from '@remotion/paths';
 import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
 import {ThreeDReducedInstruction} from './3d-svg';
+import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
 import {
-	FaceType,
 	sortFacesZIndex,
 	transformFace,
 	translateSvgInstruction,
