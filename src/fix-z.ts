@@ -69,5 +69,10 @@ export const turnInto3D = ({
 		strokeColor,
 		strokeWidth,
 	};
-	return makeElement(face);
+	return makeElement(face, {
+		backTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
+		frontBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
+		frontTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
+		backBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
+	});
 };

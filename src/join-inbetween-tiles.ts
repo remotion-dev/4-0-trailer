@@ -99,7 +99,35 @@ export const extrudeElement = ({
 		color: backFaceColor,
 	};
 
-	return makeElement([...inbetween, scaledFrontFace, scaledBackFace]);
+	const {backBottomRight, backTopLeft, frontBottomRight, frontTopLeft} =
+		threeD.boundingBox;
+
+	return makeElement([...inbetween, scaledFrontFace, scaledBackFace], {
+		backBottomRight: [
+			backBottomRight[0],
+			backBottomRight[1],
+			backBottomRight[2] - depth / 2,
+			backBottomRight[3],
+		],
+		backTopLeft: [
+			backTopLeft[0],
+			backTopLeft[1],
+			backTopLeft[2] - depth / 2,
+			backTopLeft[3],
+		],
+		frontBottomRight: [
+			frontBottomRight[0],
+			frontBottomRight[1],
+			frontBottomRight[2] + depth / 2,
+			frontBottomRight[3],
+		],
+		frontTopLeft: [
+			frontTopLeft[0],
+			frontTopLeft[1],
+			frontTopLeft[2] + depth / 2,
+			frontTopLeft[3],
+		],
+	});
 };
 const inverseInstruction = (
 	instruction: ThreeDReducedInstruction,

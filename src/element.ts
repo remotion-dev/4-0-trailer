@@ -1,18 +1,30 @@
 import {FaceType} from './face-type';
 import {makeId} from './make-id';
 import {transformFace} from './map-face';
-import {MatrixTransform4D} from './matrix';
+import {MatrixTransform4D, multiplyMatrix, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
 export type ThreeDElement = {
 	faces: FaceType[];
 	id: string;
+	boundingBox: ThreeDBoundingBox;
 };
 
-export const makeElement = (face: FaceType | FaceType[]): ThreeDElement => {
+type ThreeDBoundingBox = {
+	frontTopLeft: Vector4D;
+	frontBottomRight: Vector4D;
+	backTopLeft: Vector4D;
+	backBottomRight: Vector4D;
+};
+
+export const makeElement = (
+	face: FaceType | FaceType[],
+	boundingBox: ThreeDBoundingBox
+): ThreeDElement => {
 	return {
 		faces: Array.isArray(face) ? face : [face],
 		id: makeId(),
+		boundingBox,
 	};
 };
 
@@ -35,6 +47,24 @@ export const transformElement = (
 			return transformFace(face, transformations);
 		}),
 		id: makeId(),
+		boundingBox: {
+			backBottomRight: transformations.reduce(
+				(point, transformation) => multiplyMatrix(transformation, point),
+				element.boundingBox.backBottomRight
+			),
+			backTopLeft: transformations.reduce(
+				(point, transformation) => multiplyMatrix(transformation, point),
+				element.boundingBox.backTopLeft
+			),
+			frontBottomRight: transformations.reduce(
+				(point, transformation) => multiplyMatrix(transformation, point),
+				element.boundingBox.frontBottomRight
+			),
+			frontTopLeft: transformations.reduce(
+				(point, transformation) => multiplyMatrix(transformation, point),
+				element.boundingBox.frontTopLeft
+			),
+		},
 	};
 };
 
