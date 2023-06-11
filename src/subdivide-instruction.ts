@@ -125,7 +125,7 @@ export const subdivide2DCInstruction = (
 	return curves;
 };
 
-export const subdivide3DCInstruction = (
+const subdivide3DCInstruction = (
 	from: Vector4D,
 	instruction: ThreeDReducedInstruction
 ) => {

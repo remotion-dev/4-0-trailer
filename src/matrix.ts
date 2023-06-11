@@ -229,23 +229,6 @@ export const mulScalar = function <T extends number[]>(v: T, s: number): T {
 	}) as T;
 };
 
-export function multiplyMatrixAndPoint(
-	matrix: MatrixTransform4D,
-	point: Vector4D
-): Vector4D {
-	const result: number[] = [];
-
-	for (let i = 0; i < 4; i++) {
-		result[i] =
-			matrix[i] * point[0] +
-			matrix[i + 4] * point[1] +
-			matrix[i + 8] * point[2] +
-			matrix[i + 12] * point[3];
-	}
-
-	return result as Vector4D;
-}
-
 export function multiplyMatrixAndSvgInstruction(
 	matrix: MatrixTransform4D,
 	point: ThreeDReducedInstruction
@@ -301,27 +284,4 @@ export const multiplyMatrix = (
 	}
 
 	return result;
-};
-
-export const averagePoint = (points: Vector4D[]) => {
-	const result: Vector4D = [0, 0, 0, 0];
-	for (const point of points) {
-		for (let i = 0; i < 4; i++) {
-			result[i] += point[i];
-		}
-	}
-	for (let i = 0; i < 4; i++) {
-		result[i] /= points.length;
-	}
-	return result;
-};
-
-export const getCenterPoint = (three: ThreeDReducedInstruction[]): Vector4D => {
-	return averagePoint(
-		three
-			.filter((t) => t.type !== 'M')
-			.map((i) => {
-				return i.point;
-			})
-	);
 };

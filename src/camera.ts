@@ -35,7 +35,7 @@ export const getCamera = (width: number, height: number, eye?: Vector) => {
 	return camera;
 };
 
-export const setupCamera = function (area: Area, zscale: number, cam: Camera) {
+const setupCamera = function (area: Area, zscale: number, cam: Camera) {
 	const camera = lookat(cam.eye, cam.coa, cam.up);
 	const persp = perspective(cam.near, cam.far, cam.angle);
 	const center: Vector = [(area[0] + area[2]) / 2, (area[1] + area[3]) / 2, 0];
@@ -94,7 +94,7 @@ const cross = function (a: Vector, b: Vector): Vector {
 	];
 };
 
-export const sub = function (a: Vector, b: Vector): Vector {
+const sub = function (a: Vector, b: Vector): Vector {
 	return a.map((v, i) => {
 		return v - b[i];
 	}) as Vector;
