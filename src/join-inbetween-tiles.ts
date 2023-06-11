@@ -1,12 +1,10 @@
-import {Instruction, reduceInstructions} from '@remotion/paths';
-import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
+import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
-import {makeElement, ThreeDElement} from './element';
+import {makeElement, subdivideElement, ThreeDElement} from './element';
 import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
 import {transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
 
 export const extrudeElement = ({
 	depth,
@@ -23,26 +21,20 @@ export const extrudeElement = ({
 	points: Instruction[];
 	strokeWidth: number;
 }): ThreeDElement => {
-	const boundingBox = getBoundingBoxFromInstructions(
-		reduceInstructions(points)
+	const threeD = subdivideElement(
+		turnInto3D({
+			instructions: points,
+			color: 'black',
+			strokeWidth,
+			strokeColor: 'black',
+		}),
+		3
 	);
 
-	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
-	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
-
-	const threeD = turnInto3D(points);
-	const instructions: FaceType = {
-		centerPoint: [centerX, centerY, 0, 1],
-		points: subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(threeD))
-		),
-		strokeWidth,
-		strokeColor: 'black',
-		color: 'black',
-	};
-
-	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
-	const unscaledFrontFace = transformFace(instructions, [
+	const unscaledBackFace = transformFace(threeD.faces[0], [
+		translateZ(depth / 2),
+	]);
+	const unscaledFrontFace = transformFace(threeD.faces[0], [
 		translateZ(-depth / 2),
 	]);
 
@@ -87,7 +79,12 @@ export const extrudeElement = ({
 		return {
 			points: newInstructions,
 			color: sideColor,
-			centerPoint: [centerX, centerY, 0, 1],
+			centerPoint: [
+				threeD.faces[0].centerPoint[0],
+				threeD.faces[0].centerPoint[1],
+				0,
+				1,
+			],
 			strokeWidth: 0,
 			strokeColor: 'black',
 		};

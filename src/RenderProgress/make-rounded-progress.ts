@@ -17,6 +17,9 @@ export const makeRoundedProgress = ({
 	width,
 	evolve,
 	boxHeight,
+	color,
+	strokeColor,
+	strokeWidth,
 }: {
 	outerCornerRadius: number;
 	padding: number;
@@ -25,6 +28,9 @@ export const makeRoundedProgress = ({
 	width: number;
 	height: number;
 	evolve: number;
+	color: string;
+	strokeColor: string;
+	strokeWidth: number;
 }) => {
 	const innerCornerRadius = outerCornerRadius - padding;
 	const cornerRadiusFactor = (4 / 3) * Math.tan(Math.PI / 8);
@@ -181,13 +187,16 @@ export const makeRoundedProgress = ({
 		},
 	].filter(truthy);
 
-	return turnInto3D(
-		parsePath(
+	return turnInto3D({
+		instructions: parsePath(
 			translatePath(
 				serializeInstructions(paths),
 				-width / 2 + 1,
 				-height / 2 + 1
 			)
-		)
-	);
+		),
+		color,
+		strokeColor,
+		strokeWidth,
+	});
 };

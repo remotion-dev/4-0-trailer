@@ -9,6 +9,7 @@ export const ElementComp: React.FC<{
 	camera: MatrixTransform4D;
 }> = ({element, camera}) => {
 	const sortedFaces = sortFacesZIndex(element.faces);
+
 	return (
 		<>
 			{sortedFaces.map(({points, color, strokeColor, strokeWidth}, i) => {

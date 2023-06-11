@@ -11,13 +11,19 @@ import {
 import {getCamera} from './camera';
 import {centerPath} from './center';
 import {BLUE} from './colors';
-import {makeElement, transformElement} from './element';
+import {transformElement} from './element';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
 import {extrudeElement} from './join-inbetween-tiles';
-import {transformFace, translateSvgInstruction} from './map-face';
-import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
+import {
+	rotateX,
+	rotateY,
+	rotateZ,
+	translateX,
+	translateY,
+	translateZ,
+} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -93,27 +99,18 @@ export const RenderButton: React.FC = () => {
 
 	const bBoxText = getBoundingBox(textPath);
 
-	const centeredText = turnInto3D(parsedText).map((turn) => {
-		return translateSvgInstruction(
-			turn,
-			-(bBoxText.x2 - bBoxText.x1) / 2,
-			-(bBoxText.y2 - bBoxText.y1) / 2,
-			0
-		);
+	const centeredText = turnInto3D({
+		instructions: parsedText,
+		strokeColor: 'black',
+		color: 'white',
+		strokeWidth: 0,
 	});
 
-	const textFace = makeElement(
-		transformFace(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: 'white',
-				points: centeredText,
-				strokeWidth: 0,
-				strokeColor: 'black',
-			},
-			[translateZ(-depth - 0.001 - pushIn)]
-		)
-	);
+	const textFace = transformElement(centeredText, [
+		translateX(-(bBoxText.x2 - bBoxText.x1) / 2),
+		translateY(-(bBoxText.y2 - bBoxText.y1) / 2),
+		translateZ(-depth - 0.001 - pushIn),
+	]);
 
 	const movedCursor = transformElement(extrudedCursor, [
 		rotateY(Math.PI / 2),

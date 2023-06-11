@@ -4,7 +4,7 @@ import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
 import {Cube, cubeSchema} from './Cube';
 import {Main} from './Main';
-import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
+import {NpmInitVideo} from './NpmInitVideo/NpmInitVideo';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
 import {Sparks} from './Sparks';
@@ -89,7 +89,7 @@ export const RemotionRoot: React.FC = () => {
 			/>
 			<Composition
 				id="NpmInitVideo"
-				component={NpmIniVideo}
+				component={NpmInitVideo}
 				durationInFrames={600}
 				fps={30}
 				width={1920}
