@@ -113,6 +113,7 @@ export const RenderButton: React.FC = () => {
 			color: 'white',
 			points: centeredText,
 			strokeWidth: 0,
+			strokeColor: 'black',
 		},
 		transformations: [translateZ(-depth - 0.001 - pushIn)],
 	});

@@ -40,6 +40,7 @@ export const extrudeInstructions = ({
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
 		strokeWidth,
+		strokeColor: 'black',
 	};
 
 	const unscaledBackFace = transformInstructions(instructions, [
@@ -95,6 +96,7 @@ export const extrudeInstructions = ({
 			color: sideColor,
 			centerPoint: [centerX, centerY, 0, 1],
 			strokeWidth: 0,
+			strokeColor: 'black',
 		};
 	});
 

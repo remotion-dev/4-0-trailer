@@ -106,6 +106,7 @@ export const getButton = ({
 			color,
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			strokeWidth: 20,
+			strokeColor: 'black',
 		},
 		transformations: [translateZ(-depth / 2 - 0.0001)],
 	});
@@ -129,6 +130,7 @@ export const getButton = ({
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			strokeWidth: 0,
+			strokeColor: 'black',
 		},
 		transformations: faceTransformations,
 	});
@@ -147,6 +149,7 @@ export const getButton = ({
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			strokeWidth: 0,
+			strokeColor: 'black',
 		},
 		transformations: faceTransformations,
 	});

@@ -11,6 +11,7 @@ export type FaceType = {
 	points: ThreeDReducedInstruction[];
 	centerPoint: Vector4D;
 	strokeWidth: number;
+	strokeColor: string;
 };
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {

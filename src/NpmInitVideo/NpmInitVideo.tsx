@@ -76,6 +76,7 @@ export const NpmIniVideo: React.FC = () => {
 			color: '#fe5f57',
 			points: dot,
 			strokeWidth: 1,
+			strokeColor: 'black',
 		},
 		transformations: topLeftTransformation,
 	});
@@ -86,6 +87,7 @@ export const NpmIniVideo: React.FC = () => {
 			color: '#ffbc2e',
 			points: dot,
 			strokeWidth: 1,
+			strokeColor: 'black',
 		},
 		transformations: [...topLeftTransformation, translateX(10)],
 	});
@@ -96,6 +98,7 @@ export const NpmIniVideo: React.FC = () => {
 			color: '#28c840',
 			points: dot,
 			strokeWidth: 1,
+			strokeColor: 'black',
 		},
 		transformations: [...topLeftTransformation, translateX(20)],
 	});
@@ -106,6 +109,7 @@ export const NpmIniVideo: React.FC = () => {
 			color: BLUE,
 			points: turnInto3D(parsePath(dollar.path)),
 			strokeWidth: 0,
+			strokeColor: 'black',
 		},
 		transformations: [...topLeftTransformation, translateY(25)],
 	});
@@ -116,6 +120,7 @@ export const NpmIniVideo: React.FC = () => {
 			color: 'white',
 			points: turnInto3D(parsePath(npmInitVideo.path)),
 			strokeWidth: 0,
+			strokeColor: 'black',
 		},
 		transformations: [...topLeftTransformation, translateY(25), translateX(10)],
 	});

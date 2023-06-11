@@ -8,10 +8,9 @@ export const Faces: React.FC<{
 	camera: MatrixTransform4D;
 	sort: boolean;
 }> = ({camera, elements, sort}) => {
-	const sorted = useMemo(
-		() => (sort ? sortElements(elements) : elements),
-		[elements, sort]
-	);
+	const sorted = useMemo(() => {
+		return sort ? sortElements(elements) : elements;
+	}, [elements, sort]);
 
 	return (
 		<>
