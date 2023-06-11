@@ -9,11 +9,11 @@ import {makeRect} from '@remotion/shapes';
 import {Font} from 'opentype.js';
 import {interpolate, spring} from 'remotion';
 import {centerPath} from '../center';
-import {FaceType} from '../face-type';
+import {makeElement, ThreeDElement, transformElements} from '../element';
 import {turnInto3D} from '../fix-z';
 import {getText} from '../get-char';
 import {extrudeInstructions} from '../join-inbetween-tiles';
-import {sortFacesZIndex, transformFace, transformFaces} from '../map-face';
+import {transformFace} from '../map-face';
 import {MatrixTransform4D, rotateX, translateZ, Vector4D} from '../matrix';
 import {makeRoundedProgress} from './make-rounded-progress';
 
@@ -40,7 +40,7 @@ export const getButton = ({
 	transformations: MatrixTransform4D[];
 	frame: number;
 	fps: number;
-}): FaceType[] => {
+}): ThreeDElement[] => {
 	const rect = makeRect({
 		height: outerHeight,
 		width: outerWidth,
@@ -79,32 +79,36 @@ export const getButton = ({
 
 	const rotation = interpolate(turn, [0, 1], [0, Math.PI]);
 
-	const extruded = extrudeInstructions({
-		backFaceColor: 'white',
-		sideColor: 'black',
-		frontFaceColor: 'black',
-		depth,
-		points: parsePath(centerPath(rect.path)),
-		strokeWidth: 20,
-	});
-
-	const progressFace: FaceType = transformFace(
-		{
-			points: makeRoundedProgress({
-				outerCornerRadius,
-				boxHeight,
-				evolve,
-				height,
-				width,
-				padding,
-				boxWidth,
-			}),
-			color,
-			centerPoint: [0, 0, 0, 1] as Vector4D,
+	const extruded = makeElement(
+		extrudeInstructions({
+			backFaceColor: 'white',
+			sideColor: 'black',
+			frontFaceColor: 'black',
+			depth,
+			points: parsePath(centerPath(rect.path)),
 			strokeWidth: 20,
-			strokeColor: 'black',
-		},
-		[translateZ(-depth / 2 - 0.0001)]
+		})
+	);
+
+	const progressFace = makeElement(
+		transformFace(
+			{
+				points: makeRoundedProgress({
+					outerCornerRadius,
+					boxHeight,
+					evolve,
+					height,
+					width,
+					padding,
+					boxWidth,
+				}),
+				color,
+				centerPoint: [0, 0, 0, 1] as Vector4D,
+				strokeWidth: 20,
+				strokeColor: 'black',
+			},
+			[translateZ(-depth / 2 - 0.0001)]
+		)
 	);
 
 	const scaled = resetPath(scalePath(text.path, 0.4 * 7.5, 0.4 * 7.5));
@@ -120,15 +124,17 @@ export const getButton = ({
 		translateZ(depth / 2 + 0.0001),
 	];
 
-	const textFace: FaceType = transformFace(
-		{
-			points: turnInto3D(parsePath(leftAlignedText)),
-			color: 'black',
-			centerPoint: [0, 0, 0, 1] as Vector4D,
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
-		faceTransformations
+	const textFace = makeElement(
+		transformFace(
+			{
+				points: turnInto3D(parsePath(leftAlignedText)),
+				color: 'black',
+				centerPoint: [0, 0, 0, 1] as Vector4D,
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			faceTransformations
+		)
 	);
 
 	const folderPath = resetPath(
@@ -139,23 +145,25 @@ export const getButton = ({
 		)
 	);
 
-	const folderFace: FaceType = transformFace(
-		{
-			points: turnInto3D(
-				parsePath(translatePath(folderPath, 95 * 7.5, -15 * 7.5))
-			),
-			color: 'black',
-			centerPoint: [0, 0, 0, 1] as Vector4D,
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
-		faceTransformations
+	const folderFace = makeElement(
+		transformFace(
+			{
+				points: turnInto3D(
+					parsePath(translatePath(folderPath, 95 * 7.5, -15 * 7.5))
+				),
+				color: 'black',
+				centerPoint: [0, 0, 0, 1] as Vector4D,
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			faceTransformations
+		)
 	);
 
-	const projected = transformFaces({
-		transformations: [rotateX(rotation), ...transformations],
-		faces: [...extruded, progressFace, textFace, folderFace],
-	});
+	const projected = transformElements(
+		[extruded, progressFace, textFace, folderFace],
+		[rotateX(rotation), ...transformations]
+	);
 
-	return sortFacesZIndex(projected);
+	return projected;
 };

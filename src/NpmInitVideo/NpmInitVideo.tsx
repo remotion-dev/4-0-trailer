@@ -5,6 +5,7 @@ import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from '../camera';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
+import {makeElement, ThreeDElement, transformElements} from '../element';
 import {FaceType} from '../face-type';
 import {Faces} from '../Faces';
 import {turnInto3D} from '../fix-z';
@@ -104,51 +105,62 @@ export const NpmIniVideo: React.FC = () => {
 		[...topLeftTransformation, translateX(20 * 7.5)]
 	);
 
-	const dollarFace: FaceType = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
-			color: BLUE,
-			points: turnInto3D(parsePath(dollar.path)),
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
-		[...topLeftTransformation, translateY(25 * 7.5)]
+	const dollarFace = makeElement(
+		transformFace(
+			{
+				centerPoint: [0, 0, 0, 1],
+				color: BLUE,
+				points: turnInto3D(parsePath(dollar.path)),
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			[...topLeftTransformation, translateY(25 * 7.5)]
+		)
 	);
 
-	const npmInitVideoFace: FaceType = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
-			color: 'white',
-			points: turnInto3D(parsePath(npmInitVideo.path)),
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
-		[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
+	const npmInitVideoFace = makeElement(
+		transformFace(
+			{
+				centerPoint: [0, 0, 0, 1],
+				color: 'white',
+				points: turnInto3D(parsePath(npmInitVideo.path)),
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
+		)
 	);
 
-	const transformed = transformFaces({
-		faces: [greenFace, yellowFace, redFace],
-		transformations: [],
-	});
+	const transformed = makeElement(
+		transformFaces({
+			faces: [greenFace, yellowFace, redFace],
+			transformations: [],
+		})
+	);
 
 	const centered = centerPath(rect.path);
-	const extrude = extrudeInstructions({
-		backFaceColor: 'black',
-		depth,
-		frontFaceColor: '#222',
-		points: parsePath(centered),
-		sideColor: 'black',
-		strokeWidth: 10,
-	});
+	const extrude = makeElement(
+		extrudeInstructions({
+			backFaceColor: 'black',
+			depth,
+			frontFaceColor: '#222',
+			points: parsePath(centered),
+			sideColor: 'black',
+			strokeWidth: 10,
+		})
+	);
 
-	const allFaces = [extrude, transformed, [dollarFace], [npmInitVideoFace]];
+	const allFaces: ThreeDElement[] = [
+		extrude,
+		transformed,
+		dollarFace,
+		npmInitVideoFace,
+	];
 
-	const all = allFaces.map((a) => {
-		return transformFaces({
-			faces: a,
-			transformations: [rotateY(frame / 100), rotateX(frame / 100)],
-		});
-	});
+	const all = transformElements(allFaces, [
+		rotateY(frame / 100),
+		rotateX(frame / 100),
+	]);
 
 	return (
 		<AbsoluteFill

@@ -19,13 +19,13 @@ import {
 import {z} from 'zod';
 import {getCamera} from './camera';
 import {centerPath} from './center';
+import {makeElement, transformElement} from './element';
 import {FaceType} from './face-type';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {
-	sortFacesZIndex,
 	transformFace,
 	transformFaces,
 	translateSvgInstruction,
@@ -104,10 +104,12 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		translateY(interpolate(intrude, [0, 1], [0, -20 * 7.5])),
 	];
 
-	const extrudedTo0 = transformFaces({
-		faces: _extrudedButton,
-		transformations,
-	});
+	const extrudedTo0 = makeElement(
+		transformFaces({
+			faces: _extrudedButton,
+			transformations,
+		})
+	);
 
 	const bBoxText = getBoundingBox(textPath);
 
@@ -120,15 +122,17 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		);
 	});
 
-	const textFace = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
-			color: 'white',
-			points: centeredText,
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
-		[translateZ(-actualDepth / 2 - 0.001)]
+	const textFace = makeElement(
+		transformFace(
+			{
+				centerPoint: [0, 0, 0, 1],
+				color: 'white',
+				points: centeredText,
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			[translateZ(-actualDepth / 2 - 0.001)]
+		)
 	);
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200 * 7.5]);
@@ -180,13 +184,8 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 					<Faces
 						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
-							sortFacesZIndex(extrudedTo0),
-							sortFacesZIndex(
-								transformFaces({
-									transformations,
-									faces: [textFace],
-								})
-							),
+							extrudedTo0,
+							transformElement(textFace, transformations),
 						]}
 					/>
 				</svg>

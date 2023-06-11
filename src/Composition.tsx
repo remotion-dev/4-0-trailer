@@ -1,11 +1,10 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
-import {FaceType} from './face-type';
+import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
-import {sortFacesZIndex, transformFaces} from './map-face';
 import {rotateY} from './matrix';
 
 export const MyComposition = () => {
@@ -26,21 +25,18 @@ export const MyComposition = () => {
 
 	const depth = 150;
 
-	const inbetweenFaces: FaceType[] = extrudeInstructions({
-		points: parsePath(scaled),
-		depth,
-		sideColor: 'green',
-		frontFaceColor: 'red',
-		backFaceColor: 'blue',
-		strokeWidth: 10,
-	});
-
-	const rotatedFaces = sortFacesZIndex(
-		transformFaces({
-			faces: inbetweenFaces,
-			transformations: [rotateY(frame / 100)],
+	const inbetweenFaces = makeElement(
+		extrudeInstructions({
+			points: parsePath(scaled),
+			depth,
+			sideColor: 'green',
+			frontFaceColor: 'red',
+			backFaceColor: 'blue',
+			strokeWidth: 10,
 		})
 	);
+
+	const rotatedFaces = transformElement(inbetweenFaces, [rotateY(frame / 100)]);
 
 	return (
 		<svg
