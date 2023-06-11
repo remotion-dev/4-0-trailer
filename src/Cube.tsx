@@ -128,7 +128,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		[translateZ(-actualDepth / 2 + 0.001)]
+		[translateZ(-actualDepth / 2 - 0.001)]
 	);
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200 * 7.5]);
