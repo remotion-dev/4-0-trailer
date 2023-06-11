@@ -59,7 +59,7 @@ export const TriangleOut: React.FC = () => {
 				rotateX(-(i * delayedFrame) / 300),
 				rotateY(delayedFrame / 100),
 				rotateZ(delayedFrame / 100),
-				scaled([0.6 + zoomIn, 0.6 + zoomIn, 0.6 + zoomIn]),
+				scaled(0.6 + zoomIn),
 			],
 			faces: extruded,
 		});

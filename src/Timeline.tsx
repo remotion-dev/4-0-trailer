@@ -152,7 +152,7 @@ export const Timeline: React.FC = () => {
 								rotateX(-xRotation),
 								rotateZ(-frame / 1500),
 								rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
-								scaled([scale, scale, scale]),
+								scaled(scale),
 							],
 							faces: element,
 						})

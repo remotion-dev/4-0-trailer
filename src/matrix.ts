@@ -127,7 +127,8 @@ export type MatrixTransform4D = [
 	number
 ];
 
-export const scaled = function (vec: Vector) {
+export const scaled = function (value: number | Vector) {
+	const vec: Vector = typeof value === 'number' ? [value, value, value] : value;
 	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
 };
 
