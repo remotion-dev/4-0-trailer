@@ -12,7 +12,6 @@ import {getText, useFont} from '../get-char';
 import {extrudeElement} from '../join-inbetween-tiles';
 import {
 	MatrixTransform4D,
-	rotateX,
 	rotateY,
 	translateX,
 	translateY,
@@ -115,7 +114,7 @@ export const NpmInitVideo: React.FC = () => {
 		strokeWidth: 10,
 	});
 
-	const allFaces: ThreeDElement[] = [
+	const allElements: ThreeDElement[] = [
 		extrude,
 		greenFace,
 		yellowFace,
@@ -124,10 +123,7 @@ export const NpmInitVideo: React.FC = () => {
 		npmInitVideoFace,
 	];
 
-	const all = transformElements(allFaces, [
-		rotateY(frame / 100),
-		rotateX(frame / 100),
-	]);
+	const all = transformElements(allElements, [rotateY(frame / 100)]);
 
 	return (
 		<AbsoluteFill
