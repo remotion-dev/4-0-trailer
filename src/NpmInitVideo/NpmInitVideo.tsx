@@ -10,7 +10,7 @@ import {FaceType} from '../face-type';
 import {Faces} from '../Faces';
 import {turnInto3D} from '../fix-z';
 import {getText, useFont} from '../get-char';
-import {extrudeInstructions} from '../join-inbetween-tiles';
+import {extrudeElement} from '../join-inbetween-tiles';
 import {transformFace, transformFaces} from '../map-face';
 import {
 	MatrixTransform4D,
@@ -139,16 +139,14 @@ export const NpmIniVideo: React.FC = () => {
 	);
 
 	const centered = centerPath(rect.path);
-	const extrude = makeElement(
-		extrudeInstructions({
-			backFaceColor: 'black',
-			depth,
-			frontFaceColor: '#222',
-			points: parsePath(centered),
-			sideColor: 'black',
-			strokeWidth: 10,
-		})
-	);
+	const extrude = extrudeElement({
+		backFaceColor: 'black',
+		depth,
+		frontFaceColor: '#222',
+		points: parsePath(centered),
+		sideColor: 'black',
+		strokeWidth: 10,
+	});
 
 	const allFaces: ThreeDElement[] = [
 		extrude,

@@ -12,16 +12,11 @@ import {getCamera} from './camera';
 import {centerPath} from './center';
 import {BLUE} from './colors';
 import {makeElement, transformElement} from './element';
-import {FaceType} from './face-type';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {
-	transformFace,
-	transformFaces,
-	translateSvgInstruction,
-} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
+import {transformFace, translateSvgInstruction} from './map-face';
 import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -73,7 +68,7 @@ export const RenderButton: React.FC = () => {
 
 	const pushIn = Math.min(0, cursorDistance);
 
-	const _extrudedButton: FaceType[] = extrudeInstructions({
+	const _extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
 		depth: depth + pushIn,
 		sideColor: 'black',
@@ -82,23 +77,19 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 20,
 	});
 
-	const extrudedTo0 = makeElement(
-		transformFaces({
-			faces: _extrudedButton,
-			transformations: [translateZ(-(depth + pushIn) / 2), ...transformations],
-		})
-	);
+	const extrudedTo0 = transformElement(_extrudedButton, [
+		translateZ(-(depth + pushIn) / 2),
+		...transformations,
+	]);
 
-	const extrudedCursor = makeElement(
-		extrudeInstructions({
-			points: parsePath(cursorPath),
-			depth: cursorDepth,
-			sideColor: 'black',
-			frontFaceColor: 'white',
-			backFaceColor: 'white',
-			strokeWidth: 20,
-		})
-	);
+	const extrudedCursor = extrudeElement({
+		points: parsePath(cursorPath),
+		depth: cursorDepth,
+		sideColor: 'black',
+		frontFaceColor: 'white',
+		backFaceColor: 'white',
+		strokeWidth: 20,
+	});
 
 	const bBoxText = getBoundingBox(textPath);
 

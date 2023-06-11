@@ -20,16 +20,11 @@ import {z} from 'zod';
 import {getCamera} from './camera';
 import {centerPath} from './center';
 import {makeElement, transformElement} from './element';
-import {FaceType} from './face-type';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {
-	transformFace,
-	transformFaces,
-	translateSvgInstruction,
-} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
+import {transformFace, translateSvgInstruction} from './map-face';
 import {rotateX, rotateY, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -81,7 +76,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const actualDepth = depth + pushIn;
 
-	const _extrudedButton: FaceType[] = extrudeInstructions({
+	const _extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
 		depth: actualDepth,
 		sideColor: 'black',
@@ -104,12 +99,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		translateY(interpolate(intrude, [0, 1], [0, -20 * 7.5])),
 	];
 
-	const extrudedTo0 = makeElement(
-		transformFaces({
-			faces: _extrudedButton,
-			transformations,
-		})
-	);
+	const extrudedTo0 = transformElement(_extrudedButton, transformations);
 
 	const bBoxText = getBoundingBox(textPath);
 

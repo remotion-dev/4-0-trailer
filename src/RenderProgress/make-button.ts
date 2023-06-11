@@ -12,7 +12,7 @@ import {centerPath} from '../center';
 import {makeElement, ThreeDElement, transformElements} from '../element';
 import {turnInto3D} from '../fix-z';
 import {getText} from '../get-char';
-import {extrudeInstructions} from '../join-inbetween-tiles';
+import {extrudeElement} from '../join-inbetween-tiles';
 import {transformFace} from '../map-face';
 import {MatrixTransform4D, rotateX, translateZ, Vector4D} from '../matrix';
 import {makeRoundedProgress} from './make-rounded-progress';
@@ -79,16 +79,14 @@ export const getButton = ({
 
 	const rotation = interpolate(turn, [0, 1], [0, Math.PI]);
 
-	const extruded = makeElement(
-		extrudeInstructions({
-			backFaceColor: 'white',
-			sideColor: 'black',
-			frontFaceColor: 'black',
-			depth,
-			points: parsePath(centerPath(rect.path)),
-			strokeWidth: 20,
-		})
-	);
+	const extruded = extrudeElement({
+		backFaceColor: 'white',
+		sideColor: 'black',
+		frontFaceColor: 'black',
+		depth,
+		points: parsePath(centerPath(rect.path)),
+		strokeWidth: 20,
+	});
 
 	const progressFace = makeElement(
 		transformFace(

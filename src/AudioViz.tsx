@@ -10,9 +10,9 @@ import {
 	useVideoConfig,
 } from 'remotion';
 import {getCamera} from './camera';
-import {makeElement, transformElement} from './element';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -84,16 +84,14 @@ export const AudioViz: React.FC = () => {
 			const depth: number = i % 2 === 0 ? depthIn : depthOut;
 			const color = '#0b84f3';
 
-			const extruded = makeElement(
-				extrudeInstructions({
-					backFaceColor: color,
-					sideColor: 'black',
-					frontFaceColor: color,
-					depth,
-					points: parsePath(path),
-					strokeWidth: 10,
-				})
-			);
+			const extruded = extrudeElement({
+				backFaceColor: color,
+				sideColor: 'black',
+				frontFaceColor: color,
+				depth,
+				points: parsePath(path),
+				strokeWidth: 10,
+			});
 
 			const spacing = boxWidth * 1.5;
 

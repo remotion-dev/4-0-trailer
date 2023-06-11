@@ -4,10 +4,9 @@ import React, {useMemo} from 'react';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
-import {makeElement, transformElement} from './element';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {transformFaces} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -82,20 +81,18 @@ export const Timeline: React.FC = () => {
 	];
 
 	const facesProject = faces.map((f, i) => {
-		const faces = makeElement(
-			extrudeInstructions({
-				depth: 20 * 7.5,
-				backFaceColor: f.backColor,
-				frontFaceColor: f.frontColor,
-				points: makeRect({
-					width: f.width,
-					height: TRACK_HEIGHT,
-					cornerRadius: 15,
-				}).instructions,
-				sideColor: 'black',
-				strokeWidth: 10,
-			})
-		);
+		const faces = extrudeElement({
+			depth: 20 * 7.5,
+			backFaceColor: f.backColor,
+			frontFaceColor: f.frontColor,
+			points: makeRect({
+				width: f.width,
+				height: TRACK_HEIGHT,
+				cornerRadius: 15,
+			}).instructions,
+			sideColor: 'black',
+			strokeWidth: 10,
+		});
 		return transformElement(faces, [
 			translateX(f.x),
 			translateY((TRACK_HEIGHT + 2) * i),
@@ -117,22 +114,20 @@ export const Timeline: React.FC = () => {
 		]);
 	});
 
-	const cursor = makeElement(
-		transformFaces({
-			faces: extrudeInstructions({
-				depth: 2 * 7.5,
-				backFaceColor: 'black',
-				frontFaceColor: 'red',
-				points: parsePath(resetPath(cursorHandlerPath)),
-				sideColor: 'black',
-				strokeWidth: 10,
-			}),
-			transformations: [
-				translateX((frame - 6) * 7.5),
-				translateY(-12 * 7.5),
-				translateZ(-LAYER_DEPTH / 2 - 1),
-			],
-		})
+	const cursor = transformElement(
+		extrudeElement({
+			depth: 2 * 7.5,
+			backFaceColor: 'black',
+			frontFaceColor: 'red',
+			points: parsePath(resetPath(cursorHandlerPath)),
+			sideColor: 'black',
+			strokeWidth: 10,
+		}),
+		[
+			translateX((frame - 6) * 7.5),
+			translateY(-12 * 7.5),
+			translateZ(-LAYER_DEPTH / 2 - 1),
+		]
 	);
 
 	const facesMapped = useMemo(() => {

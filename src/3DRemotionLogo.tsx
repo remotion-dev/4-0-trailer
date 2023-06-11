@@ -2,9 +2,9 @@ import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
-import {makeElement, transformElement} from './element';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -42,16 +42,14 @@ export const TriangleOut: React.FC = () => {
 
 		const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
 
-		const extruded = makeElement(
-			extrudeInstructions({
-				backFaceColor: color,
-				sideColor: 'black',
-				frontFaceColor: color,
-				depth,
-				points: parsed,
-				strokeWidth: 10,
-			})
-		);
+		const extruded = extrudeElement({
+			backFaceColor: color,
+			sideColor: 'black',
+			frontFaceColor: color,
+			depth,
+			points: parsed,
+			strokeWidth: 10,
+		});
 		const projected = transformElement(extruded, [
 			translateZ(spread * i - spread),
 			translateX(-width / 2),
