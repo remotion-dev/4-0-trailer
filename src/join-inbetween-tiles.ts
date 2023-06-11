@@ -44,14 +44,10 @@ export const extrudeInstructions = ({
 		color: 'black',
 	};
 
-	const unscaledBackFace = transformFace({
-		face: instructions,
-		transformations: [translateZ(depth / 2)],
-	});
-	const unscaledFrontFace = transformFace({
-		face: instructions,
-		transformations: [translateZ(-depth / 2)],
-	});
+	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
+	const unscaledFrontFace = transformFace(instructions, [
+		translateZ(-depth / 2),
+	]);
 
 	const inbetween = unscaledBackFace.points.map((t, i): FaceType => {
 		const nextInstruction =

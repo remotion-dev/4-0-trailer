@@ -121,16 +121,16 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		);
 	});
 
-	const textFace = transformFace({
-		face: {
+	const textFace = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: centeredText,
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: [translateZ(-actualDepth / 2 + 0.001)],
-	});
+		[translateZ(-actualDepth / 2 + 0.001)]
+	);
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200]);
 

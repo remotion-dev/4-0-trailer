@@ -107,16 +107,16 @@ export const RenderButton: React.FC = () => {
 		);
 	});
 
-	const textFace = transformFace({
-		face: {
+	const textFace = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: centeredText,
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: [translateZ(-depth - 0.001 - pushIn)],
-	});
+		[translateZ(-depth - 0.001 - pushIn)]
+	);
 
 	const movedCursor = transformFaces({
 		faces: extrudedCursor,

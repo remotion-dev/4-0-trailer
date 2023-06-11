@@ -70,60 +70,60 @@ export const NpmIniVideo: React.FC = () => {
 		translateZ(-depth / 2),
 	];
 
-	const redFace: FaceType = transformFace({
-		face: {
+	const redFace: FaceType = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: '#fe5f57',
 			points: dot,
 			strokeWidth: 1,
 			strokeColor: 'black',
 		},
-		transformations: topLeftTransformation,
-	});
+		topLeftTransformation
+	);
 
-	const yellowFace: FaceType = transformFace({
-		face: {
+	const yellowFace: FaceType = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: '#ffbc2e',
 			points: dot,
 			strokeWidth: 1,
 			strokeColor: 'black',
 		},
-		transformations: [...topLeftTransformation, translateX(10)],
-	});
+		[...topLeftTransformation, translateX(10)]
+	);
 
-	const greenFace: FaceType = transformFace({
-		face: {
+	const greenFace: FaceType = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: '#28c840',
 			points: dot,
 			strokeWidth: 1,
 			strokeColor: 'black',
 		},
-		transformations: [...topLeftTransformation, translateX(20)],
-	});
+		[...topLeftTransformation, translateX(20)]
+	);
 
-	const dollarFace: FaceType = transformFace({
-		face: {
+	const dollarFace: FaceType = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: BLUE,
 			points: turnInto3D(parsePath(dollar.path)),
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: [...topLeftTransformation, translateY(25)],
-	});
+		[...topLeftTransformation, translateY(25)]
+	);
 
-	const npmInitVideoFace: FaceType = transformFace({
-		face: {
+	const npmInitVideoFace: FaceType = transformFace(
+		{
 			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: turnInto3D(parsePath(npmInitVideo.path)),
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: [...topLeftTransformation, translateY(25), translateX(10)],
-	});
+		[...topLeftTransformation, translateY(25), translateX(10)]
+	);
 
 	const transformed = transformFaces({
 		faces: [greenFace, yellowFace, redFace],

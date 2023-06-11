@@ -115,13 +115,10 @@ export const translateSvgInstruction = (
 	throw new Error('Unknown instruction type: ' + JSON.stringify(instruction));
 };
 
-export const transformFace = ({
-	face,
-	transformations,
-}: {
-	face: FaceType;
-	transformations: MatrixTransform4D[];
-}): FaceType => {
+export const transformFace = (
+	face: FaceType,
+	transformations: MatrixTransform4D[]
+): FaceType => {
 	return {
 		...face,
 		points: face.points.map((p) => {
@@ -144,7 +141,7 @@ export const transformFaces = ({
 	transformations: MatrixTransform4D[];
 }) => {
 	return faces.map((face) => {
-		return transformFace({face, transformations});
+		return transformFace(face, transformations);
 	});
 };
 

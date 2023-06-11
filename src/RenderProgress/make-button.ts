@@ -92,8 +92,8 @@ export const getButton = ({
 		strokeWidth: 20,
 	});
 
-	const progressFace: FaceType = transformFace({
-		face: {
+	const progressFace: FaceType = transformFace(
+		{
 			points: makeRoundedProgress({
 				outerCornerRadius,
 				boxHeight,
@@ -108,8 +108,8 @@ export const getButton = ({
 			strokeWidth: 20,
 			strokeColor: 'black',
 		},
-		transformations: [translateZ(-depth / 2 - 0.0001)],
-	});
+		[translateZ(-depth / 2 - 0.0001)]
+	);
 
 	const scaled = resetPath(scalePath(text.path, 0.4, 0.4));
 	const boundingBoxText = getBoundingBox(scaled);
@@ -124,16 +124,16 @@ export const getButton = ({
 		translateZ(depth / 2 + 0.0001),
 	];
 
-	const textFace: FaceType = transformFace({
-		face: {
+	const textFace: FaceType = transformFace(
+		{
 			points: turnInto3D(parsePath(leftAlignedText)),
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: faceTransformations,
-	});
+		faceTransformations
+	);
 
 	const folderPath = resetPath(
 		scalePath(
@@ -143,16 +143,16 @@ export const getButton = ({
 		)
 	);
 
-	const folderFace: FaceType = transformFace({
-		face: {
+	const folderFace: FaceType = transformFace(
+		{
 			points: turnInto3D(parsePath(translatePath(folderPath, 95, -15))),
 			color: 'black',
 			centerPoint: [0, 0, 0, 1] as Vector4D,
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: faceTransformations,
-	});
+		faceTransformations
+	);
 
 	const projected = transformFaces({
 		transformations: [rotateX(rotation), ...transformations],
