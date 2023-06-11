@@ -1,13 +1,11 @@
-import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
+import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {FaceType, sortFacesZIndex, transformFaces} from './map-face';
-import {rotateY, translateX, translateY} from './matrix';
-
-const scale = 1;
+import {rotateY} from './matrix';
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
@@ -19,13 +17,13 @@ export const MyComposition = () => {
 
 	const text = getText({font, text: '4'});
 
-	const scaled = resetPath(scalePath(resetPath(text.path), scale, scale));
+	const scaled = resetPath(text.path);
 	const bBox = getBoundingBox(scaled);
 
 	const width = bBox.x2 - bBox.x1;
 	const height = bBox.y2 - bBox.y1;
 
-	const depth = 20;
+	const depth = 150;
 
 	const inbetweenFaces: FaceType[] = extrudeInstructions({
 		points: parsePath(scaled),
@@ -39,15 +37,9 @@ export const MyComposition = () => {
 	const rotatedFaces = sortFacesZIndex(
 		transformFaces({
 			faces: inbetweenFaces,
-			transformations: [
-				translateX(-width / 2),
-				translateY(-height / 2),
-				rotateY(frame / 100),
-			],
+			transformations: [rotateY(frame / 100)],
 		})
 	);
-
-	console.log({camera: getCamera(width, height)});
 
 	return (
 		<svg

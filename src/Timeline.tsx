@@ -19,8 +19,8 @@ import {
 
 const cursorHandlerPath = scalePath(
 	'M16.0234 0.73407H142.355C150.64 0.73407 157.355 7.4498 157.355 15.7341V69.0469C157.355 73.4503 155.421 77.6313 152.064 80.4813L88.398 134.538C88.398 134.538 91.5 2925.5 91.5 2938.5C91.5 2951.5 72.0829 2952 72.0829 2938.5C72.0829 2925 68.9809 134.538 68.9809 134.538L5.66765 80.7808C2.08724 77.7408 0.0234375 73.2811 0.0234375 68.5842V16.7341C0.0234375 7.89751 7.18688 0.73407 16.0234 0.73407Z',
-	0.08,
-	0.08
+	0.6,
+	0.6
 );
 
 type Track = {
@@ -31,8 +31,8 @@ type Track = {
 	width: number;
 };
 
-const TRACK_HEIGHT = 20;
-const LAYER_DEPTH = 20;
+const TRACK_HEIGHT = 150;
+const LAYER_DEPTH = 150;
 
 export const Timeline: React.FC = () => {
 	const {width, height} = useVideoConfig();
@@ -48,51 +48,51 @@ export const Timeline: React.FC = () => {
 			x: 0,
 			frontColor: BLUE,
 			backColor: 'black',
-			width: 150,
+			width: 150 * 7.5,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 40,
+			x: 40 * 7.5,
 			frontColor: BLUE,
 			backColor: 'black',
-			width: 150,
+			width: 150 * 7.5,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 60,
+			x: 60 * 7.5,
 			frontColor: GREEN,
 			backColor: 'black',
-			width: 150,
+			width: 150 * 7.5,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 60,
+			x: 60 * 7.5,
 			frontColor: BLUE,
 			backColor: 'black',
-			width: 300,
+			width: 300 * 7.5,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 30,
+			x: 30 * 7.5,
 			frontColor: BLUE,
 			backColor: 'black',
-			width: 300,
+			width: 300 * 7.5,
 		},
 	];
 
 	const facesProject = faces.map((f, i) => {
 		return transformFaces({
 			faces: extrudeInstructions({
-				depth: 20,
+				depth: 20 * 7.5,
 				backFaceColor: f.backColor,
 				frontFaceColor: f.frontColor,
 				points: makeRect({
 					width: f.width,
 					height: TRACK_HEIGHT,
-					cornerRadius: 2,
+					cornerRadius: 15,
 				}).instructions,
 				sideColor: 'black',
-				strokeWidth: 8,
+				strokeWidth: 10,
 			}),
 			transformations: [
 				translateX(f.x),
@@ -108,7 +108,9 @@ export const Timeline: React.FC = () => {
 							damping: 200,
 						},
 						durationInFrames: 80,
-					}) * 200
+					}) *
+						200 *
+						7.5
 				),
 			],
 		});
@@ -116,16 +118,16 @@ export const Timeline: React.FC = () => {
 
 	const cursor = transformFaces({
 		faces: extrudeInstructions({
-			depth: 2,
+			depth: 2 * 7.5,
 			backFaceColor: 'black',
 			frontFaceColor: 'red',
 			points: parsePath(resetPath(cursorHandlerPath)),
 			sideColor: 'black',
-			strokeWidth: 8,
+			strokeWidth: 10,
 		}),
 		transformations: [
-			translateX(frame - 6),
-			translateY(-12),
+			translateX((frame - 6) * 7.5),
+			translateY(-12 * 7.5),
 			translateZ(-LAYER_DEPTH / 2 - 1),
 		],
 	});
@@ -147,8 +149,8 @@ export const Timeline: React.FC = () => {
 					return sortFacesZIndex(
 						transformFaces({
 							transformations: [
-								translateX(-frame * 0.6),
-								translateY(-30),
+								translateX(-frame * 0.6 * 7.5),
+								translateY(-30 * 7.5),
 								rotateX(-xRotation),
 								rotateZ(-frame / 1500),
 								rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),

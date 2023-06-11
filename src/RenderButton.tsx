@@ -30,21 +30,21 @@ const cursorPath = scalePath(
 	resetPath(
 		'M32 32L0 46.9V432l29 31.8 96.1-117.2 48.2 102.7 13.6 29 57.9-27.2-13.6-29L183.3 320H320l-.1-42L32 32z'
 	),
-	0.1,
-	0.1
+	0.75,
+	0.75
 );
 
 export const RenderButton: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const shape = makeRect({
-		height: 60,
-		width: 200,
-		cornerRadius: 15,
+		height: 450,
+		width: 1500,
+		cornerRadius: 112.5,
 	});
 
-	const depth = 30;
-	const cursorDepth = 10;
+	const depth = 225;
+	const cursorDepth = 75;
 
 	const centeredButton = centerPath(shape.path);
 
@@ -69,7 +69,7 @@ export const RenderButton: React.FC = () => {
 		durationInFrames: 600,
 	});
 
-	const cursorDistance = interpolate(push, [0, 1], [100, 0], {});
+	const cursorDistance = interpolate(push, [0, 1], [750, 0], {});
 
 	const pushIn = Math.min(0, cursorDistance);
 
@@ -143,13 +143,13 @@ export const RenderButton: React.FC = () => {
 						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
 							sortFacesZIndex(extrudedTo0),
-							sortFacesZIndex(movedCursor),
 							sortFacesZIndex(
 								transformFaces({
 									transformations,
 									faces: [textFace],
 								})
 							),
+							sortFacesZIndex(movedCursor),
 						]}
 					/>
 				</svg>

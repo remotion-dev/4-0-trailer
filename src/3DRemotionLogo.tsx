@@ -1,4 +1,4 @@
-import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
+import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
@@ -16,7 +16,6 @@ import {
 } from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
-const scale = 1;
 
 export const TriangleOut: React.FC = () => {
 	const frame = useCurrentFrame();
@@ -28,18 +27,18 @@ export const TriangleOut: React.FC = () => {
 	const paths = new Array(3).fill(true).map((out, i) => {
 		const triangle = makeTriangle({
 			direction: 'right',
-			length: 200 + i * 90,
+			length: 1500 + i * 675,
 			edgeRoundness: 0.71,
 		});
-		const path = resetPath(scalePath(triangle.path, scale, scale));
+		const path = resetPath(triangle.path);
 		const parsed = parsePath(path);
 
 		const boundingBox = getBoundingBox(path);
 		const width = boundingBox.x2 - boundingBox.x1;
 		const height = boundingBox.y2 - boundingBox.y1;
 
-		const depth = 5 + delayedFrame / 20;
-		const spread = depth + delayedFrame / 1.2;
+		const depth = (5 + delayedFrame / 20) * 7.5;
+		const spread = depth + (delayedFrame / 1.2) * 7.5;
 
 		const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
 

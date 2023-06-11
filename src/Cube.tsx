@@ -2,7 +2,6 @@ import {
 	getBoundingBox,
 	parsePath,
 	resetPath,
-	scalePath,
 	translatePath,
 } from '@remotion/paths';
 import {makeCircle, makeRect} from '@remotion/shapes';
@@ -44,9 +43,9 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const frame = useCurrentFrame();
 	const {fps, width, height} = useVideoConfig();
 	const shape = makeRect({
-		height: 40,
-		width: 40,
-		cornerRadius: 20,
+		height: 40 * 7.5,
+		width: 40 * 7.5,
+		cornerRadius: 20 * 7.5,
 	});
 
 	const spr = spring({
@@ -57,16 +56,16 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		},
 	});
 
-	const depth = 20;
+	const depth = 150;
 
 	const centeredButton = centerPath(shape.path);
 	const font = useFont();
 	if (!font) {
 		return null;
 	}
-	const text = getText({font, text: String(step), size: 70});
+	const text = getText({font, text: String(step), size: 131.25});
 
-	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
+	const textPath = resetPath(text.path);
 	const parsedText = parsePath(textPath);
 
 	const push = spring({
@@ -76,7 +75,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		durationInFrames: 200,
 	});
 
-	const cursorDistance = interpolate(push, [0, 1], [100, 0], {});
+	const cursorDistance = interpolate(push, [0, 1], [750, 0], {});
 
 	const pushIn = Math.min(0, cursorDistance);
 
@@ -101,13 +100,13 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const transformations = [
 		rotateY((-Math.PI / 4 + frame / 100) * (1 - intrude)),
 		rotateX((-Math.PI / 4 + frame / 300) * (1 - intrude)),
-		translateY(interpolate(spr, [0, 1], [500, 0])),
-		translateY(interpolate(intrude, [0, 1], [0, -20])),
+		translateY(interpolate(spr, [0, 1], [500 * 7.5, 0])),
+		translateY(interpolate(intrude, [0, 1], [0, -20 * 7.5])),
 	];
 
 	const extrudedTo0 = transformFaces({
 		faces: _extrudedButton,
-		transformations: [...transformations],
+		transformations,
 	});
 
 	const bBoxText = getBoundingBox(textPath);
@@ -132,7 +131,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		[translateZ(-actualDepth / 2 + 0.001)]
 	);
 
-	const radius = interpolate(intrude, [0, 1], [0, 1200]);
+	const radius = interpolate(intrude, [0, 1], [0, 1200 * 7.5]);
 
 	const circleMask = makeCircle({
 		radius,

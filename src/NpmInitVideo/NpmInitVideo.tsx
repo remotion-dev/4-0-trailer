@@ -19,11 +19,11 @@ import {
 	translateZ,
 } from '../matrix';
 
-const depth = 20;
-const dotRadius = 3;
+const depth = 20 * 7.5;
+const dotRadius = 3 * 7.5;
 
-const rectWidth = 150;
-const rectHeight = 120;
+const rectWidth = 150 * 7.5;
+const rectHeight = 120 * 7.5;
 
 export const NpmIniVideo: React.FC = () => {
 	const {width, height} = useVideoConfig();
@@ -39,19 +39,19 @@ export const NpmIniVideo: React.FC = () => {
 	const dollar = getText({
 		font,
 		text: '$',
-		size: 10,
+		size: 75,
 	});
 
 	const npmInitVideo = getText({
 		font,
 		text: 'npm init video',
-		size: 10,
+		size: 75,
 	});
 
 	const rect = makeRect({
 		width: rectWidth,
 		height: rectHeight,
-		cornerRadius: 6,
+		cornerRadius: 6 * 7.5,
 	});
 
 	const dot = turnInto3D(
@@ -65,8 +65,8 @@ export const NpmIniVideo: React.FC = () => {
 		translateX(-rectWidth / 2),
 		translateY(-rectHeight / 2),
 		translateY(-dotRadius / 2),
-		translateX(7),
-		translateY(7),
+		translateX(7 * 7.5),
+		translateY(7 * 7.5),
 		translateZ(-depth / 2),
 	];
 
@@ -89,7 +89,7 @@ export const NpmIniVideo: React.FC = () => {
 			strokeWidth: 1,
 			strokeColor: 'black',
 		},
-		[...topLeftTransformation, translateX(10)]
+		[...topLeftTransformation, translateX(10 * 7.5)]
 	);
 
 	const greenFace: FaceType = transformFace(
@@ -100,7 +100,7 @@ export const NpmIniVideo: React.FC = () => {
 			strokeWidth: 1,
 			strokeColor: 'black',
 		},
-		[...topLeftTransformation, translateX(20)]
+		[...topLeftTransformation, translateX(20 * 7.5)]
 	);
 
 	const dollarFace: FaceType = transformFace(
@@ -111,7 +111,7 @@ export const NpmIniVideo: React.FC = () => {
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		[...topLeftTransformation, translateY(25)]
+		[...topLeftTransformation, translateY(25 * 7.5)]
 	);
 
 	const npmInitVideoFace: FaceType = transformFace(
@@ -122,7 +122,7 @@ export const NpmIniVideo: React.FC = () => {
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		[...topLeftTransformation, translateY(25), translateX(10)]
+		[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
 	);
 
 	const transformed = transformFaces({

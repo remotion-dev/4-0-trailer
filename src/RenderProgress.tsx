@@ -9,14 +9,14 @@ import {getButton} from './RenderProgress/make-button';
 
 const viewBox = [-1600, -800, 3200, 1600];
 const color = '#0b84f3';
-const depth = 20;
+const depth = 150;
 
 export const RenderProgress: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 
 	const commonTransformations = [
-		translateY(-frame * 1.5 + 50),
+		translateY((-frame * 1.5 + 50) * 7.5),
 		rotateX(-Math.PI / 5),
 		rotateZ(-Math.PI / 5),
 		rotateZ(frame / 1400),
@@ -35,7 +35,7 @@ export const RenderProgress: React.FC = () => {
 				depth,
 				color,
 				delay: i * 40,
-				transformations: [translateY(i * 120), ...commonTransformations],
+				transformations: [translateY(i * 900), ...commonTransformations],
 				frame,
 				fps,
 			})

@@ -2,7 +2,7 @@ import {Font, load} from 'opentype.js';
 import {useEffect, useState} from 'react';
 import {cancelRender, continueRender, delayRender, staticFile} from 'remotion';
 
-const fontSize = 100;
+const fontSize = 750;
 
 export const useFont = () => {
 	const [handle] = useState(() => delayRender());

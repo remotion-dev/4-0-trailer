@@ -11,8 +11,6 @@ import {
 	Vector4D,
 } from './matrix';
 
-const camAngle = Math.PI / 12;
-
 export const getCamera = (width: number, height: number, eye?: Vector) => {
 	const cam: Camera = {
 		eye: eye ?? ([0, 0, 1] as Vector),
@@ -45,7 +43,8 @@ const setupCamera = function (area: Area, zscale: number, cam: Camera) {
 		zscale,
 	];
 	const viewport = m44multiply(translated4d(center), scaled(viewScale));
-	return m44multiply(viewport, persp, camera, mustInvert(viewport));
+	const multiplied = m44multiply(viewport, persp, camera, mustInvert(viewport));
+	return multiplied;
 };
 
 type Area = readonly [number, number, number, number];
@@ -113,6 +112,10 @@ const mustInvert = function (m: MatrixTransform4D): MatrixTransform4D {
 	}
 	return m2;
 };
+
+// Choose a camAngle so that the cotan of half the angle is 1.
+// Then the SVG path at 0 will get its natural size.
+const camAngle = 0.5 * (4 * Math.PI + Math.PI);
 
 const perspective = function (near: number, far: number, angle: number) {
 	if (far <= near) {
