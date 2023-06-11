@@ -5,7 +5,7 @@ import {turnInto3D} from './fix-z';
 import {
 	FaceType,
 	sortFacesZIndex,
-	transformInstructions,
+	transformFace,
 	translateSvgInstruction,
 } from './map-face';
 import {translateZ, Vector4D} from './matrix';
@@ -34,21 +34,24 @@ export const extrudeInstructions = ({
 	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
 
 	const threeD = turnInto3D(points);
-	const instructions: Omit<FaceType, 'color'> = {
+	const instructions: FaceType = {
 		centerPoint: [centerX, centerY, 0, 1],
 		points: subdivideInstructions(
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
 		strokeWidth,
 		strokeColor: 'black',
+		color: 'black',
 	};
 
-	const unscaledBackFace = transformInstructions(instructions, [
-		translateZ(depth / 2),
-	]);
-	const unscaledFrontFace = transformInstructions(instructions, [
-		translateZ(-depth / 2),
-	]);
+	const unscaledBackFace = transformFace({
+		face: instructions,
+		transformations: [translateZ(depth / 2)],
+	});
+	const unscaledFrontFace = transformFace({
+		face: instructions,
+		transformations: [translateZ(-depth / 2)],
+	});
 
 	const inbetween = unscaledBackFace.points.map((t, i): FaceType => {
 		const nextInstruction =

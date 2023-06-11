@@ -148,24 +148,6 @@ export const transformFaces = ({
 	});
 };
 
-export const transformInstructions = (
-	face: Omit<FaceType, 'color'>,
-	transformations: MatrixTransform4D[]
-): Omit<FaceType, 'color'> => {
-	return {
-		...face,
-		points: face.points.map((p) => {
-			return transformations.reduce((acc, t) => {
-				return multiplyMatrixAndSvgInstruction(t, acc);
-			}, p);
-		}),
-		centerPoint: transformations.reduce((acc, t) => {
-			const result = multiplyMatrix(t, acc);
-			return result;
-		}, face.centerPoint),
-	};
-};
-
 export const getBoundingBox = (
 	faces: FaceType[]
 ): [Vector4D, Vector4D, Vector4D, Vector4D] => {
