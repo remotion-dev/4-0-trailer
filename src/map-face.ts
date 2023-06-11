@@ -100,15 +100,3 @@ export const transformFace = (
 		}, face.centerPoint),
 	};
 };
-
-export const transformFaces = ({
-	faces,
-	transformations,
-}: {
-	faces: FaceType[];
-	transformations: MatrixTransform4D[];
-}) => {
-	return faces.map((face) => {
-		return transformFace(face, transformations);
-	});
-};
