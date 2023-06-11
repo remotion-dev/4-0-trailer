@@ -107,7 +107,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const extrudedTo0 = transformFaces({
 		faces: _extrudedButton,
-		transformations: [...transformations, translateZ(-(depth + pushIn) / 2)],
+		transformations: [...transformations],
 	});
 
 	const bBoxText = getBoundingBox(textPath);
@@ -123,13 +123,13 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const textFace = transformFace({
 		face: {
-			centerPoint: [0, 0, -actualDepth / 2 - 0.0001, 1],
+			centerPoint: [0, 0, 0, 1],
 			color: 'white',
 			points: centeredText,
 			strokeWidth: 0,
 			strokeColor: 'black',
 		},
-		transformations: [translateZ(-depth - 0.001 - pushIn)],
+		transformations: [translateZ(-actualDepth / 2 + 0.001)],
 	});
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200]);
