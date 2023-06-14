@@ -1,28 +1,19 @@
 import {parsePath} from '@remotion/paths';
-import {makeCircle, makeRect} from '@remotion/shapes';
+import {makeRect} from '@remotion/shapes';
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from '../camera';
-import {centerPath} from '../center';
-import {BLUE} from '../colors';
 import {ThreeDElement, transformElement, transformElements} from '../element';
 import {Faces} from '../Faces';
 import {turnInto3D} from '../fix-z';
-import {getText, useFont} from '../get-char';
+import {useFont} from '../get-char';
 import {extrudeElement} from '../join-inbetween-tiles';
-import {
-	MatrixTransform4D,
-	rotateY,
-	translateX,
-	translateY,
-	translateZ,
-} from '../matrix';
+import {MatrixTransform4D, rotateY, translateZ} from '../matrix';
 
-const depth = 20 * 7.5;
-const dotRadius = 3 * 7.5;
+const depth = 10;
 
-const rectWidth = 150 * 7.5;
-const rectHeight = 120 * 7.5;
+const rectWidth = 100;
+const rectHeight = 100;
 
 export const NpmInitVideo: React.FC = () => {
 	const {width, height} = useVideoConfig();
@@ -35,64 +26,17 @@ export const NpmInitVideo: React.FC = () => {
 		return null;
 	}
 
-	const dollar = getText({
-		font,
-		text: '$',
-		size: 75,
-	});
-
-	const npmInitVideo = getText({
-		font,
-		text: 'npm init video',
-		size: 75,
+	const npmInitVideo = makeRect({
+		width: rectWidth / 2,
+		height: rectHeight / 2,
 	});
 
 	const rect = makeRect({
 		width: rectWidth,
 		height: rectHeight,
-		cornerRadius: 6 * 7.5,
 	});
 
-	const dot = turnInto3D({
-		instructions: makeCircle({
-			radius: dotRadius,
-		}).instructions,
-		color: '#fe5f57',
-		strokeColor: 'black',
-		strokeWidth: 1,
-	});
-
-	const topLeftTransformation: MatrixTransform4D[] = [
-		translateY(dotRadius / 2),
-		translateX(-rectWidth / 2),
-		translateY(-rectHeight / 2),
-		translateY(-dotRadius / 2),
-		translateX(7 * 7.5),
-		translateY(7 * 7.5),
-		translateZ(-depth / 2),
-	];
-
-	const redFace = transformElement(dot, topLeftTransformation);
-
-	const yellowFace = transformElement(dot, [
-		...topLeftTransformation,
-		translateX(10 * 7.5),
-	]);
-
-	const greenFace = transformElement(dot, [
-		...topLeftTransformation,
-		translateX(20 * 7.5),
-	]);
-
-	const dollarFace = transformElement(
-		turnInto3D({
-			instructions: parsePath(dollar.path),
-			color: BLUE,
-			strokeColor: 'black',
-			strokeWidth: 0,
-		}),
-		[...topLeftTransformation, translateY(25 * 7.5)]
-	);
+	const topLeftTransformation: MatrixTransform4D[] = [];
 
 	const npmInitVideoFace = transformElement(
 		turnInto3D({
@@ -101,29 +45,22 @@ export const NpmInitVideo: React.FC = () => {
 			strokeColor: 'black',
 			color: 'white',
 		}),
-		[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
+		[...topLeftTransformation, translateZ(6)]
 	);
 
-	const centered = centerPath(rect.path);
 	const extrude = extrudeElement({
-		backFaceColor: 'black',
+		backFaceColor: 'blue',
 		depth,
-		frontFaceColor: '#222',
-		points: parsePath(centered),
-		sideColor: 'black',
+		frontFaceColor: 'red',
+		points: parsePath(rect.path),
+		sideColor: 'yellow',
 		strokeWidth: 10,
 	});
 
-	const allElements: ThreeDElement[] = [
-		extrude,
-		greenFace,
-		yellowFace,
-		redFace,
-		dollarFace,
-		npmInitVideoFace,
-	];
+	const allElements: ThreeDElement[] = [extrude, npmInitVideoFace];
 
 	const all = transformElements(allElements, [rotateY(frame / 100)]);
+	console.log(all);
 
 	return (
 		<AbsoluteFill

@@ -11,11 +11,11 @@ import {
 	Vector4D,
 } from './matrix';
 
-export const cameraEye = [0, 0, 1000000000] as Vector;
+export const cameraEye = [0, 0, 1000000000, 1] as Vector4D;
 
 export const getCamera = (width: number, height: number) => {
 	const cam: Camera = {
-		eye: cameraEye,
+		eye: [cameraEye[0], cameraEye[1], cameraEye[2]],
 		coa: [0, 0, 0],
 		up: [0, 1, 0],
 		near: 200,
@@ -82,7 +82,7 @@ const lookat = function (eyeVec: Vector, centerVec: Vector, upVec: Vector) {
 	return m2;
 };
 
-const cross = function (a: Vector, b: Vector): Vector {
+export const cross = function (a: Vector, b: Vector): Vector {
 	if (a.length !== 3 || a.length !== 3) {
 		throw new Error(
 			`Cross product is only defined for 3-dimensional vectors (a.length=${a.length}, b.length=${b.length})`
@@ -104,6 +104,18 @@ const sub = function (a: Vector, b: Vector): Vector {
 export const sub4d = function (a: Vector4D, b: Vector4D): Vector4D {
 	return a.map((v, i) => {
 		return v - b[i];
+	}) as Vector4D;
+};
+
+export const add4d = function (a: Vector4D, b: Vector4D): Vector4D {
+	return a.map((v, i) => {
+		return v + b[i];
+	}) as Vector4D;
+};
+
+export const multiply4d = function (a: Vector4D, t: number): Vector4D {
+	return a.map((v) => {
+		return v * t;
 	}) as Vector4D;
 };
 

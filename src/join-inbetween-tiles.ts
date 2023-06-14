@@ -127,6 +127,8 @@ export const extrudeElement = ({
 			frontTopLeft[2] + depth / 2,
 			frontTopLeft[3],
 		],
+		// TODO: WRONG I just hardcoded something
+		normal: [0, 0, 1, 1],
 	});
 };
 const inverseInstruction = (

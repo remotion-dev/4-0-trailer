@@ -15,6 +15,7 @@ type ThreeDBoundingBox = {
 	frontBottomRight: Vector4D;
 	backTopLeft: Vector4D;
 	backBottomRight: Vector4D;
+	normal: Vector4D;
 };
 
 export const makeElement = (
@@ -48,6 +49,10 @@ export const transformElement = (
 		}),
 		id: makeId(),
 		boundingBox: {
+			normal: transformations.reduce(
+				(point, transformation) => multiplyMatrix(transformation, point),
+				element.boundingBox.normal
+			),
 			backBottomRight: transformations.reduce(
 				(point, transformation) => multiplyMatrix(transformation, point),
 				element.boundingBox.backBottomRight

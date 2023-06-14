@@ -74,5 +74,6 @@ export const turnInto3D = ({
 		frontBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
 		frontTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
 		backBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
+		normal: [0, 0, 1, 1],
 	});
 };
