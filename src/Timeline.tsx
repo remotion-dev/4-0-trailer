@@ -111,7 +111,7 @@ export const Timeline: React.FC = () => {
 			description: 'cursor',
 		}),
 		[
-			translateZ(LAYER_DEPTH / 2 - CURSOR_DEPTH / 2),
+			translateZ(LAYER_DEPTH / 2 + CURSOR_DEPTH / 2),
 			translateX((frame - 6) * 7.5),
 			translateY(-12 * 7.5),
 		]
