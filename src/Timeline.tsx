@@ -11,7 +11,6 @@ import {
 	rotateX,
 	rotateY,
 	rotateZ,
-	scaled,
 	translateX,
 	translateY,
 	translateZ,
@@ -33,6 +32,7 @@ type Track = {
 
 const TRACK_HEIGHT = 150;
 const LAYER_DEPTH = 150;
+const CURSOR_DEPTH = 15;
 
 export const Timeline: React.FC = () => {
 	const {width, height} = useVideoConfig();
@@ -82,7 +82,7 @@ export const Timeline: React.FC = () => {
 
 	const facesProject = faces.map((f, i) => {
 		const faces = extrudeElement({
-			depth: 20 * 7.5,
+			depth: LAYER_DEPTH,
 			backFaceColor: f.backColor,
 			frontFaceColor: f.frontColor,
 			points: makeRect({
@@ -102,7 +102,7 @@ export const Timeline: React.FC = () => {
 
 	const cursor = transformElement(
 		extrudeElement({
-			depth: 2 * 7.5,
+			depth: CURSOR_DEPTH,
 			backFaceColor: 'black',
 			frontFaceColor: 'red',
 			points: parsePath(resetPath(cursorHandlerPath)),
@@ -111,9 +111,9 @@ export const Timeline: React.FC = () => {
 			description: 'cursor',
 		}),
 		[
+			translateZ(LAYER_DEPTH / 2 - CURSOR_DEPTH / 2),
 			translateX((frame - 6) * 7.5),
 			translateY(-12 * 7.5),
-			translateZ(LAYER_DEPTH / 2),
 		]
 	);
 
@@ -132,12 +132,11 @@ export const Timeline: React.FC = () => {
 				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return transformElement(element, [
+						rotateX(-xRotation),
+						rotateZ(-frame / 150),
+						rotateY(interpolate(frame, [0, 400], [0, -Math.PI])),
 						translateX(-frame * 0.6 * 7.5),
 						translateY(-30 * 7.5),
-						rotateX(-xRotation),
-						rotateZ(-frame / 1500),
-						rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
-						scaled(scale),
 					]);
 				})}
 			/>
