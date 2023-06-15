@@ -58,10 +58,13 @@ export const transformElement = (
 		}),
 		id: makeId(),
 		boundingBox: {
-			normal: transformations.reduce(
-				(point, transformation) => multiplyMatrix(transformation, point),
-				element.boundingBox.normal
-			),
+			normal: transformations.reduce((point, transformation) => {
+				// Should not multiply normal the same way:
+				// https://chat.openai.com/share/4850831c-804e-4abd-b65a-59b4df17f32d
+				const inversed = invert4d(transformation);
+				const transposed = transposeMatrix(inversed);
+				return multiplyMatrix(transposed, point);
+			}, element.boundingBox.normal),
 			backBottomRight: transformations.reduce(
 				(point, transformation) => multiplyMatrix(transformation, point),
 				element.boundingBox.backBottomRight

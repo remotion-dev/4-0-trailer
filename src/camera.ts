@@ -160,7 +160,7 @@ const perspective = function (near: number, far: number, angle: number) {
 	] as MatrixTransform4D;
 };
 
-const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
+export const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
 	if (!m.every((m) => !isNaN(m))) {
 		throw new Error('some members of matrix are NaN m=' + m);
 	}
