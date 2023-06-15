@@ -16,7 +16,7 @@ export const Face: React.FC<{
 			<defs>
 				{strokeWidth ? (
 					<mask id={id}>
-						<path d={d} fill="white" />
+						<path shapeRendering="crispEdges" d={d} fill="white" />
 					</mask>
 				) : null}
 			</defs>
