@@ -1,7 +1,7 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
-import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
 import {transformElement} from './element';
@@ -97,21 +97,6 @@ export const Timeline: React.FC = () => {
 		return transformElement(faces, [
 			translateX(f.x),
 			translateY((TRACK_HEIGHT + 2) * i),
-			translateZ(
-				spring({
-					frame,
-					delay: i * 20 - 40,
-					fps,
-					from: 1,
-					to: 0,
-					config: {
-						damping: 200,
-					},
-					durationInFrames: 80,
-				}) *
-					200 *
-					7.5
-			),
 		]);
 	});
 
@@ -128,7 +113,7 @@ export const Timeline: React.FC = () => {
 		[
 			translateX((frame - 6) * 7.5),
 			translateY(-12 * 7.5),
-			translateZ(-LAYER_DEPTH / 2 - 1),
+			translateZ(LAYER_DEPTH / 2),
 		]
 	);
 
