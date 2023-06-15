@@ -95,7 +95,7 @@ export const NpmInitVideo: React.FC = () => {
 				radius: dotRadius,
 			}).instructions,
 			description: 'green-dot',
-			color: '#ffbc2e',
+			color: '#28c840',
 			strokeColor: 'black',
 			strokeWidth: 1,
 		}),
