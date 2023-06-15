@@ -1,4 +1,4 @@
-import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
+import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
 import {
@@ -16,23 +16,18 @@ import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
 import {extrudeElement} from './join-inbetween-tiles';
-import {
-	rotateX,
-	rotateY,
-	rotateZ,
-	translateX,
-	translateY,
-	translateZ,
-} from './matrix';
+import {rotateX, rotateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
-const cursorPath = scalePath(
-	resetPath(
-		'M32 32L0 46.9V432l29 31.8 96.1-117.2 48.2 102.7 13.6 29 57.9-27.2-13.6-29L183.3 320H320l-.1-42L32 32z'
-	),
-	0.75,
-	0.75
+const cursorPath = resetPath(
+	scalePath(
+		resetPath(
+			'M32 32L0 46.9V432l29 31.8 96.1-117.2 48.2 102.7 13.6 29 57.9-27.2-13.6-29L183.3 320H320l-.1-42L32 32z'
+		),
+		0.75,
+		0.75
+	)
 );
 
 export const RenderButton: React.FC = () => {
@@ -56,7 +51,6 @@ export const RenderButton: React.FC = () => {
 	const text = getText({font, text: 'Render video'});
 
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
-	const parsedText = parsePath(textPath);
 
 	const transformations = [
 		rotateY(-Math.PI / 4 + frame / 100),
@@ -99,29 +93,17 @@ export const RenderButton: React.FC = () => {
 		description: 'cursor',
 	});
 
-	const bBoxText = getBoundingBox(textPath);
-
 	const centeredText = turnInto3D({
-		instructions: parsedText,
+		instructions: parsePath(centerPath(textPath)),
 		strokeColor: 'black',
 		color: 'white',
 		strokeWidth: 0,
 		description: 'centered text',
 	});
 
-	const textFace = transformElement(centeredText, [
-		translateX(-(bBoxText.x2 - bBoxText.x1) / 2),
-		translateY(-(bBoxText.y2 - bBoxText.y1) / 2),
-		translateZ(-depth - 0.001 - pushIn),
-	]);
+	const textFace = transformElement(centeredText, [translateZ(0.00001)]);
 
-	const movedCursor = transformElement(extrudedCursor, [
-		rotateY(Math.PI / 2),
-		rotateX(-Math.PI / 4),
-		rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
-		translateZ(Number(-depth - 0.001) - cursorDistance),
-		...transformations,
-	]);
+	const movedCursor = transformElement(extrudedCursor, [...transformations]);
 
 	return (
 		<AbsoluteFill>

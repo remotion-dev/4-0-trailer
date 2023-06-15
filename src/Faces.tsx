@@ -5,10 +5,9 @@ import {ElementComp} from './ElementComp';
 import {MatrixTransform4D} from './matrix';
 import {rayTracing} from './ray-tracing';
 
-const tolerance = 0.0001;
 const biggerThanOrEqual = (a: number, b: number) => {
 	const diff = a - b;
-	return diff > -0.0001;
+	return diff > 0;
 };
 
 export const Faces: React.FC<{
