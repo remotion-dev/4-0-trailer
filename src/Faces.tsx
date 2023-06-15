@@ -7,7 +7,7 @@ import {rayTracing} from './ray-tracing';
 
 const biggerThanOrEqual = (a: number, b: number) => {
 	const diff = a - b;
-	return diff > 0;
+	return diff > 0.0000001;
 };
 
 export const Faces: React.FC<{
@@ -49,7 +49,6 @@ export const Faces: React.FC<{
 				BrayTracedFrontTopLeft.type === 'parallel' ||
 				BrayTracedFrontBottomRight.type === 'parallel'
 			) {
-				console.log('parallel');
 				const avgZA = a.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0);
 				const avgZB = b.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0);
 
@@ -75,21 +74,12 @@ export const Faces: React.FC<{
 			if (aTopLeftIsCloserThanB && aBottomRightIsCloserThanB) {
 				return 1;
 			}
-
-			console.log('we dont know', {
-				aBottomRightIsCloserThanB,
-				aTopLeftIsCloserThanB,
-				bIsCloserThanBottomRight,
-				bTopLeftIsCloserThanA,
-				a: a.description,
-				b: b.description,
-				ArayTracedFrontTopLeft,
-				ArayTracedFrontBottomRight,
-				BrayTracedFrontTopLeft,
-				BrayTracedFrontBottomRight,
-				aBackTopLeft: a.boundingBox.frontTopLeft,
-			});
-
+			if (bTopLeftIsCloserThanA && bIsCloserThanBottomRight) {
+				return -1;
+			}
+			if (aTopLeftIsCloserThanB || aBottomRightIsCloserThanB) {
+				return 1;
+			}
 			return -1;
 		});
 	}, [elements]);
