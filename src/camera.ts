@@ -11,7 +11,7 @@ import {
 	Vector4D,
 } from './matrix';
 
-export const cameraEye = [0, 0, 1000000000, 1] as Vector4D;
+export const cameraEye = [0, 0, 10000, 1] as Vector4D;
 
 export const getCamera = (width: number, height: number) => {
 	const cam: Camera = {

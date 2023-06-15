@@ -101,9 +101,15 @@ export const RenderButton: React.FC = () => {
 		description: 'centered text',
 	});
 
-	const textFace = transformElement(centeredText, [translateZ(0.00001)]);
+	const textFace = transformElement(centeredText, [
+		translateZ(0.00001),
+		...transformations,
+	]);
 
-	const movedCursor = transformElement(extrudedCursor, [...transformations]);
+	const movedCursor = transformElement(extrudedCursor, [
+		translateZ(cursorDepth / 2 + 0.0001),
+		...transformations,
+	]);
 
 	return (
 		<AbsoluteFill>
@@ -117,11 +123,7 @@ export const RenderButton: React.FC = () => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						camera={getCamera(viewBox[2], viewBox[3])}
-						elements={[
-							extrudedTo0,
-							transformElement(textFace, transformations),
-							movedCursor,
-						]}
+						elements={[extrudedTo0, textFace, movedCursor]}
 					/>
 				</svg>
 			</AbsoluteFill>
