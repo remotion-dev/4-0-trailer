@@ -1,4 +1,4 @@
-// https://chat.open.com/share/7f0b2f9b-5789-49c9-a75d-3c0e7aafbbf1
+// https://chat.openai.com/share/7f0b2f9b-5789-49c9-a75d-3c0e7aafbbf1
 
 import {add4d, multiply4d, sub4d} from './camera';
 import {dot, Vector4D} from './matrix';
