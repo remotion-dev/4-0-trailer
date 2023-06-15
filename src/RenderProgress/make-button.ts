@@ -103,7 +103,7 @@ export const getButton = ({
 			strokeWidth: 20,
 			strokeColor: 'black',
 		}),
-		[translateZ(-depth / 2 - 0.0001)]
+		[translateZ(depth / 2 + 0.0001)]
 	);
 
 	const scaled = resetPath(scalePath(text.path, 0.4 * 7.5, 0.4 * 7.5));
@@ -116,7 +116,7 @@ export const getButton = ({
 
 	const faceTransformations = [
 		rotateX(Math.PI),
-		translateZ(depth / 2 + 0.0001),
+		translateZ(-depth / 2 - 0.0002),
 	];
 
 	const textFace = transformElement(
