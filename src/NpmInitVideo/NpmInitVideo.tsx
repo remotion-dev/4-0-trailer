@@ -60,7 +60,7 @@ export const NpmInitVideo: React.FC = () => {
 		translateY(-dotRadius / 2),
 		translateX(7 * 7.5),
 		translateY(7 * 7.5),
-		translateZ(depth / 2),
+		translateZ(depth / 2 + 0.001),
 	];
 
 	const redFace = transformElement(
