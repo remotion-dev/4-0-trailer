@@ -1,12 +1,19 @@
+import {invert4d} from './camera';
 import {FaceType} from './face-type';
 import {makeId} from './make-id';
 import {transformFace} from './map-face';
-import {MatrixTransform4D, multiplyMatrix, Vector4D} from './matrix';
+import {
+	MatrixTransform4D,
+	multiplyMatrix,
+	transposeMatrix,
+	Vector4D,
+} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
 export type ThreeDElement = {
 	faces: FaceType[];
 	id: string;
+	description: string;
 	boundingBox: ThreeDBoundingBox;
 };
 
@@ -20,12 +27,14 @@ type ThreeDBoundingBox = {
 
 export const makeElement = (
 	face: FaceType | FaceType[],
-	boundingBox: ThreeDBoundingBox
+	boundingBox: ThreeDBoundingBox,
+	description: string
 ): ThreeDElement => {
 	return {
 		faces: Array.isArray(face) ? face : [face],
 		id: makeId(),
 		boundingBox,
+		description,
 	};
 };
 

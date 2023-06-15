@@ -92,6 +92,7 @@ export const Timeline: React.FC = () => {
 			}).instructions,
 			sideColor: 'black',
 			strokeWidth: 10,
+			description: 'Track' + i,
 		});
 		return transformElement(faces, [
 			translateX(f.x),
@@ -122,6 +123,7 @@ export const Timeline: React.FC = () => {
 			points: parsePath(resetPath(cursorHandlerPath)),
 			sideColor: 'black',
 			strokeWidth: 10,
+			description: 'cursor',
 		}),
 		[
 			translateX((frame - 6) * 7.5),

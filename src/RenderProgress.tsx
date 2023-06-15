@@ -38,6 +38,7 @@ export const RenderProgress: React.FC = () => {
 				transformations: [translateY(i * 900), ...commonTransformations],
 				frame,
 				fps,
+				description: `button ${i}`,
 			});
 		})
 		.flat(1);

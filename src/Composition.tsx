@@ -32,6 +32,7 @@ export const MyComposition = () => {
 		frontFaceColor: 'red',
 		backFaceColor: 'blue',
 		strokeWidth: 10,
+		description: 'text',
 	});
 
 	const rotatedFaces = transformElement(inbetweenFaces, [rotateY(frame / 100)]);

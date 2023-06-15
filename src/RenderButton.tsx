@@ -81,6 +81,7 @@ export const RenderButton: React.FC = () => {
 		frontFaceColor: BLUE,
 		backFaceColor: 'black',
 		strokeWidth: 20,
+		description: 'button',
 	});
 
 	const extrudedTo0 = transformElement(_extrudedButton, [
@@ -95,6 +96,7 @@ export const RenderButton: React.FC = () => {
 		frontFaceColor: 'white',
 		backFaceColor: 'white',
 		strokeWidth: 20,
+		description: 'cursor',
 	});
 
 	const bBoxText = getBoundingBox(textPath);
@@ -104,6 +106,7 @@ export const RenderButton: React.FC = () => {
 		strokeColor: 'black',
 		color: 'white',
 		strokeWidth: 0,
+		description: 'centered text',
 	});
 
 	const textFace = transformElement(centeredText, [

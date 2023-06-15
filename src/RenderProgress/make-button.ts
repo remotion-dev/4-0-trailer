@@ -30,6 +30,7 @@ export const getButton = ({
 	transformations,
 	frame,
 	fps,
+	description,
 }: {
 	font: Font;
 	phrase: string;
@@ -39,6 +40,7 @@ export const getButton = ({
 	transformations: MatrixTransform4D[];
 	frame: number;
 	fps: number;
+	description: string;
 }): ThreeDElement[] => {
 	const rect = makeRect({
 		height: outerHeight,
@@ -85,6 +87,7 @@ export const getButton = ({
 		depth,
 		points: parsePath(centerPath(rect.path)),
 		strokeWidth: 20,
+		description,
 	});
 
 	const progressFace = transformElement(
@@ -122,6 +125,7 @@ export const getButton = ({
 			color: 'black',
 			strokeColor: 'black',
 			strokeWidth: 0,
+			description,
 		}),
 		faceTransformations
 	);
@@ -140,6 +144,7 @@ export const getButton = ({
 			color: 'black',
 			strokeColor: 'black',
 			strokeWidth: 0,
+			description,
 		}),
 		faceTransformations
 	);

@@ -82,6 +82,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
 		strokeWidth: 10,
+		description: 'button',
 	});
 
 	const intrude = spring({
@@ -108,6 +109,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			color: 'white',
 			strokeWidth: 0,
 			strokeColor: 'black',
+			description: 'text',
 		}),
 		[
 			translateX(-(bBoxText.x2 - bBoxText.x1) / 2),

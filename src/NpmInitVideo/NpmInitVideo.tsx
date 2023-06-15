@@ -44,6 +44,7 @@ export const NpmInitVideo: React.FC = () => {
 			strokeWidth: 0,
 			strokeColor: 'black',
 			color: 'white',
+			description: 'npm init video',
 		}),
 		[...topLeftTransformation, translateZ(6)]
 	);
@@ -55,6 +56,7 @@ export const NpmInitVideo: React.FC = () => {
 		points: parsePath(rect.path),
 		sideColor: 'yellow',
 		strokeWidth: 10,
+		description: 'test',
 	});
 
 	const allElements: ThreeDElement[] = [extrude, npmInitVideoFace];

@@ -198,5 +198,6 @@ export const makeRoundedProgress = ({
 		color,
 		strokeColor,
 		strokeWidth,
+		description: 'Rounded progress',
 	});
 };

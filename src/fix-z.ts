@@ -10,11 +10,13 @@ export const turnInto3D = ({
 	color,
 	strokeWidth,
 	strokeColor,
+	description,
 }: {
 	instructions: Instruction[];
 	color: string;
 	strokeWidth: number;
 	strokeColor: string;
+	description: string;
 }): ThreeDElement => {
 	let lastMove: Vector4D = [0, 0, 0, 1];
 	const newInstructions: ThreeDReducedInstruction[] = [];
@@ -69,11 +71,15 @@ export const turnInto3D = ({
 		strokeColor,
 		strokeWidth,
 	};
-	return makeElement(face, {
-		backTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
-		frontBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
-		frontTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
-		backBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
-		normal: [0, 0, 1, 1],
-	});
+	return makeElement(
+		face,
+		{
+			backTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
+			frontBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
+			frontTopLeft: [boundingBox.x1, boundingBox.y1, 0, 1],
+			backBottomRight: [boundingBox.x2, boundingBox.y2, 0, 1],
+			normal: [0, 0, 1, 1],
+		},
+		description
+	);
 };
