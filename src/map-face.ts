@@ -8,7 +8,7 @@ import {
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
+		return a.centerPoint[2] - b.centerPoint[2];
 	});
 };
 

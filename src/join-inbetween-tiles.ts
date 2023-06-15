@@ -35,17 +35,17 @@ export const extrudeElement = ({
 	);
 
 	const unscaledBackFace = transformFace(threeD.faces[0], [
-		translateZ(depth / 2),
-	]);
-	const unscaledFrontFace = transformFace(threeD.faces[0], [
 		translateZ(-depth / 2),
 	]);
+	const unscaledFrontFace = transformFace(threeD.faces[0], [
+		translateZ(depth / 2),
+	]);
 
-	const inbetween = unscaledBackFace.points.map((t, i): FaceType => {
+	const inbetween = unscaledFrontFace.points.map((t, i): FaceType => {
 		const nextInstruction =
-			i === unscaledBackFace.points.length - 1
-				? unscaledBackFace.points[0]
-				: unscaledBackFace.points[i + 1];
+			i === unscaledFrontFace.points.length - 1
+				? unscaledFrontFace.points[0]
+				: unscaledFrontFace.points[i + 1];
 
 		const currentPoint = t.point;
 		const nextPoint = nextInstruction.point;

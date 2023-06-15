@@ -52,7 +52,7 @@ export const TriangleOut: React.FC = () => {
 			description: `tile ${i}`,
 		});
 		const projected = transformElement(extruded, [
-			translateZ(spread * i - spread),
+			translateZ(-(spread * i - spread)),
 			translateX(-width / 2),
 			translateY(-height / 2 + 20),
 			rotateX(-(i * delayedFrame) / 300),

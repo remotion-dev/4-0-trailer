@@ -132,11 +132,11 @@ export const Timeline: React.FC = () => {
 				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return transformElement(element, [
+						translateX(-frame * 0.6 * 7.5),
+						translateY(-30 * 7.5),
 						rotateX(-xRotation),
 						rotateZ(-frame / 150),
 						rotateY(interpolate(frame, [0, 400], [0, -Math.PI])),
-						translateX(-frame * 0.6 * 7.5),
-						translateY(-30 * 7.5),
 					]);
 				})}
 			/>

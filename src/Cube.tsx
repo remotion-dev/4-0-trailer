@@ -114,7 +114,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		[
 			translateX(-(bBoxText.x2 - bBoxText.x1) / 2),
 			translateY(-(bBoxText.y2 - bBoxText.y1) / 2),
-			translateZ(-actualDepth / 2 - 0.001),
+			translateZ(actualDepth / 2 + 0.001),
 		]
 	);
 
