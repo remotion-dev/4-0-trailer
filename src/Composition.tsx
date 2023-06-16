@@ -1,6 +1,5 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {getCamera} from './camera';
 import {transformElement} from './element';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
@@ -45,7 +44,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces elements={[rotatedFaces]} camera={getCamera(width, height)} />
+			<Faces elements={[rotatedFaces]} />
 		</svg>
 	);
 };

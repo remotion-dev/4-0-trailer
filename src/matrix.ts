@@ -236,15 +236,6 @@ export const translateZ = (z: number) => {
 	return translated([0, 0, z]);
 };
 
-export type Camera = {
-	near: number;
-	far: number;
-	angle: number;
-	eye: Vector;
-	coa: Vector;
-	up: Vector;
-};
-
 export const mulScalar = function <T extends number[]>(v: T, s: number): T {
 	return v.map((i) => {
 		return i * s;

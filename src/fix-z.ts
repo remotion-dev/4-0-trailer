@@ -31,6 +31,17 @@ export const turnInto3D = ({
 		const instruction = reduced[i];
 
 		if (instruction.type === 'Z') {
+			const lastInstruction = newInstructions[newInstructions.length - 1];
+			if (
+				lastInstruction.type === 'L' &&
+				lastInstruction.point[0] === lastMove[0] &&
+				lastInstruction.point[1] === lastMove[1] &&
+				lastInstruction.point[2] === lastMove[2] &&
+				lastInstruction.point[3] === lastMove[3]
+			) {
+				continue;
+			}
+
 			newInstructions.push({
 				type: 'L',
 				point: lastMove,
@@ -71,6 +82,7 @@ export const turnInto3D = ({
 		strokeColor,
 		strokeWidth,
 		normal: [0, 0, 1, 1],
+		description,
 	};
 	return makeElement(
 		face,

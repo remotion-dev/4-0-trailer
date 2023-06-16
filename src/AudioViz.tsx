@@ -9,7 +9,6 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {getCamera} from './camera';
 import {transformElement} from './element';
 import {Faces} from './Faces';
 import {extrudeElement} from './join-inbetween-tiles';
@@ -116,10 +115,7 @@ export const AudioViz: React.FC = () => {
 		>
 			<Audio src={audio} />
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces
-					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					elements={paths}
-				/>
+				<Faces elements={paths} />
 			</svg>
 		</AbsoluteFill>
 	);

@@ -1,86 +1,6 @@
-import {
-	Camera,
-	identity4,
-	m44multiply,
-	MatrixTransform4D,
-	mulScalar,
-	normalize,
-	stride,
-	translated4d,
-	Vector,
-	Vector4D,
-} from './matrix';
+import {MatrixTransform4D, Vector, Vector4D} from './matrix';
 
 export const cameraEye = [0, 0, 10000, 1] as Vector4D;
-
-export const getCamera = (width: number, height: number) => {
-	const cam: Camera = {
-		eye: [cameraEye[0], cameraEye[1], cameraEye[2]],
-		coa: [0, 0, 0],
-		up: [0, 1, 0],
-		near: 200,
-		far: 1000,
-		angle: camAngle,
-	};
-	const vSphereCenter = [width / 2, height / 2];
-	const vSphereRadius = Math.min(...vSphereCenter);
-
-	const area = [
-		-vSphereRadius,
-		-vSphereRadius,
-		vSphereRadius,
-		vSphereRadius,
-	] as const;
-	const camera = setupCamera(area, 1000, cam);
-	return camera;
-};
-
-const setupCamera = function (area: Area, zscale: number, cam: Camera) {
-	const camera = lookat(cam.eye, cam.coa, cam.up);
-	const persp = perspective(cam.near, cam.far, cam.angle);
-	const center: Vector = [(area[0] + area[2]) / 2, (area[1] + area[3]) / 2, 0];
-	const viewScale: Vector = [
-		(area[2] - area[0]) / 2,
-		(area[3] - area[1]) / 2,
-		zscale,
-	];
-	const viewport = m44multiply(translated4d(center), scaled(viewScale));
-	const multiplied = m44multiply(viewport, persp, camera, mustInvert(viewport));
-	return multiplied;
-};
-
-type Area = readonly [number, number, number, number];
-
-const lookat = function (eyeVec: Vector, centerVec: Vector, upVec: Vector) {
-	const f = normalize(sub(centerVec, eyeVec));
-	const u = normalize(upVec);
-	const s = normalize(cross(f, u));
-
-	const m = identity4();
-	// Set each column's top three numbers
-	stride({v: s, m, width: 4, offset: 0, colStride: 0});
-	stride({
-		v: cross(s, f),
-		m,
-		width: 4,
-		offset: 1,
-		colStride: 0,
-	});
-	stride({
-		v: mulScalar(f, -1),
-		m,
-		width: 4,
-		offset: 2,
-		colStride: 0,
-	});
-	stride({v: eyeVec, m, width: 4, offset: 3, colStride: 0});
-
-	const m2 = invert4d(m);
-	if (m2 === null) {
-		return identity4();
-	}
-	return m2;
-};
 
 export const cross = function (a: Vector, b: Vector): Vector {
 	if (a.length !== 3 || a.length !== 3) {
@@ -93,12 +13,6 @@ export const cross = function (a: Vector, b: Vector): Vector {
 		a[2] * b[0] - a[0] * b[2],
 		a[0] * b[1] - a[1] * b[0],
 	];
-};
-
-const sub = function (a: Vector, b: Vector): Vector {
-	return a.map((v, i) => {
-		return v - b[i];
-	}) as Vector;
 };
 
 export const sub4d = function (a: Vector4D, b: Vector4D): Vector4D {
@@ -117,47 +31,6 @@ export const multiply4d = function (a: Vector4D, t: number): Vector4D {
 	return a.map((v) => {
 		return v * t;
 	}) as Vector4D;
-};
-
-const mustInvert = function (m: MatrixTransform4D): MatrixTransform4D {
-	const m2 = invert4d(m);
-	if (m2 === null) {
-		throw new Error('Matrix not invertible');
-	}
-	return m2;
-};
-
-// Choose a camAngle so that the cotan of half the angle is 1.
-// Then the SVG path at 0 will get its natural size.
-const camAngle = 0.5 * (4 * Math.PI + Math.PI);
-
-const perspective = function (near: number, far: number, angle: number) {
-	if (far <= near) {
-		throw new Error(
-			'far must be greater than near when constructing M44 using perspective.'
-		);
-	}
-	const dInv = 1 / (far - near);
-	const halfAngle = angle / 2;
-	const cot = Math.cos(halfAngle) / Math.sin(halfAngle);
-	return [
-		cot,
-		0,
-		0,
-		0,
-		0,
-		cot,
-		0,
-		0,
-		0,
-		0,
-		(far + near) * dInv,
-		2 * far * near * dInv,
-		0,
-		0,
-		-1,
-		1,
-	] as MatrixTransform4D;
 };
 
 export const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
@@ -249,8 +122,4 @@ export const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
 		throw new Error('inverted matrix contains infinities or NaN ' + tmp);
 	}
 	return tmp;
-};
-
-const scaled = function (vec: Vector) {
-	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
 };

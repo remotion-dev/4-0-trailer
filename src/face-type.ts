@@ -8,4 +8,5 @@ export type FaceType = {
 	strokeWidth: number;
 	strokeColor: string;
 	normal: Vector4D;
+	description: string;
 };

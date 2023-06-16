@@ -3,6 +3,7 @@ import {ThreeDReducedInstruction} from './3d-svg';
 import {makeElement, ThreeDElement} from './element';
 import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
+import {getCenterFromPoints} from './get-center-from-points';
 import {getNormalFromPoints} from './get-normal-from.points';
 import {transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
@@ -25,16 +26,13 @@ export const extrudeElement = ({
 	strokeWidth: number;
 	description: string;
 }): ThreeDElement => {
-	const threeD = subdivideElement(
-		turnInto3D({
-			instructions: points,
-			color: 'black',
-			strokeWidth,
-			strokeColor: 'black',
-			description,
-		}),
-		3
-	);
+	const threeD = turnInto3D({
+		instructions: points,
+		color: 'black',
+		strokeWidth,
+		strokeColor: 'black',
+		description,
+	});
 
 	const unscaledBackFace = transformFace(threeD.faces[0], [
 		translateZ(-depth / 2),
@@ -96,12 +94,12 @@ export const extrudeElement = ({
 			return {
 				points: newInstructions,
 				color: sideColor,
-				centerPoint: [
-					threeD.faces[0].centerPoint[0],
-					threeD.faces[0].centerPoint[1],
-					0,
-					1,
-				],
+				centerPoint: getCenterFromPoints([
+					currentPoint,
+					nextPoint,
+					movingOver,
+					translatedInstruction.point,
+				]),
 				strokeWidth: 0,
 				strokeColor: 'black',
 				normal,
