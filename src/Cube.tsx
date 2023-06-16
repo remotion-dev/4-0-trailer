@@ -17,20 +17,13 @@ import {
 	useVideoConfig,
 } from 'remotion';
 import {z} from 'zod';
-import {getCamera} from './camera';
 import {centerPath} from './center';
+import {transformElement} from './element';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	transformFaces,
-	translateSvgInstruction,
-} from './map-face';
-import {rotateX, rotateY, translateY, translateZ} from './matrix';
+import {extrudeElement} from './join-inbetween-tiles';
+import {rotateX, rotateY, translateX, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
 
@@ -81,13 +74,14 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const actualDepth = depth + pushIn;
 
-	const _extrudedButton: FaceType[] = extrudeInstructions({
+	const _extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
 		depth: actualDepth,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
 		strokeWidth: 10,
+		description: 'button',
 	});
 
 	const intrude = spring({
@@ -104,31 +98,23 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		translateY(interpolate(intrude, [0, 1], [0, -20 * 7.5])),
 	];
 
-	const extrudedTo0 = transformFaces({
-		faces: _extrudedButton,
-		transformations,
-	});
+	const extrudedTo0 = transformElement(_extrudedButton, transformations);
 
 	const bBoxText = getBoundingBox(textPath);
 
-	const centeredText = turnInto3D(parsedText).map((turn) => {
-		return translateSvgInstruction(
-			turn,
-			-(bBoxText.x2 - bBoxText.x1) / 2,
-			-(bBoxText.y2 - bBoxText.y1) / 2,
-			0
-		);
-	});
-
-	const textFace = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
+	const centeredText = transformElement(
+		turnInto3D({
+			instructions: parsedText,
 			color: 'white',
-			points: centeredText,
 			strokeWidth: 0,
 			strokeColor: 'black',
-		},
-		[translateZ(-actualDepth / 2 + 0.001)]
+			description: 'text',
+		}),
+		[
+			translateX(-(bBoxText.x2 - bBoxText.x1) / 2),
+			translateY(-(bBoxText.y2 - bBoxText.y1) / 2),
+			translateZ(actualDepth / 2 + 0.001),
+		]
 	);
 
 	const radius = interpolate(intrude, [0, 1], [0, 1200 * 7.5]);
@@ -178,15 +164,9 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
-						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
-							sortFacesZIndex(extrudedTo0),
-							sortFacesZIndex(
-								transformFaces({
-									transformations,
-									faces: [textFace],
-								})
-							),
+							extrudedTo0,
+							transformElement(centeredText, transformations),
 						]}
 					/>
 				</svg>

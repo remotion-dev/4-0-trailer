@@ -1,9 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {useFont} from './get-char';
-import {sortFacesZIndex} from './map-face';
 import {rotateX, rotateY, rotateZ, translateY} from './matrix';
 import {getButton} from './RenderProgress/make-button';
 
@@ -27,9 +25,10 @@ export const RenderProgress: React.FC = () => {
 		return null;
 	}
 
-	const rendered = new Array(4).fill(true).map((_, i) => {
-		return sortFacesZIndex(
-			getButton({
+	const rendered = new Array(4)
+		.fill(true)
+		.map((_, i) => {
+			return getButton({
 				font,
 				phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4'][i],
 				depth,
@@ -38,9 +37,10 @@ export const RenderProgress: React.FC = () => {
 				transformations: [translateY(i * 900), ...commonTransformations],
 				frame,
 				fps,
-			})
-		);
-	});
+				description: `button ${i}`,
+			});
+		})
+		.flat(1);
 
 	return (
 		<AbsoluteFill
@@ -49,10 +49,7 @@ export const RenderProgress: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-				<Faces
-					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					elements={rendered}
-				/>
+				<Faces elements={rendered} />
 			</svg>
 		</AbsoluteFill>
 	);

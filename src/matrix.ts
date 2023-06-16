@@ -127,6 +127,27 @@ export type MatrixTransform4D = [
 	number
 ];
 
+export function transposeMatrix(matrix: MatrixTransform4D): MatrixTransform4D {
+	return [
+		matrix[0],
+		matrix[4],
+		matrix[8],
+		matrix[12],
+		matrix[1],
+		matrix[5],
+		matrix[9],
+		matrix[13],
+		matrix[2],
+		matrix[6],
+		matrix[10],
+		matrix[14],
+		matrix[3],
+		matrix[7],
+		matrix[11],
+		matrix[15],
+	];
+}
+
 export const scaled = function (value: number | Vector) {
 	const vec: Vector = typeof value === 'number' ? [value, value, value] : value;
 	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
@@ -213,15 +234,6 @@ export const translateY = (y: number) => {
 
 export const translateZ = (z: number) => {
 	return translated([0, 0, z]);
-};
-
-export type Camera = {
-	near: number;
-	far: number;
-	angle: number;
-	eye: Vector;
-	coa: Vector;
-	up: Vector;
 };
 
 export const mulScalar = function <T extends number[]>(v: T, s: number): T {

@@ -1,34 +1,35 @@
-import React from 'react';
-import {Face} from './Face';
-import {FaceType} from './map-face';
-import {MatrixTransform4D, multiplyMatrixAndSvgInstruction} from './matrix';
+import React, {useMemo} from 'react';
+import {ThreeDElement} from './element';
+import {Face} from './FaceComp';
 
 export const Faces: React.FC<{
-	elements: FaceType[][];
-	camera: MatrixTransform4D;
-}> = ({camera, elements}) => {
+	elements: ThreeDElement[];
+}> = ({elements}) => {
+	const faces = useMemo(() => {
+		return elements
+			.map((e) => {
+				return e.faces;
+			})
+			.flat(1);
+	}, [elements]);
+
+	const sortedFaces = useMemo(() => {
+		return faces.slice().sort((a, b) => {
+			return a.centerPoint[2] - b.centerPoint[2];
+		});
+	}, [faces]);
+
 	return (
 		<>
-			{elements.map((element, i) => {
+			{sortedFaces.map(({points, color, strokeColor, strokeWidth}, i) => {
 				return (
-					<React.Fragment key={i}>
-						{element.map(({points, color, strokeWidth}, i) => {
-							const multiplied = points.map((p) => {
-								const result = multiplyMatrixAndSvgInstruction(camera, p);
-								return result;
-							});
-
-							return (
-								<Face
-									key={JSON.stringify(points) + i}
-									strokeColor="black"
-									color={color}
-									points={multiplied}
-									strokeWidth={strokeWidth}
-								/>
-							);
-						})}
-					</React.Fragment>
+					<Face
+						key={JSON.stringify(points) + i}
+						strokeColor={strokeColor}
+						color={color}
+						points={points}
+						strokeWidth={strokeWidth}
+					/>
 				);
 			})}
 		</>

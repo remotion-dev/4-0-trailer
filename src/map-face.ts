@@ -1,22 +1,16 @@
 import {ThreeDReducedInstruction} from './3d-svg';
+import {invert4d} from './camera';
+import {FaceType} from './face-type';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
 	multiplyMatrixAndSvgInstruction,
-	Vector4D,
+	transposeMatrix,
 } from './matrix';
-
-export type FaceType = {
-	color: string;
-	points: ThreeDReducedInstruction[];
-	centerPoint: Vector4D;
-	strokeWidth: number;
-	strokeColor: string;
-};
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	return face.slice().sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
+		return a.centerPoint[2] - b.centerPoint[2];
 	});
 };
 
@@ -106,17 +100,12 @@ export const transformFace = (
 			const result = multiplyMatrix(t, acc);
 			return result;
 		}, face.centerPoint),
+		normal: transformations.reduce((point, transformation) => {
+			// Should not multiply normal the same way:
+			// https://chat.openai.com/share/4850831c-804e-4abd-b65a-59b4df17f32d
+			const inversed = invert4d(transformation);
+			const transposed = transposeMatrix(inversed);
+			return multiplyMatrix(transposed, point);
+		}, face.normal),
 	};
-};
-
-export const transformFaces = ({
-	faces,
-	transformations,
-}: {
-	faces: FaceType[];
-	transformations: MatrixTransform4D[];
-}) => {
-	return faces.map((face) => {
-		return transformFace(face, transformations);
-	});
 };

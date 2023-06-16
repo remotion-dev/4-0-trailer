@@ -1,23 +1,22 @@
-import {Instruction, reduceInstructions} from '@remotion/paths';
-import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
+import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
+import {makeElement, ThreeDElement} from './element';
+import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	translateSvgInstruction,
-} from './map-face';
+import {getCenterFromPoints} from './get-center-from-points';
+import {getNormalFromPoints} from './get-normal-from.points';
+import {transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
-import {subdivideInstructions} from './subdivide-instruction';
+import {truthy} from './truthy';
 
-export const extrudeInstructions = ({
+export const extrudeElement = ({
 	depth,
 	sideColor,
 	frontFaceColor,
 	backFaceColor,
 	points,
 	strokeWidth,
+	description,
 }: {
 	depth: number;
 	sideColor: string;
@@ -25,76 +24,89 @@ export const extrudeInstructions = ({
 	backFaceColor: string;
 	points: Instruction[];
 	strokeWidth: number;
-}): FaceType[] => {
-	const boundingBox = getBoundingBoxFromInstructions(
-		reduceInstructions(points)
-	);
-
-	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;
-	const centerY = (boundingBox.y2 - boundingBox.y1) / 2 + boundingBox.y1;
-
-	const threeD = turnInto3D(points);
-	const instructions: FaceType = {
-		centerPoint: [centerX, centerY, 0, 1],
-		points: subdivideInstructions(
-			subdivideInstructions(subdivideInstructions(threeD))
-		),
+	description: string;
+}): ThreeDElement => {
+	const threeD = turnInto3D({
+		instructions: points,
+		color: 'black',
 		strokeWidth,
 		strokeColor: 'black',
-		color: 'black',
-	};
+		description,
+	});
 
-	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
-	const unscaledFrontFace = transformFace(instructions, [
+	const unscaledBackFace = transformFace(threeD.faces[0], [
 		translateZ(-depth / 2),
 	]);
+	const unscaledFrontFace = transformFace(threeD.faces[0], [
+		translateZ(depth / 2),
+	]);
 
-	const inbetween = unscaledBackFace.points.map((t, i): FaceType => {
-		const nextInstruction =
-			i === unscaledBackFace.points.length - 1
-				? unscaledBackFace.points[0]
-				: unscaledBackFace.points[i + 1];
+	const inbetween = unscaledFrontFace.points
+		.map((t, i): FaceType | null => {
+			const nextInstruction =
+				i === unscaledFrontFace.points.length - 1
+					? unscaledFrontFace.points[0]
+					: unscaledFrontFace.points[i + 1];
 
-		const currentPoint = t.point;
-		const nextPoint = nextInstruction.point;
-		const movingOver: Vector4D = [
-			nextPoint[0],
-			nextPoint[1],
-			nextPoint[2] - depth,
-			nextPoint[3],
-		];
+			const currentPoint = t.point;
+			const nextPoint = nextInstruction.point;
+			const movingOver: Vector4D = [
+				nextPoint[0],
+				nextPoint[1],
+				nextPoint[2] - depth,
+				nextPoint[3],
+			];
 
-		const translatedInstruction = translateSvgInstruction(
-			inverseInstruction(nextInstruction, currentPoint),
-			0,
-			0,
-			-depth
-		);
-		const newInstructions: ThreeDReducedInstruction[] = [
-			{
-				type: 'M',
-				point: currentPoint,
-			},
-			nextInstruction,
-			{
-				type: 'L',
-				point: movingOver,
-			},
-			translatedInstruction,
-			{
-				type: 'L',
-				point: currentPoint,
-			},
-		];
+			if (
+				currentPoint[0] === nextPoint[0] &&
+				currentPoint[1] === nextPoint[1] &&
+				currentPoint[2] === nextPoint[2] &&
+				currentPoint[3] === nextPoint[3]
+			) {
+				return null;
+			}
 
-		return {
-			points: newInstructions,
-			color: sideColor,
-			centerPoint: [centerX, centerY, 0, 1],
-			strokeWidth: 0,
-			strokeColor: 'black',
-		};
-	});
+			const translatedInstruction = translateSvgInstruction(
+				inverseInstruction(nextInstruction, currentPoint),
+				0,
+				0,
+				-depth
+			);
+			const newInstructions: ThreeDReducedInstruction[] = [
+				{
+					type: 'M',
+					point: currentPoint,
+				},
+				nextInstruction,
+				{
+					type: 'L',
+					point: movingOver,
+				},
+				translatedInstruction,
+				{
+					type: 'L',
+					point: currentPoint,
+				},
+			];
+
+			const normal = getNormalFromPoints(currentPoint, nextPoint, movingOver);
+
+			return {
+				points: newInstructions,
+				color: sideColor,
+				centerPoint: getCenterFromPoints([
+					currentPoint,
+					nextPoint,
+					movingOver,
+					translatedInstruction.point,
+				]),
+				strokeWidth: 0,
+				strokeColor: 'black',
+				normal,
+				description: 'inbetween' + i,
+			};
+		})
+		.filter(truthy);
 
 	const scaledFrontFace: FaceType = {
 		...unscaledFrontFace,
@@ -105,7 +117,41 @@ export const extrudeInstructions = ({
 		color: backFaceColor,
 	};
 
-	return sortFacesZIndex([...inbetween, scaledFrontFace, scaledBackFace]);
+	const {backBottomRight, backTopLeft, frontBottomRight, frontTopLeft} =
+		threeD.boundingBox;
+
+	return makeElement(
+		[...inbetween, scaledFrontFace, scaledBackFace],
+		{
+			backBottomRight: [
+				backBottomRight[0],
+				backBottomRight[1],
+				backBottomRight[2] - depth / 2,
+				backBottomRight[3],
+			],
+			backTopLeft: [
+				backTopLeft[0],
+				backTopLeft[1],
+				backTopLeft[2] - depth / 2,
+				backTopLeft[3],
+			],
+			frontBottomRight: [
+				frontBottomRight[0],
+				frontBottomRight[1],
+				frontBottomRight[2] + depth / 2,
+				frontBottomRight[3],
+			],
+			frontTopLeft: [
+				frontTopLeft[0],
+				frontTopLeft[1],
+				frontTopLeft[2] + depth / 2,
+				frontTopLeft[3],
+			],
+			// TODO: WRONG I just hardcoded something
+			normal: [0, 0, 1, 1],
+		},
+		description
+	);
 };
 const inverseInstruction = (
 	instruction: ThreeDReducedInstruction,
