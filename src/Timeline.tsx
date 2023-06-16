@@ -49,20 +49,20 @@ export const Timeline: React.FC = () => {
 	const facesProject = faces.map((f, i) => {
 		const faces = extrudeElement({
 			depth: LAYER_DEPTH,
-			backFaceColor: 'transparent',
+			backFaceColor: 'black',
 			frontFaceColor: f.frontColor,
 			points: makeRect({
 				width: f.width,
 				height: TRACK_HEIGHT,
 				cornerRadius: 0,
 			}).instructions,
-			sideColor: 'rgba(0,0,0,0)',
+			sideColor: 'rgba(0,0,0,1)',
 			strokeWidth: 1,
 			description: 'Track' + i,
 		});
 		return transformElement(faces, [
 			translateX(f.x),
-			translateY(TRACK_HEIGHT * i),
+			translateY((TRACK_HEIGHT + 1) * i),
 			translateZ(-i * 0.01),
 		]);
 	});
