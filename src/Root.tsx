@@ -82,7 +82,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Timeline"
 				component={Timeline}
-				durationInFrames={600}
+				durationInFrames={6000}
 				fps={30}
 				width={1920}
 				height={1080}
