@@ -49,8 +49,12 @@ export const Faces: React.FC<{
 				BrayTracedFrontTopLeft.type === 'parallel' ||
 				BrayTracedFrontBottomRight.type === 'parallel'
 			) {
-				const avgZA = a.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0);
-				const avgZB = b.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0);
+				const avgZA =
+					a.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0) /
+					a.faces.length;
+				const avgZB =
+					b.faces.reduce((_a, _b) => _a + _b.centerPoint[2], 0) /
+					b.faces.length;
 
 				return avgZB - avgZA;
 			}
@@ -71,6 +75,15 @@ export const Faces: React.FC<{
 				BrayTracedFrontBottomRight.point[2]
 			);
 
+			console.log('a there', {
+				aTopLeftIsCloserThanB,
+				aBottomRightIsCloserThanB,
+				bTopLeftIsCloserThanA,
+				bIsCloserThanBottomRight,
+				a,
+				b,
+			});
+
 			if (aTopLeftIsCloserThanB && aBottomRightIsCloserThanB) {
 				return 1;
 			}
@@ -80,7 +93,32 @@ export const Faces: React.FC<{
 			if (aTopLeftIsCloserThanB || aBottomRightIsCloserThanB) {
 				return 1;
 			}
-			return -1;
+			console.log({
+				aTopLeftIsCloserThanB,
+				aBottomRightIsCloserThanB,
+				bTopLeftIsCloserThanA,
+				bIsCloserThanBottomRight,
+				hi: 'tie',
+				a,
+				b,
+			});
+
+			console.log({
+				topLeftA: a.boundingBox.frontTopLeft[2],
+				actual: ArayTracedFrontTopLeft.point[2],
+			});
+
+			// Ties can happen! Resort to Z difference
+			console.log('tie');
+
+			const smallestZA = Math.min(
+				...a.faces.map((f) => f.points.map((p) => p.point[2])).flat(1)
+			);
+			const smallestZB = Math.min(
+				...b.faces.map((f) => f.points.map((p) => p.point[2])).flat(1)
+			);
+
+			return smallestZB - smallestZA;
 		});
 	}, [elements]);
 

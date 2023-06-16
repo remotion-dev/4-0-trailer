@@ -1,9 +1,9 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
-import {interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {interpolate, useCurrentFrame} from 'remotion';
 import {getCamera} from './camera';
-import {BLUE, GREEN} from './colors';
+import {BLUE} from './colors';
 import {transformElement} from './element';
 import {Faces} from './Faces';
 import {extrudeElement} from './join-inbetween-tiles';
@@ -30,73 +30,49 @@ type Track = {
 	width: number;
 };
 
-const TRACK_HEIGHT = 150;
-const LAYER_DEPTH = 150;
+const TRACK_HEIGHT = 10;
+const LAYER_DEPTH = 5;
 const CURSOR_DEPTH = 15;
 
 export const Timeline: React.FC = () => {
-	const {width, height} = useVideoConfig();
-	const viewBox = [-width / 2, -height / 2, width, height];
+	const viewBox = [-50, -50, 100, 100];
 	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
-	const xRotation = interpolate(frame, [-200, 200], [0, Math.PI / 4]);
-	const scale = interpolate(frame, [0, 300], [1.3, 1.8]);
 
 	const faces: Track[] = [
 		{
 			depth: LAYER_DEPTH,
 			x: 0,
-			frontColor: BLUE,
+			frontColor: 'red',
 			backColor: 'black',
-			width: 150 * 7.5,
+			width: 10,
 		},
 		{
 			depth: LAYER_DEPTH,
-			x: 40 * 7.5,
+			x: 2,
 			frontColor: BLUE,
 			backColor: 'black',
-			width: 150 * 7.5,
-		},
-		{
-			depth: LAYER_DEPTH,
-			x: 60 * 7.5,
-			frontColor: GREEN,
-			backColor: 'black',
-			width: 150 * 7.5,
-		},
-		{
-			depth: LAYER_DEPTH,
-			x: 60 * 7.5,
-			frontColor: BLUE,
-			backColor: 'black',
-			width: 300 * 7.5,
-		},
-		{
-			depth: LAYER_DEPTH,
-			x: 30 * 7.5,
-			frontColor: BLUE,
-			backColor: 'black',
-			width: 300 * 7.5,
+			width: 10,
 		},
 	];
 
 	const facesProject = faces.map((f, i) => {
 		const faces = extrudeElement({
 			depth: LAYER_DEPTH,
-			backFaceColor: f.backColor,
+			backFaceColor: 'transparent',
 			frontFaceColor: f.frontColor,
 			points: makeRect({
 				width: f.width,
 				height: TRACK_HEIGHT,
-				cornerRadius: 15,
+				cornerRadius: 0,
 			}).instructions,
-			sideColor: 'black',
-			strokeWidth: 10,
+			sideColor: 'rgba(0,0,0,0)',
+			strokeWidth: 1,
 			description: 'Track' + i,
 		});
 		return transformElement(faces, [
 			translateX(f.x),
-			translateY((TRACK_HEIGHT + 2) * i),
+			translateY(TRACK_HEIGHT * i),
+			translateZ(-i * 0.01),
 		]);
 	});
 
@@ -118,8 +94,8 @@ export const Timeline: React.FC = () => {
 	);
 
 	const facesMapped = useMemo(() => {
-		return [...facesProject, cursor];
-	}, [cursor, facesProject]);
+		return [...facesProject];
+	}, [facesProject]);
 
 	return (
 		<svg
@@ -132,9 +108,7 @@ export const Timeline: React.FC = () => {
 				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return transformElement(element, [
-						translateX(-frame * 0.6 * 7.5),
-						translateY(-30 * 7.5),
-						rotateX(-xRotation),
+						rotateX(-interpolate(frame, [-200, 200], [0, Math.PI / 4])),
 						rotateZ(-frame / 150),
 						rotateY(interpolate(frame, [0, 400], [0, -Math.PI])),
 					]);
