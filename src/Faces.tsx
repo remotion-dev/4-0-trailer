@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 import {cameraEye} from './camera';
 import {ThreeDElement} from './element';
 import {ElementComp} from './ElementComp';
-import {MatrixTransform4D} from './matrix';
 import {rayTracing} from './ray-tracing';
 
 const biggerThanOrEqual = (a: number, b: number) => {
@@ -12,8 +11,7 @@ const biggerThanOrEqual = (a: number, b: number) => {
 
 export const Faces: React.FC<{
 	elements: ThreeDElement[];
-	camera: MatrixTransform4D;
-}> = ({camera, elements}) => {
+}> = ({elements}) => {
 	const sortedElements = useMemo(() => {
 		return elements.sort((a, b) => {
 			const ArayTracedFrontTopLeft = rayTracing({
@@ -125,9 +123,7 @@ export const Faces: React.FC<{
 	return (
 		<>
 			{sortedElements.map((element) => {
-				return (
-					<ElementComp key={element.id} camera={camera} element={element} />
-				);
+				return <ElementComp key={element.id} element={element} />;
 			})}
 		</>
 	);
