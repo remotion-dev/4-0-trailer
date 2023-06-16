@@ -1,53 +1,14 @@
 import {
-	Camera,
 	identity4,
-	m44multiply,
 	MatrixTransform4D,
 	mulScalar,
 	normalize,
 	stride,
-	translated4d,
 	Vector,
 	Vector4D,
 } from './matrix';
 
 export const cameraEye = [0, 0, 10000, 1] as Vector4D;
-
-export const getCamera = (width: number, height: number) => {
-	const cam: Camera = {
-		eye: [cameraEye[0], cameraEye[1], cameraEye[2]],
-		coa: [0, 0, 0],
-		up: [0, 1, 0],
-		near: 200,
-		far: 1000,
-		angle: camAngle,
-	};
-	const vSphereCenter = [width / 2, height / 2];
-	const vSphereRadius = Math.min(...vSphereCenter);
-
-	const area = [
-		-vSphereRadius,
-		-vSphereRadius,
-		vSphereRadius,
-		vSphereRadius,
-	] as const;
-	const camera = setupCamera(area, 1000, cam);
-	return camera;
-};
-
-const setupCamera = function (area: Area, zscale: number, cam: Camera) {
-	const camera = lookat(cam.eye, cam.coa, cam.up);
-	const persp = perspective(cam.near, cam.far, cam.angle);
-	const center: Vector = [(area[0] + area[2]) / 2, (area[1] + area[3]) / 2, 0];
-	const viewScale: Vector = [
-		(area[2] - area[0]) / 2,
-		(area[3] - area[1]) / 2,
-		zscale,
-	];
-	const viewport = m44multiply(translated4d(center), scaled(viewScale));
-	const multiplied = m44multiply(viewport, persp, camera, mustInvert(viewport));
-	return multiplied;
-};
 
 type Area = readonly [number, number, number, number];
 

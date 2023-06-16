@@ -8,7 +8,6 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {getCamera} from './camera';
 import {centerPath} from './center';
 import {BLUE} from './colors';
 import {transformElement} from './element';
@@ -121,10 +120,7 @@ export const RenderButton: React.FC = () => {
 				}}
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-					<Faces
-						camera={getCamera(viewBox[2], viewBox[3])}
-						elements={[extrudedTo0, textFace, movedCursor]}
-					/>
+					<Faces elements={[extrudedTo0, textFace, movedCursor]} />
 				</svg>
 			</AbsoluteFill>
 		</AbsoluteFill>

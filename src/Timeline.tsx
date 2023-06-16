@@ -2,7 +2,6 @@ import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
 import {interpolate, useCurrentFrame} from 'remotion';
-import {getCamera} from './camera';
 import {BLUE} from './colors';
 import {transformElement} from './element';
 import {Faces} from './Faces';
@@ -105,7 +104,6 @@ export const Timeline: React.FC = () => {
 			viewBox={viewBox.join(' ')}
 		>
 			<Faces
-				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return transformElement(element, [
 						rotateX(-interpolate(frame, [-200, 200], [0, Math.PI / 4])),
