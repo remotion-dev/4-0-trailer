@@ -1,9 +1,11 @@
 import {ThreeDReducedInstruction} from './3d-svg';
+import {invert4d} from './camera';
 import {FaceType} from './face-type';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
 	multiplyMatrixAndSvgInstruction,
+	transposeMatrix,
 } from './matrix';
 
 export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
@@ -98,5 +100,12 @@ export const transformFace = (
 			const result = multiplyMatrix(t, acc);
 			return result;
 		}, face.centerPoint),
+		normal: transformations.reduce((point, transformation) => {
+			// Should not multiply normal the same way:
+			// https://chat.openai.com/share/4850831c-804e-4abd-b65a-59b4df17f32d
+			const inversed = invert4d(transformation);
+			const transposed = transposeMatrix(inversed);
+			return multiplyMatrix(transposed, point);
+		}, face.normal),
 	};
 };

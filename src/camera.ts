@@ -1,47 +1,6 @@
-import {
-	identity4,
-	MatrixTransform4D,
-	mulScalar,
-	normalize,
-	stride,
-	Vector,
-	Vector4D,
-} from './matrix';
+import {MatrixTransform4D, Vector, Vector4D} from './matrix';
 
 export const cameraEye = [0, 0, 10000, 1] as Vector4D;
-
-type Area = readonly [number, number, number, number];
-
-const lookat = function (eyeVec: Vector, centerVec: Vector, upVec: Vector) {
-	const f = normalize(sub(centerVec, eyeVec));
-	const u = normalize(upVec);
-	const s = normalize(cross(f, u));
-
-	const m = identity4();
-	// Set each column's top three numbers
-	stride({v: s, m, width: 4, offset: 0, colStride: 0});
-	stride({
-		v: cross(s, f),
-		m,
-		width: 4,
-		offset: 1,
-		colStride: 0,
-	});
-	stride({
-		v: mulScalar(f, -1),
-		m,
-		width: 4,
-		offset: 2,
-		colStride: 0,
-	});
-	stride({v: eyeVec, m, width: 4, offset: 3, colStride: 0});
-
-	const m2 = invert4d(m);
-	if (m2 === null) {
-		return identity4();
-	}
-	return m2;
-};
 
 export const cross = function (a: Vector, b: Vector): Vector {
 	if (a.length !== 3 || a.length !== 3) {
@@ -54,12 +13,6 @@ export const cross = function (a: Vector, b: Vector): Vector {
 		a[2] * b[0] - a[0] * b[2],
 		a[0] * b[1] - a[1] * b[0],
 	];
-};
-
-const sub = function (a: Vector, b: Vector): Vector {
-	return a.map((v, i) => {
-		return v - b[i];
-	}) as Vector;
 };
 
 export const sub4d = function (a: Vector4D, b: Vector4D): Vector4D {
@@ -78,47 +31,6 @@ export const multiply4d = function (a: Vector4D, t: number): Vector4D {
 	return a.map((v) => {
 		return v * t;
 	}) as Vector4D;
-};
-
-const mustInvert = function (m: MatrixTransform4D): MatrixTransform4D {
-	const m2 = invert4d(m);
-	if (m2 === null) {
-		throw new Error('Matrix not invertible');
-	}
-	return m2;
-};
-
-// Choose a camAngle so that the cotan of half the angle is 1.
-// Then the SVG path at 0 will get its natural size.
-const camAngle = 0.5 * (4 * Math.PI + Math.PI);
-
-const perspective = function (near: number, far: number, angle: number) {
-	if (far <= near) {
-		throw new Error(
-			'far must be greater than near when constructing M44 using perspective.'
-		);
-	}
-	const dInv = 1 / (far - near);
-	const halfAngle = angle / 2;
-	const cot = Math.cos(halfAngle) / Math.sin(halfAngle);
-	return [
-		cot,
-		0,
-		0,
-		0,
-		0,
-		cot,
-		0,
-		0,
-		0,
-		0,
-		(far + near) * dInv,
-		2 * far * near * dInv,
-		0,
-		0,
-		-1,
-		1,
-	] as MatrixTransform4D;
 };
 
 export const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
@@ -210,8 +122,4 @@ export const invert4d = function (m: MatrixTransform4D): MatrixTransform4D {
 		throw new Error('inverted matrix contains infinities or NaN ' + tmp);
 	}
 	return tmp;
-};
-
-const scaled = function (vec: Vector) {
-	return stride({v: vec, m: identity4(), width: 4, offset: 0, colStride: 1});
 };

@@ -3,6 +3,7 @@ import {ThreeDReducedInstruction} from './3d-svg';
 import {makeElement, subdivideElement, ThreeDElement} from './element';
 import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
+import {getNormalFromPoints} from './get-normal-from-points';
 import {transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
 
@@ -90,6 +91,7 @@ export const extrudeElement = ({
 			],
 			strokeWidth: 0,
 			strokeColor: 'black',
+			normal: getNormalFromPoints(currentPoint, nextPoint, movingOver),
 		};
 	});
 
