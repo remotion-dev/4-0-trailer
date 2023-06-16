@@ -1,10 +1,12 @@
 import {Instruction} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
-import {makeElement, subdivideElement, ThreeDElement} from './element';
+import {makeElement, ThreeDElement} from './element';
 import {FaceType} from './face-type';
 import {turnInto3D} from './fix-z';
+import {getNormalFromPoints} from './get-normal-from.points';
 import {transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
+import {truthy} from './truthy';
 
 export const extrudeElement = ({
 	depth,
@@ -41,60 +43,72 @@ export const extrudeElement = ({
 		translateZ(depth / 2),
 	]);
 
-	const inbetween = unscaledFrontFace.points.map((t, i): FaceType => {
-		const nextInstruction =
-			i === unscaledFrontFace.points.length - 1
-				? unscaledFrontFace.points[0]
-				: unscaledFrontFace.points[i + 1];
+	const inbetween = unscaledFrontFace.points
+		.map((t, i): FaceType | null => {
+			const nextInstruction =
+				i === unscaledFrontFace.points.length - 1
+					? unscaledFrontFace.points[0]
+					: unscaledFrontFace.points[i + 1];
 
-		const currentPoint = t.point;
-		const nextPoint = nextInstruction.point;
-		const movingOver: Vector4D = [
-			nextPoint[0],
-			nextPoint[1],
-			nextPoint[2] - depth,
-			nextPoint[3],
-		];
+			const currentPoint = t.point;
+			const nextPoint = nextInstruction.point;
+			const movingOver: Vector4D = [
+				nextPoint[0],
+				nextPoint[1],
+				nextPoint[2] - depth,
+				nextPoint[3],
+			];
 
-		const translatedInstruction = translateSvgInstruction(
-			inverseInstruction(nextInstruction, currentPoint),
-			0,
-			0,
-			-depth
-		);
-		const newInstructions: ThreeDReducedInstruction[] = [
-			{
-				type: 'M',
-				point: currentPoint,
-			},
-			nextInstruction,
-			{
-				type: 'L',
-				point: movingOver,
-			},
-			translatedInstruction,
-			{
-				type: 'L',
-				point: currentPoint,
-			},
-		];
+			if (
+				currentPoint[0] === nextPoint[0] &&
+				currentPoint[1] === nextPoint[1] &&
+				currentPoint[2] === nextPoint[2] &&
+				currentPoint[3] === nextPoint[3]
+			) {
+				return null;
+			}
 
-		const normal = getNormalFromPoints(currentPoint, nextPoint, movingOver);
-
-		return {
-			points: newInstructions,
-			color: sideColor,
-			centerPoint: [
-				threeD.faces[0].centerPoint[0],
-				threeD.faces[0].centerPoint[1],
+			const translatedInstruction = translateSvgInstruction(
+				inverseInstruction(nextInstruction, currentPoint),
 				0,
-				1,
-			],
-			strokeWidth: 0,
-			strokeColor: 'black',
-			normal,
-		};
-	});
+				0,
+				-depth
+			);
+			const newInstructions: ThreeDReducedInstruction[] = [
+				{
+					type: 'M',
+					point: currentPoint,
+				},
+				nextInstruction,
+				{
+					type: 'L',
+					point: movingOver,
+				},
+				translatedInstruction,
+				{
+					type: 'L',
+					point: currentPoint,
+				},
+			];
+
+			const normal = getNormalFromPoints(currentPoint, nextPoint, movingOver);
+
+			return {
+				points: newInstructions,
+				color: sideColor,
+				centerPoint: [
+					threeD.faces[0].centerPoint[0],
+					threeD.faces[0].centerPoint[1],
+					0,
+					1,
+				],
+				strokeWidth: 0,
+				strokeColor: 'black',
+				normal,
+				description: 'inbetween' + i,
+			};
+		})
+		.filter(truthy);
 
 	const scaledFrontFace: FaceType = {
 		...unscaledFrontFace,
