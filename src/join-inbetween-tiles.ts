@@ -79,6 +79,8 @@ export const extrudeElement = ({
 			},
 		];
 
+		const normal = getNormalFromPoints(currentPoint, nextPoint, movingOver);
+
 		return {
 			points: newInstructions,
 			color: sideColor,
@@ -90,6 +92,7 @@ export const extrudeElement = ({
 			],
 			strokeWidth: 0,
 			strokeColor: 'black',
+			normal,
 		};
 	});
 

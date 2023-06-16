@@ -7,4 +7,5 @@ export type FaceType = {
 	centerPoint: Vector4D;
 	strokeWidth: number;
 	strokeColor: string;
+	normal: Vector4D;
 };
