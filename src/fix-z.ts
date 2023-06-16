@@ -70,6 +70,7 @@ export const turnInto3D = ({
 		points: newInstructions,
 		strokeColor,
 		strokeWidth,
+		normal: [0, 0, 1, 1],
 	};
 	return makeElement(
 		face,
