@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 import {cameraEye} from './camera';
+import {BLUE} from './colors';
 import {ThreeDElement} from './element';
 import {Face} from './FaceComp';
 import {rayTracing} from './ray-tracing';
@@ -13,19 +14,28 @@ export const Faces: React.FC<{
 
 	const sortedElements = useMemo(() => {
 		return faces.sort((a, b) => {
+			const debug =
+				a.color === '#222' ||
+				b.color === '#222' ||
+				a.color === BLUE ||
+				b.color === BLUE;
 			const ArayTracedFrontTopLeft = rayTracing({
 				camera: cameraEye,
 				firstPlaneCorner: a.centerPoint,
 				secondPlaneNormal: b.normal,
 				secondPlanePoint: b.centerPoint,
+				debug,
 			});
 
 			if (ArayTracedFrontTopLeft.type === 'parallel') {
-				console.log('parallel');
-				return a.centerPoint[2] - b.centerPoint[2];
+				return b.centerPoint[2] > a.centerPoint[2] ? -1 : 1;
 			}
 
-			return a.centerPoint[2] - ArayTracedFrontTopLeft.point[2];
+			if (debug) {
+				console.log({a, b, ArayTracedFrontTopLeft});
+			}
+
+			return a.centerPoint[2] < ArayTracedFrontTopLeft.point[2] ? 1 : -1;
 		});
 	}, [faces]);
 

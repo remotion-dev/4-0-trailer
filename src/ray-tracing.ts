@@ -17,11 +17,13 @@ export const rayTracing = ({
 	firstPlaneCorner,
 	secondPlanePoint,
 	secondPlaneNormal,
+	debug,
 }: {
 	camera: Vector4D;
 	firstPlaneCorner: Vector4D;
 	secondPlanePoint: Vector4D;
 	secondPlaneNormal: Vector4D;
+	debug?: boolean;
 }): Result => {
 	// Point on the line: P1
 	const p1 = camera;
@@ -36,13 +38,17 @@ export const rayTracing = ({
 
 	const dDotN = dot(d, n);
 
-	if (dDotN === 0) {
+	if (Math.abs(dDotN) < 1e-6) {
 		return {
 			type: 'parallel',
 		};
 	}
 
 	const t = dot(sub4d(p0, p1), n) / dDotN;
+
+	if (debug) {
+		console.log({t, dDotN});
+	}
 
 	// P(t) = P1 + t * d
 	const intersection = add4d(p1, multiply4d(d, t));

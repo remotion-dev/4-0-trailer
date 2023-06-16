@@ -49,7 +49,6 @@ export const NpmInitVideo: React.FC = () => {
 	const rect = makeRect({
 		width: rectWidth,
 		height: rectHeight,
-		cornerRadius: 6 * 7.5,
 	});
 
 	const topLeftTransformation: MatrixTransform4D[] = [
@@ -127,16 +126,16 @@ export const NpmInitVideo: React.FC = () => {
 
 	const centered = centerPath(rect.path);
 	const extrude = extrudeElement({
-		backFaceColor: 'black',
+		backFaceColor: 'red',
 		frontFaceColor: '#222',
 		depth,
-		sideColor: 'black',
+		sideColor: 'yellow',
 		strokeWidth: 10,
 		points: parsePath(centered),
 		description: 'rect',
 	});
 
-	const allFaces = [extrude, ...transformed, dollarFace, npmInitVideoFace];
+	const allFaces = [extrude, npmInitVideoFace];
 
 	const all = transformElements(allFaces, [rotateY(frame / 100)]);
 

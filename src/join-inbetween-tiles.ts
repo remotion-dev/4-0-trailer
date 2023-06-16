@@ -34,7 +34,7 @@ export const extrudeElement = ({
 			strokeColor: 'black',
 			description,
 		}),
-		3
+		1
 	);
 
 	const unscaledBackFace = transformFace(threeD.faces[0], [
