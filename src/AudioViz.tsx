@@ -9,7 +9,6 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {sortFacesZIndex, transformFaces} from './map-face';
@@ -120,14 +119,7 @@ export const AudioViz: React.FC = () => {
 		>
 			<Audio src={audio} />
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces
-					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1], [
-						Math.sin(frame / 100) * 10,
-						0,
-						Math.cos(frame / 100) * 10,
-					])}
-					elements={paths.map((p) => sortFacesZIndex(p))}
-				/>
+				<Faces elements={paths.map((p) => sortFacesZIndex(p))} />
 			</svg>
 		</AbsoluteFill>
 	);

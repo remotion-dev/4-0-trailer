@@ -2,7 +2,6 @@ import {parsePath} from '@remotion/paths';
 import {makeCircle, makeRect} from '@remotion/shapes';
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {getCamera} from '../camera';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
 import {Faces} from '../Faces';
@@ -156,7 +155,7 @@ export const NpmIniVideo: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces camera={getCamera(width, height)} elements={all} />
+				<Faces elements={all} />
 			</svg>
 		</AbsoluteFill>
 	);

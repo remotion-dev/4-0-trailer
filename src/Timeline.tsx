@@ -2,7 +2,6 @@ import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {getCamera} from './camera';
 import {BLUE, GREEN} from './colors';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
@@ -144,7 +143,6 @@ export const Timeline: React.FC = () => {
 			viewBox={viewBox.join(' ')}
 		>
 			<Faces
-				camera={getCamera(viewBox[2], viewBox[3])}
 				elements={facesMapped.map((element) => {
 					return sortFacesZIndex(
 						transformFaces({

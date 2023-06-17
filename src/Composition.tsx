@@ -1,6 +1,5 @@
-import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
+import {parsePath, resetPath} from '@remotion/paths';
 import {useCurrentFrame} from 'remotion';
-import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeInstructions} from './join-inbetween-tiles';
@@ -18,10 +17,6 @@ export const MyComposition = () => {
 	const text = getText({font, text: '4'});
 
 	const scaled = resetPath(text.path);
-	const bBox = getBoundingBox(scaled);
-
-	const width = bBox.x2 - bBox.x1;
-	const height = bBox.y2 - bBox.y1;
 
 	const depth = 150;
 
@@ -49,7 +44,7 @@ export const MyComposition = () => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Faces elements={[rotatedFaces]} camera={getCamera(width, height)} />
+			<Faces elements={[rotatedFaces]} />
 		</svg>
 	);
 };

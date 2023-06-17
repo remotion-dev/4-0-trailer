@@ -8,7 +8,6 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {getCamera} from './camera';
 import {centerPath} from './center';
 import {BLUE} from './colors';
 import {Faces} from './Faces';
@@ -140,7 +139,6 @@ export const RenderButton: React.FC = () => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
-						camera={getCamera(viewBox[2], viewBox[3])}
 						elements={[
 							sortFacesZIndex(extrudedTo0),
 							sortFacesZIndex(

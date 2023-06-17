@@ -1,6 +1,5 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {useFont} from './get-char';
 import {sortFacesZIndex} from './map-face';
@@ -49,10 +48,7 @@ export const RenderProgress: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-				<Faces
-					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					elements={rendered}
-				/>
+				<Faces elements={rendered} />
 			</svg>
 		</AbsoluteFill>
 	);

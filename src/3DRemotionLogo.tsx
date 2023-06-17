@@ -1,7 +1,6 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
-import {getCamera} from './camera';
 import {Faces} from './Faces';
 import {extrudeInstructions} from './join-inbetween-tiles';
 import {sortFacesZIndex, transformFaces} from './map-face';
@@ -79,10 +78,7 @@ export const TriangleOut: React.FC = () => {
 					opacity: interpolate(frame, [0, 70], [0, 1]),
 				}}
 			>
-				<Faces
-					camera={getCamera(viewBox[2] - viewBox[0], viewBox[3] - viewBox[1])}
-					elements={paths.reverse()}
-				/>
+				<Faces elements={paths.reverse()} />
 			</svg>
 		</AbsoluteFill>
 	);
