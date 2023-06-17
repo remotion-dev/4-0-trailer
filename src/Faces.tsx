@@ -1,6 +1,13 @@
 import React from 'react';
 import {ThreeDElement} from './element';
 import {Face} from './Face';
+import {FaceType} from './map-face';
+
+const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
+	return face.slice().sort((a, b) => {
+		return b.centerPoint[2] - a.centerPoint[2];
+	});
+};
 
 export const Faces: React.FC<{
 	elements: ThreeDElement[];
@@ -12,9 +19,7 @@ export const Faces: React.FC<{
 	return (
 		<>
 			{sortedElement.map((element, i) => {
-				const sortedFaces = element.faces.sort((a, b) => {
-					return b.centerPoint[2] - a.centerPoint[2];
-				});
+				const sortedFaces = sortFacesZIndex(element.faces);
 				return (
 					<React.Fragment key={i}>
 						{sortedFaces.map(({points, color, strokeWidth}, i) => {

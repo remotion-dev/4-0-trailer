@@ -15,12 +15,6 @@ export type FaceType = {
 	strokeColor: string;
 };
 
-export const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
-	return face.slice().sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
-	});
-};
-
 export const translateSvgInstruction = (
 	instruction: ThreeDReducedInstruction,
 	x: number,

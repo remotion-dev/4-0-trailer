@@ -161,7 +161,7 @@ export const NpmIniVideo: React.FC = () => {
 	const allFaces = [extrude, ...transformed, dollarFace, npmInitVideoFace];
 
 	const all = allFaces.map((a) => {
-		return transformElement(a, [rotateY(frame / 100), rotateX(frame / 100)]);
+		return transformElement(a, [rotateY(frame / 100), rotateX(frame / 50)]);
 	});
 
 	return (

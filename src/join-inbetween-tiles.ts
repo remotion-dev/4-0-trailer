@@ -3,12 +3,7 @@ import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-
 import {ThreeDReducedInstruction} from './3d-svg';
 import {makeElement, ThreeDElement} from './element';
 import {turnInto3D} from './fix-z';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	translateSvgInstruction,
-} from './map-face';
+import {FaceType, transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
@@ -109,7 +104,7 @@ export const extrudeElement = ({
 	};
 
 	return makeElement(
-		sortFacesZIndex([...inbetween, scaledFrontFace, scaledBackFace]),
+		[...inbetween, scaledFrontFace, scaledBackFace],
 		[centerX, centerY, 0, 1],
 		description
 	);
