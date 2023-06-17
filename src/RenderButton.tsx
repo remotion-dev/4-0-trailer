@@ -10,17 +10,12 @@ import {
 } from 'remotion';
 import {centerPath} from './center';
 import {BLUE} from './colors';
+import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	transformFaces,
-	translateSvgInstruction,
-} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
+import {translateSvgInstruction} from './map-face';
 import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -72,27 +67,29 @@ export const RenderButton: React.FC = () => {
 
 	const pushIn = Math.min(0, cursorDistance);
 
-	const _extrudedButton: FaceType[] = extrudeInstructions({
+	const _extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
 		depth: depth + pushIn,
 		sideColor: 'black',
 		frontFaceColor: BLUE,
 		backFaceColor: 'black',
 		strokeWidth: 20,
+		description: 'Button',
 	});
 
-	const extrudedTo0 = transformFaces({
-		faces: _extrudedButton,
-		transformations: [translateZ(-(depth + pushIn) / 2), ...transformations],
-	});
+	const extrudedTo0 = transformElement(_extrudedButton, [
+		translateZ(-(depth + pushIn) / 2),
+		...transformations,
+	]);
 
-	const extrudedCursor: FaceType[] = extrudeInstructions({
+	const extrudedCursor = extrudeElement({
 		points: parsePath(cursorPath),
 		depth: cursorDepth,
 		sideColor: 'black',
 		frontFaceColor: 'white',
 		backFaceColor: 'white',
 		strokeWidth: 20,
+		description: 'Cursor',
 	});
 
 	const bBoxText = getBoundingBox(textPath);
@@ -106,27 +103,28 @@ export const RenderButton: React.FC = () => {
 		);
 	});
 
-	const textFace = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
-			color: 'white',
-			points: centeredText,
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
+	const textFace = transformElement(
+		makeElement(
+			{
+				centerPoint: [0, 0, 0, 1],
+				color: 'white',
+				points: centeredText,
+				strokeWidth: 0,
+				strokeColor: 'black',
+			},
+			[0, 0, 0, 1],
+			'Button text'
+		),
 		[translateZ(-depth - 0.001 - pushIn)]
 	);
 
-	const movedCursor = transformFaces({
-		faces: extrudedCursor,
-		transformations: [
-			rotateY(Math.PI / 2),
-			rotateX(-Math.PI / 4),
-			rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
-			translateZ(Number(-depth - 0.001) - cursorDistance),
-			...transformations,
-		],
-	});
+	const movedCursor = transformElement(extrudedCursor, [
+		rotateY(Math.PI / 2),
+		rotateX(-Math.PI / 4),
+		rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
+		translateZ(Number(-depth - 0.001) - cursorDistance),
+		...transformations,
+	]);
 
 	return (
 		<AbsoluteFill>
@@ -140,14 +138,9 @@ export const RenderButton: React.FC = () => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						elements={[
-							sortFacesZIndex(extrudedTo0),
-							sortFacesZIndex(
-								transformFaces({
-									transformations,
-									faces: [textFace],
-								})
-							),
-							sortFacesZIndex(movedCursor),
+							extrudedTo0,
+							transformElement(textFace, transformations),
+							movedCursor,
 						]}
 					/>
 				</svg>

@@ -18,17 +18,12 @@ import {
 } from 'remotion';
 import {z} from 'zod';
 import {centerPath} from './center';
+import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
 import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {
-	FaceType,
-	sortFacesZIndex,
-	transformFace,
-	transformFaces,
-	translateSvgInstruction,
-} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
+import {translateSvgInstruction} from './map-face';
 import {rotateX, rotateY, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -80,13 +75,14 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const actualDepth = depth + pushIn;
 
-	const _extrudedButton: FaceType[] = extrudeInstructions({
+	const _extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
 		depth: actualDepth,
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
 		strokeWidth: 10,
+		description: 'button',
 	});
 
 	const intrude = spring({
@@ -103,10 +99,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		translateY(interpolate(intrude, [0, 1], [0, -20 * 7.5])),
 	];
 
-	const extrudedTo0 = transformFaces({
-		faces: _extrudedButton,
-		transformations,
-	});
+	const extrudedTo0 = transformElement(_extrudedButton, transformations);
 
 	const bBoxText = getBoundingBox(textPath);
 
@@ -119,14 +112,18 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		);
 	});
 
-	const textFace = transformFace(
-		{
-			centerPoint: [0, 0, 0, 1],
-			color: 'white',
-			points: centeredText,
-			strokeWidth: 0,
-			strokeColor: 'black',
-		},
+	const textFace = transformElement(
+		makeElement(
+			{
+				centerPoint: [0, 0, 0, 1],
+				points: centeredText,
+				color: 'white',
+				strokeColor: 'black',
+				strokeWidth: 0,
+			},
+			[0, 0, 0, 1],
+			'text'
+		),
 		[translateZ(-actualDepth / 2 + 0.001)]
 	);
 
@@ -178,13 +175,8 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						elements={[
-							sortFacesZIndex(extrudedTo0),
-							sortFacesZIndex(
-								transformFaces({
-									transformations,
-									faces: [textFace],
-								})
-							),
+							extrudedTo0,
+							transformElement(textFace, transformations),
 						]}
 					/>
 				</svg>

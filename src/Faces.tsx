@@ -1,16 +1,20 @@
 import React from 'react';
+import {ThreeDElement} from './element';
 import {Face} from './Face';
-import {FaceType} from './map-face';
 
 export const Faces: React.FC<{
-	elements: FaceType[][];
+	elements: ThreeDElement[];
 }> = ({elements}) => {
+	const sortedElement = elements.sort((a, b) => {
+		return b.centerPoint[2] - a.centerPoint[2];
+	});
+
 	return (
 		<>
-			{elements.map((element, i) => {
+			{sortedElement.map((element, i) => {
 				return (
 					<React.Fragment key={i}>
-						{element.map(({points, color, strokeWidth}, i) => {
+						{element.faces.map(({points, color, strokeWidth}, i) => {
 							return (
 								<Face
 									key={JSON.stringify(points) + i}

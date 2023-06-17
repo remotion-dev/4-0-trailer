@@ -1,9 +1,9 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {sortFacesZIndex, transformFaces} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -41,28 +41,26 @@ export const TriangleOut: React.FC = () => {
 
 		const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
 
-		const extruded = extrudeInstructions({
+		const extruded = extrudeElement({
 			backFaceColor: color,
 			sideColor: 'black',
 			frontFaceColor: color,
 			depth,
 			points: parsed,
 			strokeWidth: 10,
+			description: `triangle-${i}`,
 		});
-		const projected = transformFaces({
-			transformations: [
-				translateZ(spread * i - spread),
-				translateX(-width / 2),
-				translateY(-height / 2 + 20),
-				rotateX(-(i * delayedFrame) / 300),
-				rotateY(delayedFrame / 100),
-				rotateZ(delayedFrame / 100),
-				scaled(0.6 + zoomIn),
-			],
-			faces: extruded,
-		});
+		const projected = transformElement(extruded, [
+			translateZ(spread * i - spread),
+			translateX(-width / 2),
+			translateY(-height / 2 + 20),
+			rotateX(-(i * delayedFrame) / 300),
+			rotateY(delayedFrame / 100),
+			rotateZ(delayedFrame / 100),
+			scaled(0.6 + zoomIn),
+		]);
 
-		return sortFacesZIndex(projected);
+		return projected;
 	});
 
 	return (

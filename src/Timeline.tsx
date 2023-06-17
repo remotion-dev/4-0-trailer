@@ -3,9 +3,9 @@ import {makeRect} from '@remotion/shapes';
 import React, {useMemo} from 'react';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BLUE, GREEN} from './colors';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {sortFacesZIndex, transformFaces} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -80,8 +80,8 @@ export const Timeline: React.FC = () => {
 	];
 
 	const facesProject = faces.map((f, i) => {
-		return transformFaces({
-			faces: extrudeInstructions({
+		return transformElement(
+			extrudeElement({
 				depth: 20 * 7.5,
 				backFaceColor: f.backColor,
 				frontFaceColor: f.frontColor,
@@ -92,8 +92,9 @@ export const Timeline: React.FC = () => {
 				}).instructions,
 				sideColor: 'black',
 				strokeWidth: 10,
+				description: `Track ${i}`,
 			}),
-			transformations: [
+			[
 				translateX(f.x),
 				translateY((TRACK_HEIGHT + 2) * i),
 				translateZ(
@@ -111,25 +112,26 @@ export const Timeline: React.FC = () => {
 						200 *
 						7.5
 				),
-			],
-		});
+			]
+		);
 	});
 
-	const cursor = transformFaces({
-		faces: extrudeInstructions({
+	const cursor = transformElement(
+		extrudeElement({
 			depth: 2 * 7.5,
 			backFaceColor: 'black',
 			frontFaceColor: 'red',
 			points: parsePath(resetPath(cursorHandlerPath)),
 			sideColor: 'black',
 			strokeWidth: 10,
+			description: 'Cursor',
 		}),
-		transformations: [
+		[
 			translateX((frame - 6) * 7.5),
 			translateY(-12 * 7.5),
 			translateZ(-LAYER_DEPTH / 2 - 1),
-		],
-	});
+		]
+	);
 
 	const facesMapped = useMemo(() => {
 		return [...facesProject, cursor];
@@ -144,19 +146,14 @@ export const Timeline: React.FC = () => {
 		>
 			<Faces
 				elements={facesMapped.map((element) => {
-					return sortFacesZIndex(
-						transformFaces({
-							transformations: [
-								translateX(-frame * 0.6 * 7.5),
-								translateY(-30 * 7.5),
-								rotateX(-xRotation),
-								rotateZ(-frame / 1500),
-								rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
-								scaled(scale),
-							],
-							faces: element,
-						})
-					);
+					return transformElement(element, [
+						translateX(-frame * 0.6 * 7.5),
+						translateY(-30 * 7.5),
+						rotateX(-xRotation),
+						rotateZ(-frame / 1500),
+						rotateY(interpolate(frame, [0, 4000], [0, -Math.PI])),
+						scaled(scale),
+					]);
 				})}
 			/>
 		</svg>

@@ -1,6 +1,7 @@
 import {Instruction, reduceInstructions} from '@remotion/paths';
 import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
 import {ThreeDReducedInstruction} from './3d-svg';
+import {makeElement, ThreeDElement} from './element';
 import {turnInto3D} from './fix-z';
 import {
 	FaceType,
@@ -11,13 +12,14 @@ import {
 import {translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
 
-export const extrudeInstructions = ({
+export const extrudeElement = ({
 	depth,
 	sideColor,
 	frontFaceColor,
 	backFaceColor,
 	points,
 	strokeWidth,
+	description,
 }: {
 	depth: number;
 	sideColor: string;
@@ -25,7 +27,8 @@ export const extrudeInstructions = ({
 	backFaceColor: string;
 	points: Instruction[];
 	strokeWidth: number;
-}): FaceType[] => {
+	description: string;
+}): ThreeDElement => {
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
 	);
@@ -105,7 +108,11 @@ export const extrudeInstructions = ({
 		color: backFaceColor,
 	};
 
-	return sortFacesZIndex([...inbetween, scaledFrontFace, scaledBackFace]);
+	return makeElement(
+		sortFacesZIndex([...inbetween, scaledFrontFace, scaledBackFace]),
+		[centerX, centerY, 0, 1],
+		description
+	);
 };
 const inverseInstruction = (
 	instruction: ThreeDReducedInstruction,

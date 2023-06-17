@@ -1,4 +1,5 @@
 import {ThreeDReducedInstruction} from './3d-svg';
+import {ThreeDElement, transformElement} from './element';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
@@ -118,5 +119,14 @@ export const transformFaces = ({
 }) => {
 	return faces.map((face) => {
 		return transformFace(face, transformations);
+	});
+};
+
+export const transformElements = (
+	elements: ThreeDElement[],
+	transformations: MatrixTransform4D[]
+) => {
+	return elements.map((element) => {
+		return transformElement(element, transformations);
 	});
 };

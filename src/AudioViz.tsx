@@ -9,9 +9,9 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
+import {transformElement} from './element';
 import {Faces} from './Faces';
-import {extrudeInstructions} from './join-inbetween-tiles';
-import {sortFacesZIndex, transformFaces} from './map-face';
+import {extrudeElement} from './join-inbetween-tiles';
 import {
 	rotateX,
 	rotateY,
@@ -83,31 +83,27 @@ export const AudioViz: React.FC = () => {
 			const depth: number = i % 2 === 0 ? depthIn : depthOut;
 			const color = '#0b84f3';
 
-			const extruded = extrudeInstructions({
+			const extruded = extrudeElement({
 				backFaceColor: color,
 				sideColor: 'black',
 				frontFaceColor: color,
 				depth,
 				points: parsePath(path),
 				strokeWidth: 10,
+				description: `circle-${i}`,
 			});
 
 			const spacing = boxWidth * 1.5;
 
-			return transformFaces({
-				transformations: [
-					translateY(noise2D('seed', frame / 100, i) * 5),
-					translateX(
-						-boxWidth / 2 + i * spacing - (spacing * (samples - 1)) / 2
-					),
-					translateY(-boxHeight / 2),
-					translateZ(-depth / 2),
-					rotateX(-noise2D('rotate2', frame / 800, 0) * 0.5),
-					rotateY(-noise2D('rotate3', frame / 200, 0) * 0.5),
-					rotateZ(noise2D('rotate', frame / 400, 0) * 0.5),
-				],
-				faces: extruded,
-			});
+			return transformElement(extruded, [
+				translateY(noise2D('seed', frame / 100, i) * 5),
+				translateX(-boxWidth / 2 + i * spacing - (spacing * (samples - 1)) / 2),
+				translateY(-boxHeight / 2),
+				translateZ(-depth / 2),
+				rotateX(-noise2D('rotate2', frame / 800, 0) * 0.5),
+				rotateY(-noise2D('rotate3', frame / 200, 0) * 0.5),
+				rotateZ(noise2D('rotate', frame / 400, 0) * 0.5),
+			]);
 		});
 	})();
 
@@ -119,7 +115,7 @@ export const AudioViz: React.FC = () => {
 		>
 			<Audio src={audio} />
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces elements={paths.map((p) => sortFacesZIndex(p))} />
+				<Faces elements={paths} />
 			</svg>
 		</AbsoluteFill>
 	);

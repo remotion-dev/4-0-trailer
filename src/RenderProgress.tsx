@@ -2,7 +2,6 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Faces} from './Faces';
 import {useFont} from './get-char';
-import {sortFacesZIndex} from './map-face';
 import {rotateX, rotateY, rotateZ, translateY} from './matrix';
 import {getButton} from './RenderProgress/make-button';
 
@@ -27,18 +26,16 @@ export const RenderProgress: React.FC = () => {
 	}
 
 	const rendered = new Array(4).fill(true).map((_, i) => {
-		return sortFacesZIndex(
-			getButton({
-				font,
-				phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4'][i],
-				depth,
-				color,
-				delay: i * 40,
-				transformations: [translateY(i * 900), ...commonTransformations],
-				frame,
-				fps,
-			})
-		);
+		return getButton({
+			font,
+			phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4'][i],
+			depth,
+			color,
+			delay: i * 40,
+			transformations: [translateY(i * 900), ...commonTransformations],
+			frame,
+			fps,
+		});
 	});
 
 	return (
@@ -48,7 +45,7 @@ export const RenderProgress: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
-				<Faces elements={rendered} />
+				<Faces elements={rendered.flat(1)} />
 			</svg>
 		</AbsoluteFill>
 	);
