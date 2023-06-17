@@ -12,9 +12,12 @@ export const Faces: React.FC<{
 	return (
 		<>
 			{sortedElement.map((element, i) => {
+				const sortedFaces = element.faces.sort((a, b) => {
+					return b.centerPoint[2] - a.centerPoint[2];
+				});
 				return (
 					<React.Fragment key={i}>
-						{element.faces.map(({points, color, strokeWidth}, i) => {
+						{sortedFaces.map(({points, color, strokeWidth}, i) => {
 							return (
 								<Face
 									key={JSON.stringify(points) + i}
