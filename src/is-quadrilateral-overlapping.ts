@@ -1,5 +1,4 @@
-import {sub4d} from './camera';
-import {dot, normalize4d, Vector4D} from './matrix';
+import {dot, normalize4d, sub4d, Vector4D} from './matrix';
 
 class Quad3D {
 	constructor(public vertices: Vector4D[]) {

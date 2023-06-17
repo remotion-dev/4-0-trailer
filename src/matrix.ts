@@ -282,3 +282,9 @@ export const multiplyMatrix = (
 
 	return result;
 };
+
+export const sub4d = function (a: Vector4D, b: Vector4D): Vector4D {
+	return a.map((v, i) => {
+		return v - b[i];
+	}) as Vector4D;
+};
