@@ -70,7 +70,7 @@ export const RemotionRoot: React.FC = () => {
 				height={1080}
 			/>
 			<Composition
-				id="Cube"
+				id="NumberedChapter"
 				component={Cube}
 				durationInFrames={60}
 				fps={30}

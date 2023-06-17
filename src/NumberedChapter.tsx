@@ -1,5 +1,5 @@
 import {parsePath, resetPath, translatePath} from '@remotion/paths';
-import {makeCircle, makeRect} from '@remotion/shapes';
+import {makeCircle} from '@remotion/shapes';
 import React from 'react';
 import {
 	AbsoluteFill,
@@ -30,10 +30,8 @@ export const cubeSchema = z.object({
 export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const frame = useCurrentFrame();
 	const {fps, width, height} = useVideoConfig();
-	const shape = makeRect({
-		height: 300,
-		width: 300,
-		cornerRadius: 150,
+	const shape = makeCircle({
+		radius: 150,
 	});
 
 	const spr = spring({
@@ -58,11 +56,10 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const push = spring({
 		fps,
 		frame,
-		config: {},
 		durationInFrames: 200,
 	});
 
-	const cursorDistance = interpolate(push, [0, 1], [750, 0], {});
+	const cursorDistance = push * 750;
 
 	const pushIn = Math.min(0, cursorDistance);
 
@@ -74,7 +71,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		sideColor: 'black',
 		frontFaceColor: '#0b84f3',
 		backFaceColor: 'black',
-		strokeWidth: 10,
+		strokeWidth: 20,
 		description: 'button',
 	});
 
@@ -82,7 +79,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		fps,
 		frame,
 		delay: 30,
-		config: {},
 	});
 
 	const transformations = [
