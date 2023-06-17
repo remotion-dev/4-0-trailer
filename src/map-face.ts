@@ -133,7 +133,7 @@ export const makeFace = ({
 	strokeColor,
 	fill,
 }: {
-	points: string;
+	points: string | ThreeDReducedInstruction[];
 	strokeWidth: number;
 	strokeColor: string;
 	fill: string;
@@ -143,7 +143,7 @@ export const makeFace = ({
 	return {
 		centerPoint,
 		color: fill,
-		points: turnInto3D(parsePath(points)),
+		points: typeof points === 'string' ? turnInto3D(parsePath(points)) : points,
 		strokeWidth,
 		strokeColor,
 	};
