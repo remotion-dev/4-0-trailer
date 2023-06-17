@@ -47,7 +47,7 @@ export const TriangleOut: React.FC = () => {
 			frontFaceColor: color,
 			depth,
 			points: parsed,
-			strokeWidth: 10,
+			strokeWidth: 20,
 			description: `triangle-${i}`,
 		});
 		const projected = transformElement(extruded, [

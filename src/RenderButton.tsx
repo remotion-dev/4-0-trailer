@@ -14,7 +14,7 @@ import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
 import {getText, useFont} from './get-char';
 import {extrudeElement} from './join-inbetween-tiles';
-import {makeFace} from './map-face';
+import {makeFace, transformElements} from './map-face';
 import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -57,28 +57,22 @@ export const RenderButton: React.FC = () => {
 	const push = spring({
 		fps,
 		frame,
-		config: {},
 		durationInFrames: 600,
 	});
 
 	const cursorDistance = interpolate(push, [0, 1], [750, 0], {});
 
-	const pushIn = Math.min(0, cursorDistance);
+	const actualDepth = depth;
 
-	const _extrudedButton = extrudeElement({
+	const extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
-		depth: depth + pushIn,
+		depth: actualDepth,
 		sideColor: 'black',
 		frontFaceColor: BLUE,
 		backFaceColor: 'black',
 		strokeWidth: 20,
 		description: 'Button',
 	});
-
-	const extrudedTo0 = transformElement(_extrudedButton, [
-		translateZ(-(depth + pushIn) / 2),
-		...transformations,
-	]);
 
 	const extrudedCursor = extrudeElement({
 		points: parsePath(cursorPath),
@@ -99,7 +93,7 @@ export const RenderButton: React.FC = () => {
 
 	const textElement = transformElement(
 		makeElement(textFace, textFace.centerPoint, 'Button text'),
-		[translateZ(-depth - 0.001 - pushIn)]
+		[translateZ(-actualDepth / 2 - 0.001)]
 	);
 
 	const movedCursor = transformElement(extrudedCursor, [
@@ -107,7 +101,6 @@ export const RenderButton: React.FC = () => {
 		rotateX(-Math.PI / 4),
 		rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
 		translateZ(Number(-depth - 0.001) - cursorDistance),
-		...transformations,
 	]);
 
 	return (
@@ -121,11 +114,10 @@ export const RenderButton: React.FC = () => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
-						elements={[
-							extrudedTo0,
-							transformElement(textElement, transformations),
-							movedCursor,
-						]}
+						elements={transformElements(
+							[extrudedButton, textElement, movedCursor],
+							transformations
+						)}
 					/>
 				</svg>
 			</AbsoluteFill>
