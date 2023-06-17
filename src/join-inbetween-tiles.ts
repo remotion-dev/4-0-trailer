@@ -39,8 +39,8 @@ export const extrudeElement = ({
 		),
 		strokeWidth,
 		strokeColor: 'black',
-		color: 'black',
-	};
+		fill: 'black',
+	});
 
 	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
 	const unscaledFrontFace = transformFace(instructions, [
