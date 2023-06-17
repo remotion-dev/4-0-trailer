@@ -1,9 +1,4 @@
-import {
-	getBoundingBox,
-	parsePath,
-	resetPath,
-	translatePath,
-} from '@remotion/paths';
+import {parsePath, resetPath, translatePath} from '@remotion/paths';
 import {makeCircle, makeRect} from '@remotion/shapes';
 import React from 'react';
 import {
@@ -20,10 +15,9 @@ import {z} from 'zod';
 import {centerPath} from './center';
 import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
 import {extrudeElement} from './join-inbetween-tiles';
-import {translateSvgInstruction} from './map-face';
+import {makeFace} from './map-face';
 import {rotateX, rotateY, translateY, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -37,9 +31,9 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const frame = useCurrentFrame();
 	const {fps, width, height} = useVideoConfig();
 	const shape = makeRect({
-		height: 40 * 7.5,
-		width: 40 * 7.5,
-		cornerRadius: 20 * 7.5,
+		height: 300,
+		width: 300,
+		cornerRadius: 150,
 	});
 
 	const spr = spring({
@@ -60,7 +54,6 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 	const text = getText({font, text: String(step), size: 131.25});
 
 	const textPath = resetPath(text.path);
-	const parsedText = parsePath(textPath);
 
 	const push = spring({
 		fps,
@@ -101,29 +94,15 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 
 	const extrudedTo0 = transformElement(_extrudedButton, transformations);
 
-	const bBoxText = getBoundingBox(textPath);
-
-	const centeredText = turnInto3D(parsedText).map((turn) => {
-		return translateSvgInstruction(
-			turn,
-			-(bBoxText.x2 - bBoxText.x1) / 2,
-			-(bBoxText.y2 - bBoxText.y1) / 2,
-			0
-		);
+	const face = makeFace({
+		points: centerPath(textPath),
+		fill: 'white',
+		strokeColor: 'black',
+		strokeWidth: 0,
 	});
 
-	const textFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				points: centeredText,
-				color: 'white',
-				strokeColor: 'black',
-				strokeWidth: 0,
-			},
-			[0, 0, 0, 1],
-			'text'
-		),
+	const textElement = transformElement(
+		makeElement(face, face.centerPoint, 'text'),
 		[translateZ(-actualDepth / 2 + 0.001)]
 	);
 
@@ -176,7 +155,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 					<Faces
 						elements={[
 							extrudedTo0,
-							transformElement(textFace, transformations),
+							transformElement(textElement, transformations),
 						]}
 					/>
 				</svg>

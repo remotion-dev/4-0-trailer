@@ -1,5 +1,8 @@
+import {parsePath} from '@remotion/paths';
+import {getBoundingBox} from '@remotion/paths/dist/get-bounding-box';
 import {ThreeDReducedInstruction} from './3d-svg';
 import {ThreeDElement, transformElement} from './element';
+import {turnInto3D} from './fix-z';
 import {
 	MatrixTransform4D,
 	multiplyMatrix,
@@ -123,4 +126,32 @@ export const transformElements = (
 	return elements.map((element) => {
 		return transformElement(element, transformations);
 	});
+};
+
+export const makeFace = ({
+	points,
+	strokeWidth,
+	strokeColor,
+	fill,
+}: {
+	points: string;
+	strokeWidth: number;
+	strokeColor: string;
+	fill: string;
+}): FaceType => {
+	const boundingBox = getBoundingBox(points);
+	const centerPoint: Vector4D = [
+		boundingBox.x1 + boundingBox.width / 2,
+		boundingBox.x1 + boundingBox.height / 2,
+		0,
+		1,
+	];
+
+	return {
+		centerPoint,
+		color: fill,
+		points: turnInto3D(parsePath(points)),
+		strokeWidth,
+		strokeColor,
+	};
 };

@@ -1,4 +1,4 @@
-import {getBoundingBox, parsePath, resetPath, scalePath} from '@remotion/paths';
+import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
 import {
@@ -12,10 +12,9 @@ import {centerPath} from './center';
 import {BLUE} from './colors';
 import {makeElement, transformElement} from './element';
 import {Faces} from './Faces';
-import {turnInto3D} from './fix-z';
 import {getText, useFont} from './get-char';
 import {extrudeElement} from './join-inbetween-tiles';
-import {translateSvgInstruction} from './map-face';
+import {makeFace} from './map-face';
 import {rotateX, rotateY, rotateZ, translateZ} from './matrix';
 
 const viewBox = [-1600, -800, 3200, 1600];
@@ -49,7 +48,6 @@ export const RenderButton: React.FC = () => {
 	const text = getText({font, text: 'Render video'});
 
 	const textPath = resetPath(scalePath(text.path, 0.25, 0.25));
-	const parsedText = parsePath(textPath);
 
 	const transformations = [
 		rotateY(-Math.PI / 4 + frame / 100),
@@ -92,29 +90,15 @@ export const RenderButton: React.FC = () => {
 		description: 'Cursor',
 	});
 
-	const bBoxText = getBoundingBox(textPath);
-
-	const centeredText = turnInto3D(parsedText).map((turn) => {
-		return translateSvgInstruction(
-			turn,
-			-(bBoxText.x2 - bBoxText.x1) / 2,
-			-(bBoxText.y2 - bBoxText.y1) / 2,
-			0
-		);
+	const textFace = makeFace({
+		fill: 'white',
+		points: centerPath(textPath),
+		strokeWidth: 0,
+		strokeColor: 'black',
 	});
 
-	const textFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: 'white',
-				points: centeredText,
-				strokeWidth: 0,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
-			'Button text'
-		),
+	const textElement = transformElement(
+		makeElement(textFace, textFace.centerPoint, 'Button text'),
 		[translateZ(-depth - 0.001 - pushIn)]
 	);
 
@@ -139,7 +123,7 @@ export const RenderButton: React.FC = () => {
 					<Faces
 						elements={[
 							extrudedTo0,
-							transformElement(textFace, transformations),
+							transformElement(textElement, transformations),
 							movedCursor,
 						]}
 					/>

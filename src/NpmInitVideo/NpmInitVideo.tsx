@@ -6,10 +6,9 @@ import {centerPath} from '../center';
 import {BLUE} from '../colors';
 import {makeElement, transformElement} from '../element';
 import {Faces} from '../Faces';
-import {turnInto3D} from '../fix-z';
 import {getText, useFont} from '../get-char';
 import {extrudeElement} from '../join-inbetween-tiles';
-import {transformElements} from '../map-face';
+import {makeFace, transformElements} from '../map-face';
 import {
 	MatrixTransform4D,
 	rotateX,
@@ -54,11 +53,9 @@ export const NpmIniVideo: React.FC = () => {
 		cornerRadius: 6 * 7.5,
 	});
 
-	const dot = turnInto3D(
-		makeCircle({
-			radius: dotRadius,
-		}).instructions
-	);
+	const dot = makeCircle({
+		radius: dotRadius,
+	});
 
 	const topLeftTransformation: MatrixTransform4D[] = [
 		translateY(dotRadius / 2),
@@ -70,82 +67,69 @@ export const NpmIniVideo: React.FC = () => {
 		translateZ(-depth / 2),
 	];
 
-	const redFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: '#fe5f57',
-				points: dot,
-				strokeWidth: 1,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
-			'redFace'
-		),
+	const redFace = makeFace({
+		fill: '#fe5f57',
+		points: dot.path,
+		strokeWidth: 1,
+		strokeColor: 'black',
+	});
+
+	const redElement = transformElement(
+		makeElement(redFace, redFace.centerPoint, 'redFace'),
 		topLeftTransformation
 	);
 
-	const yellowFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: '#ffbc2e',
-				points: dot,
-				strokeWidth: 1,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
-			'yellowFace'
-		),
+	const yellowFace = makeFace({
+		fill: '#ffbc2e',
+		points: dot.path,
+		strokeWidth: 1,
+		strokeColor: 'black',
+	});
+
+	const yellowElement = transformElement(
+		makeElement(yellowFace, [0, 0, 0, 1], 'yellowFace'),
 		[...topLeftTransformation, translateX(10 * 7.5)]
 	);
 
-	const greenFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: '#28c840',
-				points: dot,
-				strokeWidth: 1,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
-			'greenFace'
-		),
+	const greenFace = makeFace({
+		fill: '#28c840',
+		points: dot.path,
+		strokeWidth: 1,
+		strokeColor: 'black',
+	});
+
+	const greenElement = transformElement(
+		makeElement(greenFace, greenFace.centerPoint, 'greenFace'),
 		[...topLeftTransformation, translateX(20 * 7.5)]
 	);
 
-	const dollarFace = transformElement(
-		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: BLUE,
-				points: turnInto3D(parsePath(dollar.path)),
-				strokeWidth: 0,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
-			'dollarFace'
-		),
+	const dollarFace = makeFace({
+		fill: BLUE,
+		points: dollar.path,
+		strokeWidth: 0,
+		strokeColor: 'black',
+	});
+
+	const dollarElement = transformElement(
+		makeElement(dollarFace, dollarFace.centerPoint, 'dollarFace'),
 		[...topLeftTransformation, translateY(25 * 7.5)]
 	);
 
-	const npmInitVideoFace = transformElement(
+	const npmInitVideoFace = makeFace({
+		fill: 'white',
+		points: npmInitVideo.path,
+		strokeWidth: 0,
+		strokeColor: 'black',
+	});
+
+	const npmInitVideoElement = transformElement(
 		makeElement(
-			{
-				centerPoint: [0, 0, 0, 1],
-				color: 'white',
-				points: turnInto3D(parsePath(npmInitVideo.path)),
-				strokeWidth: 0,
-				strokeColor: 'black',
-			},
-			[0, 0, 0, 1],
+			npmInitVideoFace,
+			npmInitVideoFace.centerPoint,
 			'npmInitVideoFace'
 		),
 		[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
 	);
-
-	const transformed = transformElements([greenFace, yellowFace, redFace], []);
 
 	const centered = centerPath(rect.path);
 	const extrude = extrudeElement({
@@ -158,11 +142,19 @@ export const NpmIniVideo: React.FC = () => {
 		description: 'npm init video',
 	});
 
-	const allFaces = [extrude, ...transformed, dollarFace, npmInitVideoFace];
+	const allFaces = [
+		extrude,
+		greenElement,
+		yellowElement,
+		redElement,
+		dollarElement,
+		npmInitVideoElement,
+	];
 
-	const all = allFaces.map((a) => {
-		return transformElement(a, [rotateY(frame / 100), rotateX(frame / 50)]);
-	});
+	const all = transformElements(allFaces, [
+		rotateY(frame / 100),
+		rotateX(frame / 50),
+	]);
 
 	return (
 		<AbsoluteFill
