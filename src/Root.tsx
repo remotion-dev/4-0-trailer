@@ -12,6 +12,7 @@ import {RightPaneLogo} from './RightPaneLogo';
 import {Sparks} from './Sparks';
 import {Teaser} from './Teaser';
 import {Timeline} from './Timeline';
+import {WaysToRender} from './WaysToRender';
 
 export const RemotionRoot: React.FC = () => {
 	return (
@@ -121,6 +122,14 @@ export const RemotionRoot: React.FC = () => {
 				fps={25}
 				width={1920 * 2}
 				height={1080 * 2}
+			/>
+			<Composition
+				id="WaysToRender"
+				component={WaysToRender}
+				durationInFrames={600}
+				fps={30}
+				width={1920}
+				height={1080}
 			/>
 		</>
 	);
