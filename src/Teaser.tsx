@@ -47,30 +47,30 @@ export const Teaser: React.FC = () => {
 
 	const extruded = extrudeElement({
 		backFaceColor: 'white',
-		sideColor: BLUE,
-		frontFaceColor: 'white',
+		sideColor: 'black',
+		frontFaceColor: BLUE,
 		depth,
 		points: parsed,
-		strokeWidth: 40,
+		strokeWidth: 20,
 		description: `triangle-${i}`,
-		strokeColor: BLUE,
+		strokeColor: 'black',
 	});
 
 	const textFace = extrudeElement({
 		backFaceColor: 'white',
 		depth,
 		points: parsePath(centerPath(resetPath(text.path))),
-		strokeWidth: 0,
+		strokeWidth: 20,
 		description: `text-${i}`,
-		strokeColor: BLUE,
+		strokeColor: 'black',
 		frontFaceColor: BLUE,
-		sideColor: BLUE,
+		sideColor: 'black',
 	});
 
 	const projected = transformElements([extruded], [rotateY(-spr * Math.PI)]);
 	const projected2 = transformElements(
 		[textFace],
-		[rotateY(Math.PI + spr * Math.PI)]
+		[rotateY(Math.PI - spr * Math.PI)]
 	);
 
 	return (
