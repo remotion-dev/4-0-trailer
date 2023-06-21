@@ -2,12 +2,26 @@ import React, {useState} from 'react';
 import {random} from 'remotion';
 import {threeDIntoSvgPath, ThreeDReducedInstruction} from './3d-svg';
 
-export const Face: React.FC<{
-	points: ThreeDReducedInstruction[];
-	color: string;
-	strokeColor: string;
-	strokeWidth: number;
-}> = ({color, points, strokeColor, strokeWidth}) => {
+export type FaceSVGProps = {
+	strokeLinecap?: React.SVGAttributes<SVGPathElement>['strokeLinecap'];
+	strokeMiterlimit?: React.SVGAttributes<SVGPathElement>['strokeMiterlimit'];
+};
+
+export const Face: React.FC<
+	{
+		points: ThreeDReducedInstruction[];
+		color: string;
+		strokeColor: string;
+		strokeWidth: number;
+	} & FaceSVGProps
+> = ({
+	color,
+	points,
+	strokeColor,
+	strokeWidth,
+	strokeMiterlimit,
+	strokeLinecap,
+}) => {
 	const [id] = useState(() => random(null).toString().replace('.', ''));
 	const d = threeDIntoSvgPath(points);
 
@@ -17,8 +31,10 @@ export const Face: React.FC<{
 				{strokeWidth ? (
 					<mask id={id}>
 						<path
-							strokeLinecap="round"
+							strokeLinecap={strokeLinecap}
 							shapeRendering="crispEdges"
+							strokeMiterlimit={strokeMiterlimit}
+							strokeWidth={strokeWidth}
 							d={d}
 							fill="white"
 						/>
@@ -29,9 +45,10 @@ export const Face: React.FC<{
 				d={d}
 				fill={color}
 				mask={strokeWidth ? `url(#${id})` : undefined}
-				strokeLinecap="round"
 				stroke={strokeColor}
+				strokeMiterlimit={strokeMiterlimit}
 				shapeRendering="crispEdges"
+				strokeLinecap={strokeLinecap}
 				strokeWidth={strokeWidth}
 			/>
 		</>

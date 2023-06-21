@@ -1,6 +1,6 @@
 import React from 'react';
 import {ThreeDElement} from './element';
-import {Face} from './Face';
+import {Face, FaceSVGProps} from './Face';
 import {FaceType} from './map-face';
 
 const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
@@ -9,9 +9,11 @@ const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 	});
 };
 
-export const Faces: React.FC<{
-	elements: ThreeDElement[];
-}> = ({elements}) => {
+export const Faces: React.FC<
+	{
+		elements: ThreeDElement[];
+	} & FaceSVGProps
+> = ({elements, ...svgProps}) => {
 	const sortedElement = elements.sort((a, b) => {
 		return b.centerPoint[2] - a.centerPoint[2];
 	});
@@ -31,6 +33,7 @@ export const Faces: React.FC<{
 									color={color}
 									points={points}
 									strokeWidth={strokeWidth}
+									{...svgProps}
 								/>
 							);
 						})}

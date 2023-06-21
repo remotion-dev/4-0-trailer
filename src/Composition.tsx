@@ -93,13 +93,10 @@ export const MyComposition = () => {
 	const subpaths = getSubpaths(mask);
 
 	return (
-		<AbsoluteFill
-			style={{
-				clipPath: `path('${subpaths[0]}')`,
-			}}
-		>
+		<AbsoluteFill>
 			<AbsoluteFill
 				style={{
+					clipPath: `path('${subpaths[0]}')`,
 					fontFamily: 'Variable',
 					fontVariationSettings: '"wght" 600',
 					position: 'relative',

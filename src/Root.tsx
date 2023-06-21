@@ -2,6 +2,7 @@ import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
+import {DistinctlyReact} from './DistinctlyReact';
 import {Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
@@ -108,10 +109,18 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Teaser"
 				component={Teaser}
-				durationInFrames={600}
+				durationInFrames={321}
 				fps={30}
 				width={1080}
 				height={1080}
+			/>
+			<Composition
+				id="DistinctlyReact"
+				component={DistinctlyReact}
+				durationInFrames={Math.floor(22 * 25 + 44 / 100)}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 2}
 			/>
 		</>
 	);
