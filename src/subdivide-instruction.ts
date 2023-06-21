@@ -11,6 +11,10 @@ export const subdivideInstructions = (
 			newInstructions.push(instruction);
 			return;
 		}
+		if (instruction.type === 'Z') {
+			newInstructions.push(instruction);
+			return;
+		}
 		const previousInstruction = instructions[i - 1];
 		const subdivided = subdivideInstruction(
 			previousInstruction.point,
@@ -24,7 +28,7 @@ export const subdivideInstructions = (
 const subdivideInstruction = (
 	from: Vector4D,
 	instruction: ThreeDReducedInstruction
-) => {
+): ThreeDReducedInstruction[] => {
 	if (instruction.type === 'C') {
 		return subdivide3DCInstruction(from, instruction);
 	}
@@ -33,6 +37,9 @@ const subdivideInstruction = (
 	}
 	if (instruction.type === 'Q') {
 		return subdivideQInstruction(from, instruction);
+	}
+	if (instruction.type === 'Z') {
+		return [instruction];
 	}
 
 	throw new Error('Cannot subdivide instruction');

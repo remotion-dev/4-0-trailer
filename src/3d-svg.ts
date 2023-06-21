@@ -19,6 +19,10 @@ export type ThreeDReducedInstruction =
 			type: 'Q';
 			cp: Vector4D;
 			point: Vector4D;
+	  }
+	| {
+			type: 'Z';
+			point: Vector4D;
 	  };
 
 const serializeThreeDReducedInstruction = (
@@ -35,6 +39,9 @@ const serializeThreeDReducedInstruction = (
 	}
 	if (instruction.type === 'Q') {
 		return `Q ${instruction.cp[0]} ${instruction.cp[1]} ${instruction.point[0]} ${instruction.point[1]}`;
+	}
+	if (instruction.type === 'Z') {
+		return 'Z';
 	}
 	throw new Error('Unknown instruction type');
 };

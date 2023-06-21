@@ -14,7 +14,7 @@ export const turnInto3D = (
 
 		if (instruction.type === 'Z') {
 			newInstructions.push({
-				type: 'L',
+				type: 'Z',
 				point: lastMove,
 			});
 		} else if (instruction.type === 'M') {

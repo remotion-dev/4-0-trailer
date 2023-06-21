@@ -6,6 +6,7 @@ import {turnInto3D} from './fix-z';
 import {FaceType, transformFace, translateSvgInstruction} from './map-face';
 import {translateZ, Vector4D} from './matrix';
 import {subdivideInstructions} from './subdivide-instruction';
+import {truthy} from './truthy';
 
 export const extrudeElement = ({
 	depth,
@@ -73,20 +74,26 @@ export const extrudeElement = ({
 		);
 		const newInstructions: ThreeDReducedInstruction[] = [
 			{
-				type: 'M',
+				type: 'M' as const,
 				point: currentPoint,
 			},
 			nextInstruction,
+			nextInstruction.type === 'Z'
+				? {
+						type: 'M' as const,
+						point: nextInstruction.point,
+				  }
+				: null,
 			{
-				type: 'L',
+				type: 'L' as const,
 				point: movingOver,
 			},
 			translatedInstruction,
 			{
-				type: 'L',
+				type: 'L' as const,
 				point: currentPoint,
 			},
-		];
+		].filter(truthy);
 
 		return {
 			points: newInstructions,
@@ -115,6 +122,7 @@ export const extrudeElement = ({
 		description
 	);
 };
+
 const inverseInstruction = (
 	instruction: ThreeDReducedInstruction,
 	comingFrom: Vector4D
@@ -144,6 +152,12 @@ const inverseInstruction = (
 			type: 'Q',
 			point: comingFrom,
 			cp: instruction.cp,
+		};
+	}
+	if (instruction.type === 'Z') {
+		return {
+			type: 'L',
+			point: comingFrom,
 		};
 	}
 	throw new Error('Unknown instruction type');

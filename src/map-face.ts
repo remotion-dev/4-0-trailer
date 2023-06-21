@@ -86,6 +86,17 @@ export const translateSvgInstruction = (
 			],
 		};
 	}
+	if (instruction.type === 'Z') {
+		return {
+			type: 'Z',
+			point: [
+				instruction.point[0] + x,
+				instruction.point[1] + y,
+				instruction.point[2] + z,
+				instruction.point[3],
+			],
+		};
+	}
 	throw new Error('Unknown instruction type: ' + JSON.stringify(instruction));
 };
 

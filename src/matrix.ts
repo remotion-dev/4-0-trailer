@@ -261,6 +261,12 @@ export function multiplyMatrixAndSvgInstruction(
 			point: multiplyMatrix(matrix, point.point),
 		};
 	}
+	if (point.type === 'Z') {
+		return {
+			type: 'Z',
+			point: multiplyMatrix(matrix, point.point),
+		};
+	}
 	throw new Error('Unknown instruction type: ' + JSON.stringify(point));
 }
 
