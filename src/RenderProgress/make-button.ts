@@ -87,6 +87,7 @@ export const getButton = ({
 		points: parsePath(centerPath(rect.path)),
 		strokeWidth: 20,
 		description: 'Button',
+		strokeColor: 'black',
 	});
 
 	const progressFace = transformElement(
@@ -105,6 +106,7 @@ export const getButton = ({
 				centerPoint: [0, 0, 0, 1] as Vector4D,
 				strokeWidth: 20,
 				strokeColor: 'black',
+				description: 'progress',
 			},
 			[0, 0, 0, 1],
 			'progress'
@@ -133,6 +135,7 @@ export const getButton = ({
 				centerPoint: [0, 0, 0, 1] as Vector4D,
 				strokeWidth: 0,
 				strokeColor: 'black',
+				description: 'text',
 			},
 			[0, 0, 0, 1],
 			'text'
@@ -158,6 +161,7 @@ export const getButton = ({
 				centerPoint: [0, 0, 0, 1] as Vector4D,
 				strokeWidth: 0,
 				strokeColor: 'black',
+				description: 'folder',
 			},
 			[0, 0, 0, 1],
 			'folder'

@@ -93,6 +93,7 @@ export const Timeline: React.FC = () => {
 				sideColor: 'black',
 				strokeWidth: 10,
 				description: `Track ${i}`,
+				strokeColor: 'black',
 			}),
 			[
 				translateX(f.x),
@@ -125,6 +126,7 @@ export const Timeline: React.FC = () => {
 			sideColor: 'black',
 			strokeWidth: 10,
 			description: 'Cursor',
+			strokeColor: 'black',
 		}),
 		[
 			translateX((frame - 6) * 7.5),

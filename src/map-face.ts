@@ -15,6 +15,7 @@ export type FaceType = {
 	centerPoint: Vector4D;
 	strokeWidth: number;
 	strokeColor: string;
+	description: string;
 };
 
 export const translateSvgInstruction = (
@@ -132,11 +133,13 @@ export const makeFace = ({
 	strokeWidth,
 	strokeColor,
 	fill,
+	description,
 }: {
 	points: string | ThreeDReducedInstruction[];
 	strokeWidth: number;
 	strokeColor: string;
 	fill: string;
+	description: string;
 }): FaceType => {
 	const centerPoint: Vector4D = [0, 0, 0, 1];
 
@@ -146,5 +149,6 @@ export const makeFace = ({
 		points: typeof points === 'string' ? turnInto3D(parsePath(points)) : points,
 		strokeWidth,
 		strokeColor,
+		description,
 	};
 };

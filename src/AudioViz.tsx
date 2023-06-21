@@ -91,6 +91,7 @@ export const AudioViz: React.FC = () => {
 				points: parsePath(path),
 				strokeWidth: 10,
 				description: `circle-${i}`,
+				strokeColor: color,
 			});
 
 			const spacing = boxWidth * 1.5;

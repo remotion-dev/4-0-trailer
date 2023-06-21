@@ -20,13 +20,14 @@ export const Faces: React.FC<{
 		<>
 			{sortedElement.map((element, i) => {
 				const sortedFaces = sortFacesZIndex(element.faces);
+
 				return (
 					<React.Fragment key={i}>
-						{sortedFaces.map(({points, color, strokeWidth}, i) => {
+						{sortedFaces.map(({points, color, strokeWidth, strokeColor}, i) => {
 							return (
 								<Face
 									key={JSON.stringify(points) + i}
-									strokeColor="black"
+									strokeColor={strokeColor}
 									color={color}
 									points={points}
 									strokeWidth={strokeWidth}

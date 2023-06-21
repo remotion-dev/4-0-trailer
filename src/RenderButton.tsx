@@ -72,6 +72,7 @@ export const RenderButton: React.FC = () => {
 		backFaceColor: 'black',
 		strokeWidth: 20,
 		description: 'Button',
+		strokeColor: 'black',
 	});
 
 	const extrudedCursor = extrudeElement({
@@ -82,6 +83,7 @@ export const RenderButton: React.FC = () => {
 		backFaceColor: 'white',
 		strokeWidth: 20,
 		description: 'Cursor',
+		strokeColor: 'black',
 	});
 
 	const textFace = makeFace({
@@ -89,6 +91,7 @@ export const RenderButton: React.FC = () => {
 		points: centerPath(textPath),
 		strokeWidth: 0,
 		strokeColor: 'black',
+		description: 'Text',
 	});
 
 	const textElement = transformElement(

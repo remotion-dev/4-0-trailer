@@ -15,6 +15,7 @@ export const extrudeElement = ({
 	points,
 	strokeWidth,
 	description,
+	strokeColor,
 }: {
 	depth: number;
 	sideColor: string;
@@ -23,6 +24,7 @@ export const extrudeElement = ({
 	points: Instruction[];
 	strokeWidth: number;
 	description: string;
+	strokeColor: string;
 }): ThreeDElement => {
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
@@ -38,8 +40,9 @@ export const extrudeElement = ({
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
 		strokeWidth,
-		strokeColor: 'black',
+		strokeColor,
 		color: 'black',
+		description,
 	};
 
 	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
@@ -91,16 +94,19 @@ export const extrudeElement = ({
 			centerPoint: [centerX, centerY, 0, 1],
 			strokeWidth: 0,
 			strokeColor: 'black',
+			description: description + 'inbetween',
 		};
 	});
 
 	const scaledFrontFace: FaceType = {
 		...unscaledFrontFace,
 		color: frontFaceColor,
+		description: description + '(front)',
 	};
 	const scaledBackFace: FaceType = {
 		...unscaledBackFace,
 		color: backFaceColor,
+		description: description + '(back)',
 	};
 
 	return makeElement(

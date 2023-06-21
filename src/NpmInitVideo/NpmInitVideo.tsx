@@ -72,6 +72,7 @@ export const NpmIniVideo: React.FC = () => {
 		points: dot.path,
 		strokeWidth: 1,
 		strokeColor: 'black',
+		description: 'redFace',
 	});
 
 	const redElement = transformElement(
@@ -84,6 +85,7 @@ export const NpmIniVideo: React.FC = () => {
 		points: dot.path,
 		strokeWidth: 1,
 		strokeColor: 'black',
+		description: 'yellowFace',
 	});
 
 	const yellowElement = transformElement(
@@ -96,6 +98,7 @@ export const NpmIniVideo: React.FC = () => {
 		points: dot.path,
 		strokeWidth: 1,
 		strokeColor: 'black',
+		description: 'greenFace',
 	});
 
 	const greenElement = transformElement(
@@ -108,6 +111,7 @@ export const NpmIniVideo: React.FC = () => {
 		points: dollar.path,
 		strokeWidth: 0,
 		strokeColor: 'black',
+		description: 'dollarFace',
 	});
 
 	const dollarElement = transformElement(
@@ -120,6 +124,7 @@ export const NpmIniVideo: React.FC = () => {
 		points: npmInitVideo.path,
 		strokeWidth: 0,
 		strokeColor: 'black',
+		description: 'npmInitVideoFace',
 	});
 
 	const npmInitVideoElement = transformElement(
@@ -140,6 +145,7 @@ export const NpmIniVideo: React.FC = () => {
 		sideColor: 'black',
 		strokeWidth: 10,
 		description: 'npm init video',
+		strokeColor: 'black',
 	});
 
 	const allFaces = [

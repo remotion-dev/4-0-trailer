@@ -73,6 +73,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		backFaceColor: 'black',
 		strokeWidth: 20,
 		description: 'button',
+		strokeColor: 'black',
 	});
 
 	const intrude = spring({
@@ -95,6 +96,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		fill: 'white',
 		strokeColor: 'black',
 		strokeWidth: 0,
+		description: 'text',
 	});
 
 	const textElement = transformElement(
