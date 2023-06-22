@@ -32,8 +32,6 @@ export const AudioViz: React.FC = () => {
 
 	const audioData = useAudioData(audio);
 
-	console.log(audioData);
-
 	if (!audioData) {
 		return null;
 	}

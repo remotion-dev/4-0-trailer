@@ -1,11 +1,11 @@
 import React from 'react';
-import {Audio, interpolate, Series, staticFile} from 'remotion';
+import {AbsoluteFill, Audio, interpolate, Series, staticFile} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {MyComposition} from './Composition';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
-import {Timeline} from './Timeline';
+import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
 
 export const Main: React.FC = () => {
 	return (
@@ -22,7 +22,7 @@ export const Main: React.FC = () => {
 					<NpmIniVideo />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>
-					<Timeline />
+					<TimelinePerspective1 />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>
 					<RenderButton />
@@ -30,8 +30,14 @@ export const Main: React.FC = () => {
 				<Series.Sequence durationInFrames={7 * 30}>
 					<RenderProgress />
 				</Series.Sequence>
+				<Series.Sequence durationInFrames={11 * 30}>
+					<TimelinePerspective2 withAudio={false} />
+				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>
-					<MyComposition />
+					<AbsoluteFill />
+				</Series.Sequence>
+				<Series.Sequence durationInFrames={Infinity}>
+					<MyComposition str="Welcome to Remotion 4.0" />
 				</Series.Sequence>
 			</Series>
 		</>

@@ -1,8 +1,10 @@
 import {getSubpaths, parsePath, resetPath} from '@remotion/paths';
+import React from 'react';
 import {
 	AbsoluteFill,
 	Easing,
 	interpolate,
+	Sequence,
 	spring,
 	useCurrentFrame,
 	useVideoConfig,
@@ -24,7 +26,9 @@ import {
 	translateY,
 } from './matrix';
 
-export const MyComposition = () => {
+export const MyComposition: React.FC<{
+	str: string;
+}> = ({str}) => {
 	const frame = useCurrentFrame() * 1.3;
 	const {width, height, fps} = useVideoConfig();
 
@@ -59,6 +63,7 @@ export const MyComposition = () => {
 
 	const fromRight = interpolate(progress, [0, 1], [width * 0.75, 0], {
 		extrapolateLeft: 'clamp',
+		extrapolateRight: 'clamp',
 	});
 
 	const zoomIn = interpolate(frame, [0, 120], [0, 1], {
@@ -66,12 +71,14 @@ export const MyComposition = () => {
 		easing: Easing.out(Easing.ease),
 	});
 
-	const distance = interpolate(zoomIn, [0, 1], [1, 0.000000005]);
+	const distance = interpolate(zoomIn, [0, 1], [1, 0.000000005], {
+		extrapolateRight: 'clamp',
+	});
 
 	const scale = 1 / distance;
 
 	const textScale = 1 - distance;
-	const textY = interpolate(progress, [0, 1], [2000000, 0]);
+	const textY = interpolate(progress, [0, 1], [2000000, 0], {});
 
 	const rotatedFaces = transformElement(inbetweenFaces, [
 		translateY(20),
@@ -120,11 +127,11 @@ export const MyComposition = () => {
 							translate: '0 ' + String(textY) + 'px',
 						}}
 					>
-						Introducing Remotion 4.0
+						{str}
 					</h1>
 				</AbsoluteFill>
 			</AbsoluteFill>
-			<AbsoluteFill>
+			<Sequence durationInFrames={128}>
 				<svg
 					viewBox={[0, 0, width, height].join(' ')}
 					style={{
@@ -133,7 +140,7 @@ export const MyComposition = () => {
 				>
 					<Faces elements={[rotatedFaces]} />
 				</svg>
-			</AbsoluteFill>
+			</Sequence>
 		</AbsoluteFill>
 	);
 };

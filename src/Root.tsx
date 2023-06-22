@@ -14,7 +14,7 @@ import {RightPaneLogo} from './RightPaneLogo';
 import {RustLogo} from './RustLogo';
 import {Sparks} from './Sparks';
 import {Teaser} from './Teaser';
-import {Timeline} from './Timeline';
+import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
 import {WaysToRender} from './WaysToRender';
 
 export const RemotionRoot: React.FC = () => {
@@ -27,6 +27,9 @@ export const RemotionRoot: React.FC = () => {
 				fps={30}
 				width={1280}
 				height={720}
+				defaultProps={{
+					str: 'Introducing Remotion 4.0',
+				}}
 			/>
 			<Composition
 				id="RenderButton"
@@ -63,7 +66,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="AudioViz"
 				component={AudioViz}
-				durationInFrames={1200}
+				durationInFrames={1400}
 				fps={30}
 				width={1920}
 				height={1080}
@@ -88,11 +91,22 @@ export const RemotionRoot: React.FC = () => {
 			/>
 			<Composition
 				id="Timeline"
-				component={Timeline}
+				component={TimelinePerspective1}
 				durationInFrames={600}
 				fps={30}
 				width={1920}
 				height={1080}
+			/>
+			<Composition
+				id="Timeline2"
+				component={TimelinePerspective2}
+				durationInFrames={600}
+				fps={30}
+				width={1920}
+				height={1080}
+				defaultProps={{
+					withAudio: true,
+				}}
 			/>
 			<Composition
 				id="NpmInitVideo"
