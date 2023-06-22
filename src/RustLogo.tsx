@@ -3,7 +3,9 @@ import React from 'react';
 import {
 	AbsoluteFill,
 	interpolate,
+	OffthreadVideo,
 	spring,
+	staticFile,
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
@@ -21,7 +23,7 @@ import {
 	translateY,
 } from './matrix';
 
-export const RightPaneLogo: React.FC = () => {
+export const RustLogo: React.FC = () => {
 	const {width, height, fps} = useVideoConfig();
 	const viewBox = [-width / 4, -height / 2, width / 2, height];
 
@@ -42,7 +44,8 @@ export const RightPaneLogo: React.FC = () => {
 		points: parsePath(
 			centerPath(
 				resetPath(
-					`M2983 5895 c-12 -8 -52 -66 -89 -128 -37 -61 -68 -113 -69 -115 -2
+					`
+					M2983 5895 c-12 -8 -52 -66 -89 -128 -37 -61 -68 -113 -69 -115 -2
 					-2 -18 -5 -36 -8 -32 -5 -38 -1 -117 88 -160 178 -186 174 -262 -44 -43 -121
 					-46 -127 -78 -136 -33 -10 -38 -8 -140 69 -110 82 -136 95 -175 85 -32 -8 -45
 					-40 -62 -159 -22 -152 -24 -156 -55 -172 -27 -14 -34 -12 -158 46 -138 63
@@ -97,53 +100,89 @@ export const RightPaneLogo: React.FC = () => {
 		strokeColor: 'black',
 	});
 
-	const y = interpolate(progress(5), [0, 1], [1600, 400]);
+	const y = interpolate(progress(5), [0, 1], [1600, 800]);
 
 	const rotated = transformElement(inbetweenFaces, [
 		rotateZ(frame / 100),
-		scaled(0.22),
+		scaled(0.5),
 		rotateX(progress(5) * -Math.PI * 0.2),
 		rotateY((progress(5) * -Math.PI) / 8),
 		translateY(y),
 		translateX(30),
 	]);
 
+	const shift = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		delay: 120,
+		durationInFrames: 45,
+	});
+
+	const shiftOut = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		delay: 12 * 30,
+		durationInFrames: 45,
+	});
+
+	const x = interpolate(shift + shiftOut, [0, 1, 2], [0, -1000, 0]);
+	const xSlide = interpolate(shift + shiftOut, [0, 1, 2], [1945, 0, 1945]);
+
 	return (
 		<AbsoluteFill>
 			<AbsoluteFill
 				style={{
-					left: 'calc(50% - 10px)',
-					width: '50%',
-					borderLeft: '10px solid black',
-				}}
-			/>
-			<AbsoluteFill
-				style={{
-					backgroundColor: 'white',
-					left: '50%',
-					width: '50%',
+					transform: `translateX(${x}px)`,
 				}}
 			>
-				<AbsoluteFill>
-					<div
-						style={{
-							textAlign: 'center',
-							fontFamily: 'Variable',
-							fontSize: 80,
-							marginTop: 140,
-							fontVariationSettings: '"wght" 600',
-							opacity: progress(0),
-							translate:
-								'0 ' + interpolate(progress(0), [0, 1], [100, 0]) + 'px',
-						}}
-					>
-						Rust architecture
-					</div>
-				</AbsoluteFill>
-				<AbsoluteFill>
-					<svg viewBox={viewBox.join(' ')}>
-						<Faces elements={[rotated]} />
-					</svg>
+				<OffthreadVideo src={staticFile('rustpane.mov')} />
+			</AbsoluteFill>
+			<AbsoluteFill
+				style={{
+					transform: `translateX(${xSlide}px)`,
+				}}
+			>
+				<AbsoluteFill
+					style={{
+						left: 'calc(50% - 10px)',
+						width: '50%',
+						borderLeft: '20px solid black',
+					}}
+				/>
+				<AbsoluteFill
+					style={{
+						backgroundColor: 'white',
+						left: '50%',
+						width: '50%',
+					}}
+				>
+					<AbsoluteFill>
+						<div
+							style={{
+								textAlign: 'center',
+								fontFamily: 'Variable',
+								fontSize: 160,
+								marginTop: 280,
+								fontVariationSettings: '"wght" 600',
+								opacity: progress(0),
+								translate:
+									'0 ' + interpolate(progress(0), [0, 1], [100, 0]) + 'px',
+							}}
+						>
+							Rust architecture
+						</div>
+					</AbsoluteFill>
+					<AbsoluteFill>
+						<svg viewBox={viewBox.join(' ')}>
+							<Faces elements={[rotated]} />
+						</svg>
+					</AbsoluteFill>
 				</AbsoluteFill>
 			</AbsoluteFill>
 		</AbsoluteFill>

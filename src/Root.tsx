@@ -9,6 +9,7 @@ import {Cube, cubeSchema} from './NumberedChapter';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
 import {RightPaneLogo} from './RightPaneLogo';
+import {RustLogo} from './RustLogo';
 import {Sparks} from './Sparks';
 import {Teaser} from './Teaser';
 import {Timeline} from './Timeline';
@@ -110,7 +111,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Teaser"
 				component={Teaser}
-				durationInFrames={321}
+				durationInFrames={15.4 * 30}
 				fps={30}
 				width={1080}
 				height={1080}
@@ -130,6 +131,14 @@ export const RemotionRoot: React.FC = () => {
 				fps={30}
 				width={1920}
 				height={1080}
+			/>
+			<Composition
+				id="RustLogo"
+				component={RustLogo}
+				durationInFrames={44.68 * 25}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 2}
 			/>
 		</>
 	);

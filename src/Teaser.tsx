@@ -133,13 +133,24 @@ export const Teaser: React.FC = () => {
 	const mask = threeDIntoSvgPath(frontFace?.points ?? []);
 	const subpaths = getSubpaths(mask);
 
+	const thirdText = frame > 320;
+	const secondText = frame > 250;
+
 	return (
 		<AbsoluteFill
 			style={{
 				backgroundColor: 'white',
 			}}
 		>
-			<Audio startFrom={20} src={staticFile('woop.mp3')} />
+			<Audio
+				volume={(f: number) => {
+					return interpolate(f, [320, 460], [1, 0], {
+						extrapolateLeft: 'clamp',
+					});
+				}}
+				startFrom={20}
+				src={staticFile('woop.mp3')}
+			/>
 			<AbsoluteFill style={{}}>
 				{showLogo ? null : (
 					<AbsoluteFill
@@ -154,11 +165,22 @@ export const Teaser: React.FC = () => {
 								textAlign: 'center',
 								fontFamily: 'Variable',
 								fontVariationSettings: '"wght" 700',
-								fontSize: 200,
+								fontSize: 70,
 								transform: `scale(${textScale}) translateY(${textY}px)`,
+								lineHeight: 1.4,
 							}}
 						>
-							July 3rd
+							{secondText && !thirdText ? (
+								<>
+									<span>Keynote</span>
+									<br />
+								</>
+							) : null}
+							{thirdText
+								? 'remotion.dev/4'
+								: secondText
+								? 'July 3rd, 2023'
+								: 'Remotion 4.0'}
 						</h1>
 					</AbsoluteFill>
 				)}
