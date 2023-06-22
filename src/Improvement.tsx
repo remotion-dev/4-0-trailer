@@ -17,15 +17,15 @@ const row: React.CSSProperties = {
 const label: React.CSSProperties = {
 	fontSize: 100,
 	fontFamily: 'Variable',
-	fontVariationSettings: '"wght" 700',
+	fontVariationSettings: '"wght" 600',
 	textAlign: 'right',
 	marginRight: 100,
 	width: 700,
 };
 
 const separator: React.CSSProperties = {
-	height: 500,
-	borderRight: '10px solid black',
+	height: 550,
+	borderRight: '15px solid black',
 };
 
 const barContainer: React.CSSProperties = {
@@ -44,6 +44,7 @@ export const Improvement: React.FC = () => {
 		config: {
 			damping: 200,
 		},
+		delay: 20,
 	});
 
 	const progress2 = spring({
@@ -53,6 +54,7 @@ export const Improvement: React.FC = () => {
 		config: {
 			damping: 200,
 		},
+		delay: 20,
 	});
 
 	const width = interpolate(progress1, [0, 1], [0, 2400]);
@@ -69,13 +71,11 @@ export const Improvement: React.FC = () => {
 				style={{
 					fontSize: 100,
 					fontFamily: 'Variable',
-					fontVariationSettings: '"wght" 700',
+					fontVariationSettings: '"wght" 600',
 					marginBottom: 250,
-					marginTop: 250,
+					marginTop: 200,
 				}}
-			>
-				Re-encoding a 4K video
-			</h1>
+			/>
 			<div style={row}>
 				<div style={label}>Remotion 3.3</div>
 				<div style={separator} />
@@ -115,7 +115,7 @@ export const Improvement: React.FC = () => {
 					flexDirection: 'row',
 					alignItems: 'center',
 					alignSelf: 'flex-start',
-					marginTop: 300,
+					marginTop: 380,
 					marginLeft: 100,
 				}}
 			>

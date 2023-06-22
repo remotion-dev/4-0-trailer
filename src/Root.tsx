@@ -3,10 +3,11 @@ import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
 import {DistinctlyReact} from './DistinctlyReact';
-import {Improvement} from './Improvement';
+import {FeatureMap} from './FeatureMap';
 import {Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
+import {Reencoding} from './ReEncoding';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
 import {RightPaneLogo} from './RightPaneLogo';
@@ -143,8 +144,16 @@ export const RemotionRoot: React.FC = () => {
 			/>
 			<Composition
 				id="Improvement"
-				component={Improvement}
-				durationInFrames={200}
+				component={Reencoding}
+				durationInFrames={12 * 25}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 2}
+			/>
+			<Composition
+				id="FeatureMap"
+				component={FeatureMap}
+				durationInFrames={12 * 25}
 				fps={25}
 				width={1920 * 2}
 				height={1080 * 2}
