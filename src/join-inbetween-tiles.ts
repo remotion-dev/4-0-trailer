@@ -36,7 +36,7 @@ export const extrudeElement = ({
 
 	const threeD = turnInto3D(points);
 	const instructions: FaceType = {
-		centerPoint: [centerX, centerY, 0, 1],
+		centerPoint: [0, 0, 0, 1],
 		points: subdivideInstructions(
 			subdivideInstructions(subdivideInstructions(threeD))
 		),
@@ -98,7 +98,7 @@ export const extrudeElement = ({
 		return {
 			points: newInstructions,
 			color: sideColor,
-			centerPoint: [centerX, centerY, 0, 1],
+			centerPoint: [0, 0, 0, 1],
 			strokeWidth: 0,
 			strokeColor: 'black',
 			description: description + 'inbetween',

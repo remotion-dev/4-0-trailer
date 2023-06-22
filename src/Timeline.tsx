@@ -147,6 +147,7 @@ export const Timeline: React.FC = () => {
 			viewBox={viewBox.join(' ')}
 		>
 			<Faces
+				noSort
 				elements={facesMapped.map((element) => {
 					return transformElement(element, [
 						translateX(-frame * 0.6 * 7.5),

@@ -12,11 +12,14 @@ const sortFacesZIndex = (face: FaceType[]): FaceType[] => {
 export const Faces: React.FC<
 	{
 		elements: ThreeDElement[];
+		noSort?: boolean;
 	} & FaceSVGProps
-> = ({elements, ...svgProps}) => {
-	const sortedElement = elements.sort((a, b) => {
-		return b.centerPoint[2] - a.centerPoint[2];
-	});
+> = ({elements, noSort, ...svgProps}) => {
+	const sortedElement = noSort
+		? elements
+		: elements.sort((a, b) => {
+				return b.centerPoint[2] - a.centerPoint[2];
+		  });
 
 	return (
 		<>

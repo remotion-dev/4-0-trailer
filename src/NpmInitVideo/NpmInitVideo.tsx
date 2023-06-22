@@ -1,7 +1,7 @@
 import {parsePath} from '@remotion/paths';
 import {makeCircle, makeRect} from '@remotion/shapes';
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
 import {makeElement, transformElement} from '../element';
@@ -13,6 +13,8 @@ import {
 	MatrixTransform4D,
 	rotateX,
 	rotateY,
+	rotateZ,
+	scaled,
 	translateX,
 	translateY,
 	translateZ,
@@ -25,7 +27,7 @@ const rectWidth = 150 * 7.5;
 const rectHeight = 120 * 7.5;
 
 export const NpmIniVideo: React.FC = () => {
-	const {width, height} = useVideoConfig();
+	const {width, height, fps} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
 	const frame = useCurrentFrame();
 
@@ -35,15 +37,37 @@ export const NpmIniVideo: React.FC = () => {
 		return null;
 	}
 
+	const textZDistance = (delay: number) =>
+		900 -
+		spring({
+			frame: frame + 300,
+			fps,
+			delay,
+			durationInFrames: 600,
+			config: {damping: 200},
+		}) *
+			900;
+
 	const dollar = getText({
 		font,
 		text: '$',
 		size: 75,
 	});
 
-	const npmInitVideo = getText({
+	const npm = getText({
 		font,
-		text: 'npm init video',
+		text: 'npm',
+		size: 75,
+	});
+
+	const init = getText({
+		font,
+		text: 'init',
+		size: 75,
+	});
+	const video = getText({
+		font,
+		text: 'video',
 		size: 75,
 	});
 
@@ -67,6 +91,15 @@ export const NpmIniVideo: React.FC = () => {
 		translateZ(-depth / 2),
 	];
 
+	const transformations = [
+		rotateX(-0.5 - frame / 900),
+		rotateY(-Math.PI / 3 + frame / 400),
+		rotateZ(-0.2853981634),
+		scaled(1.8 - frame / 300),
+		translateX(900 - frame * 2),
+		translateY(300 - frame),
+	];
+
 	const redFace = makeFace({
 		fill: '#fe5f57',
 		points: dot.path,
@@ -77,7 +110,11 @@ export const NpmIniVideo: React.FC = () => {
 
 	const redElement = transformElement(
 		makeElement(redFace, redFace.centerPoint, 'redFace'),
-		topLeftTransformation
+		[
+			...topLeftTransformation,
+			translateZ(-textZDistance(0)),
+			...transformations,
+		]
 	);
 
 	const yellowFace = makeFace({
@@ -90,7 +127,12 @@ export const NpmIniVideo: React.FC = () => {
 
 	const yellowElement = transformElement(
 		makeElement(yellowFace, [0, 0, 0, 1], 'yellowFace'),
-		[...topLeftTransformation, translateX(10 * 7.5)]
+		[
+			...topLeftTransformation,
+			translateZ(-textZDistance(20)),
+			translateX(10 * 7.5),
+			...transformations,
+		]
 	);
 
 	const greenFace = makeFace({
@@ -103,7 +145,12 @@ export const NpmIniVideo: React.FC = () => {
 
 	const greenElement = transformElement(
 		makeElement(greenFace, greenFace.centerPoint, 'greenFace'),
-		[...topLeftTransformation, translateX(20 * 7.5)]
+		[
+			...topLeftTransformation,
+			translateX(20 * 7.5),
+			translateZ(-textZDistance(40)),
+			...transformations,
+		]
 	);
 
 	const dollarFace = makeFace({
@@ -116,24 +163,69 @@ export const NpmIniVideo: React.FC = () => {
 
 	const dollarElement = transformElement(
 		makeElement(dollarFace, dollarFace.centerPoint, 'dollarFace'),
-		[...topLeftTransformation, translateY(25 * 7.5)]
+		[
+			...topLeftTransformation,
+			translateY(25 * 7.5),
+			translateZ(-textZDistance(0)),
+			...transformations,
+		]
 	);
 
-	const npmInitVideoFace = makeFace({
+	const npmFace = makeFace({
 		fill: 'white',
-		points: npmInitVideo.path,
+		points: npm.path,
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'npmInitVideoFace',
 	});
 
-	const npmInitVideoElement = transformElement(
-		makeElement(
-			npmInitVideoFace,
-			npmInitVideoFace.centerPoint,
-			'npmInitVideoFace'
-		),
-		[...topLeftTransformation, translateY(25 * 7.5), translateX(10 * 7.5)]
+	const npmElement = transformElement(
+		makeElement(npmFace, npmFace.centerPoint, 'npmInitVideoFace'),
+		[
+			...topLeftTransformation,
+			translateZ(-textZDistance(20)),
+			translateY(25 * 7.5),
+			translateX(10 * 7.5),
+			...transformations,
+		]
+	);
+
+	const initVideoFace = makeFace({
+		fill: 'white',
+		points: init.path,
+		strokeWidth: 0,
+		strokeColor: 'black',
+		description: 'npmInitVideoFace',
+	});
+
+	const initVideoElement = transformElement(
+		makeElement(initVideoFace, initVideoFace.centerPoint, 'npmInitVideoFace'),
+		[
+			...topLeftTransformation,
+			translateZ(-textZDistance(40)),
+			translateY(25 * 7.5),
+			translateX(10 * 7.5 + 20 * 8.6),
+			...transformations,
+		]
+	);
+
+	const videoFace = makeFace({
+		fill: 'white',
+		points: video.path,
+		strokeWidth: 0,
+		strokeColor: 'black',
+		description: 'npmInitVideoFace',
+	});
+
+	const videoElement = transformElement(
+		makeElement(videoFace, videoFace.centerPoint, 'npmInitVideoFace'),
+		[
+			...topLeftTransformation,
+			translateZ(-textZDistance(60)),
+			translateY(25 * 7.5),
+			translateX(10 * 7.5 + 20 * 15.7),
+			...transformations,
+		]
 	);
 
 	const centered = centerPath(rect.path);
@@ -149,18 +241,17 @@ export const NpmIniVideo: React.FC = () => {
 	});
 
 	const allFaces = [
-		extrude,
+		transformElement(extrude, transformations),
 		greenElement,
 		yellowElement,
 		redElement,
 		dollarElement,
-		npmInitVideoElement,
+		npmElement,
+		initVideoElement,
+		videoElement,
 	];
 
-	const all = transformElements(allFaces, [
-		rotateY(frame / 100),
-		rotateX(frame / 50),
-	]);
+	const all = transformElements(allFaces, []);
 
 	return (
 		<AbsoluteFill
@@ -169,7 +260,7 @@ export const NpmIniVideo: React.FC = () => {
 			}}
 		>
 			<svg viewBox={viewBox.join(' ')}>
-				<Faces elements={all} />
+				<Faces noSort elements={all} />
 			</svg>
 		</AbsoluteFill>
 	);
