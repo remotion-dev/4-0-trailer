@@ -131,7 +131,7 @@ export const RustLogo: React.FC = () => {
 		durationInFrames: 45,
 	});
 
-	const x = interpolate(shift + shiftOut, [0, 1, 2], [0, -1000, 0]);
+	const x = interpolate(shift + shiftOut, [0, 1, 2], [0, -900, 0]);
 	const xSlide = interpolate(shift + shiftOut, [0, 1, 2], [1945, 0, 1945]);
 
 	return (
@@ -175,7 +175,7 @@ export const RustLogo: React.FC = () => {
 									'0 ' + interpolate(progress(0), [0, 1], [100, 0]) + 'px',
 							}}
 						>
-							Rust architecture
+							Adopting Rust
 						</div>
 					</AbsoluteFill>
 					<AbsoluteFill>

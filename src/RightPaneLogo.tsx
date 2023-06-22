@@ -137,7 +137,7 @@ export const RightPaneLogo: React.FC = () => {
 								'0 ' + interpolate(progress(0), [0, 1], [100, 0]) + 'px',
 						}}
 					>
-						Rust architecture
+						Zod
 					</div>
 				</AbsoluteFill>
 				<AbsoluteFill>

@@ -3,6 +3,7 @@ import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
 import {DistinctlyReact} from './DistinctlyReact';
+import {Improvement} from './Improvement';
 import {Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
@@ -136,6 +137,14 @@ export const RemotionRoot: React.FC = () => {
 				id="RustLogo"
 				component={RustLogo}
 				durationInFrames={44.68 * 25}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 2}
+			/>
+			<Composition
+				id="Improvement"
+				component={Improvement}
+				durationInFrames={200}
 				fps={25}
 				width={1920 * 2}
 				height={1080 * 2}
