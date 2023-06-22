@@ -410,7 +410,12 @@ export const FeatureMap: React.FC = () => {
 								fill="black"
 							/>
 						</g>
-						<g id="pointer" style={{}}>
+						<g
+							id="pointer"
+							style={{
+								transform: 'translateX(110px) translateY(-20px)',
+							}}
+						>
 							<mask
 								id="path-22-outside-2_291_10"
 								maskUnits="userSpaceOnUse"
