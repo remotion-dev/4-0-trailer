@@ -1,6 +1,12 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
-import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import {
+	AbsoluteFill,
+	interpolate,
+	spring,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
 import {transformElement} from './element';
 import {Faces} from './Faces';
 import {extrudeElement} from './join-inbetween-tiles';
@@ -14,15 +20,14 @@ import {
 	translateZ,
 } from './matrix';
 
-const viewBox = [-1600, -800, 3200, 1600];
-
-export const TriangleOut: React.FC<{
+export const InFrameLogo: React.FC<{
 	background: string;
-	dark: boolean;
-}> = ({background, dark}) => {
+}> = ({background}) => {
+	const {width, height, fps} = useVideoConfig();
+	const viewBox = [-width / 2, -height / 2, width, height].join(' ');
 	const frame = useCurrentFrame();
 
-	const zoomIn = frame * 0.001;
+	const zoomIn = (Math.sin(frame / 100) + 1) * 0.2;
 
 	const delayedFrame = Math.max(frame - 80, 0);
 
@@ -39,18 +44,28 @@ export const TriangleOut: React.FC<{
 		const width = boundingBox.x2 - boundingBox.x1;
 		const height = boundingBox.y2 - boundingBox.y1;
 
-		const depth = (5 + delayedFrame / 20) * 7.5;
-		const spread = depth + (delayedFrame / 1.2) * 7.5;
+		const depth = 20 * 7.5;
+		const spread =
+			depth +
+			(Math.sin(frame / 200) +
+				(1 +
+					spring({
+						frame,
+						fps,
+						config: {
+							damping: 200,
+						},
+						durationInFrames: 100,
+						delay: 80,
+					}))) *
+				500;
 
-		const darkColor = i === 2 ? '#bbb' : i === 1 ? '#ddd' : '#fff';
 		const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
 
-		const actualColor = dark ? darkColor : color;
-
 		const extruded = extrudeElement({
-			backFaceColor: actualColor,
+			backFaceColor: color,
 			sideColor: 'black',
-			frontFaceColor: actualColor,
+			frontFaceColor: color,
 			depth,
 			points: parsed,
 			strokeWidth: 20,
@@ -64,7 +79,7 @@ export const TriangleOut: React.FC<{
 			rotateX(-(i * delayedFrame) / 300),
 			rotateY(delayedFrame / 100),
 			rotateZ(delayedFrame / 100),
-			scaled(0.6 + zoomIn),
+			scaled(0.3 + zoomIn),
 		]);
 
 		return projected;
@@ -77,7 +92,7 @@ export const TriangleOut: React.FC<{
 			}}
 		>
 			<svg
-				viewBox={viewBox.join(' ')}
+				viewBox={viewBox}
 				style={{
 					overflow: 'visible',
 					opacity: interpolate(frame, [0, 70], [0, 1]),

@@ -4,16 +4,19 @@ import {AudioViz} from './AudioViz';
 import {MyComposition} from './Composition';
 import {DistinctlyReact} from './DistinctlyReact';
 import {FeatureMap} from './FeatureMap';
+import {InFrameLogo} from './InFrameLogo';
 import {Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
+import {OgImage, ogImageSchema} from './OgImage';
 import {Reencoding} from './ReEncoding';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
 import {RightPaneLogo} from './RightPaneLogo';
 import {RustLogo} from './RustLogo';
 import {Sparks} from './Sparks';
-import {Teaser} from './Teaser';
+import {Teaser, TeaserText} from './Teaser';
+import {Wheel} from './TeaserWheel';
 import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
 import {WaysToRender} from './WaysToRender';
 
@@ -54,6 +57,10 @@ export const RemotionRoot: React.FC = () => {
 				fps={30}
 				width={1280}
 				height={720}
+				defaultProps={{
+					background: 'white',
+					dark: false,
+				}}
 			/>
 			<Composition
 				id="RenderProgress"
@@ -171,6 +178,48 @@ export const RemotionRoot: React.FC = () => {
 				fps={25}
 				width={1920 * 2}
 				height={1080 * 2}
+			/>
+			<Composition
+				id="OgImage"
+				component={OgImage}
+				durationInFrames={12 * 25}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 2}
+				schema={ogImageSchema}
+				defaultProps={{
+					dark: true,
+				}}
+			/>
+			<Composition
+				id="InFrameLogo"
+				component={InFrameLogo}
+				durationInFrames={100000}
+				fps={25}
+				width={1920 * 2}
+				height={1080 * 1.5}
+				defaultProps={{
+					background: 'transparent',
+				}}
+			/>
+			<Composition
+				id="TeaserWheel"
+				component={Wheel}
+				durationInFrames={100000}
+				fps={25}
+				width={1080}
+				height={1080}
+				defaultProps={{
+					topLayer: true,
+				}}
+			/>
+			<Composition
+				id="TeaserText"
+				component={TeaserText}
+				durationInFrames={300}
+				fps={25}
+				width={1080}
+				height={1080}
 			/>
 		</>
 	);

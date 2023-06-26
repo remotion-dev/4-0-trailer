@@ -5,7 +5,9 @@ import {
 	AbsoluteFill,
 	Audio,
 	Easing,
+	Img,
 	interpolate,
+	Sequence,
 	spring,
 	staticFile,
 	useCurrentFrame,
@@ -27,6 +29,7 @@ import {
 	translateX,
 	translateY,
 } from './matrix';
+import {Wheel} from './TeaserWheel';
 
 export const Teaser: React.FC = () => {
 	const frame = useCurrentFrame();
@@ -133,9 +136,6 @@ export const Teaser: React.FC = () => {
 	const mask = threeDIntoSvgPath(frontFace?.points ?? []);
 	const subpaths = getSubpaths(mask);
 
-	const thirdText = frame > 320;
-	const secondText = frame > 250;
-
 	return (
 		<AbsoluteFill
 			style={{
@@ -151,52 +151,78 @@ export const Teaser: React.FC = () => {
 				startFrom={20}
 				src={staticFile('woop.mp3')}
 			/>
-			<AbsoluteFill style={{}}>
+			<Sequence durationInFrames={380}>
 				{showLogo ? null : (
-					<AbsoluteFill
-						style={{
-							justifyContent: 'center',
-							alignItems: 'center',
-							clipPath: showLogo ? undefined : `path('${subpaths[0]}')`,
-						}}
-					>
-						<h1
+					<AbsoluteFill>
+						<AbsoluteFill
 							style={{
-								textAlign: 'center',
-								fontFamily: 'Variable',
-								fontVariationSettings: '"wght" 700',
-								fontSize: 70,
-								transform: `scale(${textScale}) translateY(${textY}px)`,
-								lineHeight: 1.4,
+								justifyContent: 'center',
+								alignItems: 'center',
 							}}
 						>
-							{secondText && !thirdText ? (
-								<>
-									<span>Keynote</span>
-									<br />
-								</>
-							) : null}
-							{thirdText
-								? 'remotion.dev/4'
-								: secondText
-								? 'July 3rd, 2023'
-								: 'Remotion 4.0'}
-						</h1>
+							<Sequence
+								from={130}
+								style={{
+									transform: `scale(${textScale}) translateY(${textY}px)`,
+								}}
+							>
+								<TeaserText />
+							</Sequence>
+						</AbsoluteFill>
 					</AbsoluteFill>
 				)}
-				<AbsoluteFill>
-					<svg
-						viewBox={viewBox.join(' ')}
+				{frame < 193 ? (
+					<AbsoluteFill>
+						<svg
+							viewBox={viewBox.join(' ')}
+							style={{
+								overflow: 'visible',
+							}}
+						>
+							<Faces
+								strokeMiterlimit={50}
+								elements={showLogo ? projected : [projected2]}
+							/>
+						</svg>
+					</AbsoluteFill>
+				) : null}
+			</Sequence>
+			<Sequence from={380}>
+				<AbsoluteFill
+					style={{
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<Img
 						style={{
-							overflow: 'visible',
+							height: 200,
 						}}
-					>
-						<Faces
-							strokeMiterlimit={50}
-							elements={showLogo ? projected : [projected2]}
-						/>
-					</svg>
+						src="https://github.com/remotion-dev/brand/raw/main/withouttitle/element-0.png"
+					/>
 				</AbsoluteFill>
+			</Sequence>
+		</AbsoluteFill>
+	);
+};
+
+export const TeaserText: React.FC = () => {
+	const {width, height} = useVideoConfig();
+
+	const topLine = width / 2 - 200;
+	const bottomLine = width / 2 + 200;
+
+	const leftLine = height / 2 - 600;
+	const rightLine = height / 2 + 600;
+
+	return (
+		<AbsoluteFill
+			style={{
+				backgroundColor: 'white',
+			}}
+		>
+			<AbsoluteFill style={{}}>
+				<Wheel topLayer />
 			</AbsoluteFill>
 		</AbsoluteFill>
 	);
