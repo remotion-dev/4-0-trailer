@@ -73,6 +73,7 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 20,
 		description: 'Button',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const extrudedCursor = extrudeElement({
@@ -84,6 +85,7 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 20,
 		description: 'Cursor',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const textFace = makeFace({

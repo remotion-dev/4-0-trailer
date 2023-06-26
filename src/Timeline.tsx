@@ -166,6 +166,7 @@ const Timeline: React.FC<{
 				strokeWidth: 10,
 				description: `Track ${i}`,
 				strokeColor: 'black',
+				crispEdges: false,
 			}),
 			[translateX(f.x), translateY((TRACK_HEIGHT + 2) * i), translateZ(z)]
 		);
@@ -243,6 +244,7 @@ const Timeline: React.FC<{
 			strokeWidth: 10,
 			description: 'Cursor',
 			strokeColor: 'black',
+			crispEdges: false,
 		}),
 		[
 			translateX(cursorOffset),

@@ -17,6 +17,7 @@ export const extrudeElement = ({
 	strokeWidth,
 	description,
 	strokeColor,
+	crispEdges,
 }: {
 	depth: number;
 	sideColor: string;
@@ -26,6 +27,7 @@ export const extrudeElement = ({
 	strokeWidth: number;
 	description: string;
 	strokeColor: string;
+	crispEdges: boolean;
 }): ThreeDElement => {
 	const boundingBox = getBoundingBoxFromInstructions(
 		reduceInstructions(points)
@@ -44,7 +46,7 @@ export const extrudeElement = ({
 		strokeColor,
 		color: 'black',
 		description,
-		crispEdges: false,
+		crispEdges,
 	};
 
 	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);

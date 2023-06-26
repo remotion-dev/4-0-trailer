@@ -88,6 +88,7 @@ export const getButton = ({
 		strokeWidth: 20,
 		description: 'Button',
 		strokeColor: 'black',
+		crispEdges: true,
 	});
 
 	const progressFace = transformElement(
@@ -107,7 +108,7 @@ export const getButton = ({
 				strokeWidth: 20,
 				strokeColor: 'black',
 				description: 'progress',
-				crispEdges: false,
+				crispEdges: true,
 			},
 			[0, 0, 0, 1],
 			'progress'

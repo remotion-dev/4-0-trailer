@@ -50,6 +50,7 @@ export const MyComposition: React.FC<{
 		strokeWidth: 10,
 		description: 'text',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const progress = spring({

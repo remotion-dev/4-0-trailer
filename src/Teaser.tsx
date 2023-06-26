@@ -93,6 +93,7 @@ export const Teaser: React.FC = () => {
 		strokeWidth: 15,
 		description: `triangle-${i}`,
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const textFace = extrudeElement({
@@ -104,6 +105,7 @@ export const Teaser: React.FC = () => {
 		strokeColor: 'black',
 		frontFaceColor: BLUE,
 		sideColor: 'black',
+		crispEdges: false,
 	});
 
 	const align = [translateX(width / 2), translateY(height / 2)];

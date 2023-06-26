@@ -245,6 +245,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 10,
 		description: 'npm init video',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const allFaces = [

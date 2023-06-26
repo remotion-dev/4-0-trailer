@@ -57,6 +57,7 @@ export const RenderButtonVariant: React.FC<{
 		strokeWidth: 20,
 		description: 'Button',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const textFace = makeFace({

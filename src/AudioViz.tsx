@@ -90,6 +90,7 @@ export const AudioViz: React.FC = () => {
 				strokeWidth: 10,
 				description: `circle-${i}`,
 				strokeColor: color,
+				crispEdges: false,
 			});
 
 			const spacing = boxWidth * 1.5;

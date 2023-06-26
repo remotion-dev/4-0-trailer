@@ -74,6 +74,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		strokeWidth: 20,
 		description: 'button',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const intrude = spring({

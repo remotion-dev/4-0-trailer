@@ -98,6 +98,7 @@ export const RustLogo: React.FC = () => {
 		strokeWidth: 20,
 		description: 'text',
 		strokeColor: 'black',
+		crispEdges: false,
 	});
 
 	const y = interpolate(progress(5), [0, 1], [1600, 800]);
