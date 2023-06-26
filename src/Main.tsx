@@ -16,7 +16,7 @@ export const Main: React.FC = () => {
 			/>
 			<Series>
 				<Series.Sequence durationInFrames={9 * 30}>
-					<TriangleOut background="white" />
+					<TriangleOut dark={false} background="white" />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>
 					<NpmIniVideo />

@@ -107,6 +107,7 @@ export const getButton = ({
 				strokeWidth: 20,
 				strokeColor: 'black',
 				description: 'progress',
+				crispEdges: false,
 			},
 			[0, 0, 0, 1],
 			'progress'
@@ -136,6 +137,7 @@ export const getButton = ({
 				strokeWidth: 0,
 				strokeColor: 'black',
 				description: 'text',
+				crispEdges: false,
 			},
 			[0, 0, 0, 1],
 			'text'
@@ -162,6 +164,7 @@ export const getButton = ({
 				strokeWidth: 0,
 				strokeColor: 'black',
 				description: 'folder',
+				crispEdges: false,
 			},
 			[0, 0, 0, 1],
 			'folder'

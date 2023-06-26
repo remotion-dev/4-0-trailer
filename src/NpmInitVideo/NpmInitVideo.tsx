@@ -29,7 +29,7 @@ const rectHeight = 120 * 7.5;
 export const NpmIniVideo: React.FC = () => {
 	const {width, height, fps} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
-	const frame = useCurrentFrame();
+	const frame = 150 - useCurrentFrame();
 
 	const font = useFont();
 
@@ -106,6 +106,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 1,
 		strokeColor: 'black',
 		description: 'redFace',
+		crispEdges: false,
 	});
 
 	const redElement = transformElement(
@@ -123,6 +124,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 1,
 		strokeColor: 'black',
 		description: 'yellowFace',
+		crispEdges: false,
 	});
 
 	const yellowElement = transformElement(
@@ -141,6 +143,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 1,
 		strokeColor: 'black',
 		description: 'greenFace',
+		crispEdges: false,
 	});
 
 	const greenElement = transformElement(
@@ -159,6 +162,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'dollarFace',
+		crispEdges: false,
 	});
 
 	const dollarElement = transformElement(
@@ -177,6 +181,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'npmInitVideoFace',
+		crispEdges: false,
 	});
 
 	const npmElement = transformElement(
@@ -196,6 +201,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'npmInitVideoFace',
+		crispEdges: false,
 	});
 
 	const initVideoElement = transformElement(
@@ -215,6 +221,7 @@ export const NpmIniVideo: React.FC = () => {
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'npmInitVideoFace',
+		crispEdges: false,
 	});
 
 	const videoElement = transformElement(

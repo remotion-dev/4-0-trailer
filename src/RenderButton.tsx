@@ -92,6 +92,7 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'Text',
+		crispEdges: false,
 	});
 
 	const textElement = transformElement(

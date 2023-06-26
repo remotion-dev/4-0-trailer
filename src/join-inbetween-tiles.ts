@@ -44,6 +44,7 @@ export const extrudeElement = ({
 		strokeColor,
 		color: 'black',
 		description,
+		crispEdges: false,
 	};
 
 	const unscaledBackFace = transformFace(instructions, [translateZ(depth / 2)]);
@@ -102,6 +103,7 @@ export const extrudeElement = ({
 			strokeWidth: 0,
 			strokeColor: 'black',
 			description: description + 'inbetween',
+			crispEdges: true,
 		};
 	});
 

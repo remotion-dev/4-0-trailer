@@ -97,6 +97,7 @@ export const Cube: React.FC<z.infer<typeof cubeSchema>> = ({label, step}) => {
 		strokeColor: 'black',
 		strokeWidth: 0,
 		description: 'text',
+		crispEdges: false,
 	});
 
 	const textElement = transformElement(

@@ -217,6 +217,7 @@ const Timeline: React.FC<{
 				description: 'Audio Wave',
 				strokeColor: 'black',
 				strokeWidth: 0,
+				crispEdges: false,
 			});
 
 			const element = makeElement(face, face.centerPoint, 'Audio Wave');

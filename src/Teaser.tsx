@@ -1,5 +1,5 @@
 import {noise2D} from '@remotion/noise';
-import {getSubpaths, parsePath, resetPath} from '@remotion/paths';
+import {parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
 import {
 	AbsoluteFill,
@@ -13,7 +13,6 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {threeDIntoSvgPath} from './3d-svg';
 import {centerPath} from './center';
 import {BLUE} from './colors';
 import {transformElement} from './element';
@@ -129,13 +128,6 @@ export const Teaser: React.FC = () => {
 		...align,
 	]);
 
-	const frontFace = projected2.faces.find((f) =>
-		f.description.includes('(front)')
-	);
-
-	const mask = threeDIntoSvgPath(frontFace?.points ?? []);
-	const subpaths = getSubpaths(mask);
-
 	return (
 		<AbsoluteFill
 			style={{
@@ -207,14 +199,6 @@ export const Teaser: React.FC = () => {
 };
 
 export const TeaserText: React.FC = () => {
-	const {width, height} = useVideoConfig();
-
-	const topLine = width / 2 - 200;
-	const bottomLine = width / 2 + 200;
-
-	const leftLine = height / 2 - 600;
-	const rightLine = height / 2 + 600;
-
 	return (
 		<AbsoluteFill
 			style={{

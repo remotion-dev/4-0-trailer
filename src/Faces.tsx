@@ -28,18 +28,21 @@ export const Faces: React.FC<
 
 				return (
 					<React.Fragment key={i}>
-						{sortedFaces.map(({points, color, strokeWidth, strokeColor}, i) => {
-							return (
-								<Face
-									key={JSON.stringify(points) + i}
-									strokeColor={strokeColor}
-									color={color}
-									points={points}
-									strokeWidth={strokeWidth}
-									{...svgProps}
-								/>
-							);
-						})}
+						{sortedFaces.map(
+							({points, color, strokeWidth, strokeColor, crispEdges}, i) => {
+								return (
+									<Face
+										key={JSON.stringify(points) + i}
+										strokeColor={strokeColor}
+										color={color}
+										points={points}
+										strokeWidth={strokeWidth}
+										crispEdges={crispEdges}
+										{...svgProps}
+									/>
+								);
+							}
+						)}
 					</React.Fragment>
 				);
 			})}

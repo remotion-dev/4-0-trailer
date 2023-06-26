@@ -13,6 +13,7 @@ export const Face: React.FC<
 		color: string;
 		strokeColor: string;
 		strokeWidth: number;
+		crispEdges: boolean;
 	} & FaceSVGProps
 > = ({
 	color,
@@ -21,6 +22,7 @@ export const Face: React.FC<
 	strokeWidth,
 	strokeMiterlimit,
 	strokeLinecap,
+	crispEdges,
 }) => {
 	const [id] = useState(() => random(null).toString().replace('.', ''));
 	const d = threeDIntoSvgPath(points);
@@ -32,7 +34,7 @@ export const Face: React.FC<
 					<mask id={id}>
 						<path
 							strokeLinecap={strokeLinecap}
-							shapeRendering="crispEdges"
+							shapeRendering={crispEdges ? 'crispEdges' : undefined}
 							strokeMiterlimit={strokeMiterlimit}
 							strokeWidth={strokeWidth}
 							d={d}
@@ -47,7 +49,7 @@ export const Face: React.FC<
 				mask={strokeWidth ? `url(#${id})` : undefined}
 				stroke={strokeColor}
 				strokeMiterlimit={strokeMiterlimit}
-				shapeRendering="crispEdges"
+				shapeRendering={crispEdges ? 'crispEdges' : undefined}
 				strokeLinecap={strokeLinecap}
 				strokeWidth={strokeWidth}
 			/>
