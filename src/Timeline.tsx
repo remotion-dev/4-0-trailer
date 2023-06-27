@@ -238,7 +238,7 @@ const Timeline: React.FC<{
 		extrudeElement({
 			depth: 2 * 7.5,
 			backFaceColor: 'black',
-			frontFaceColor: 'red',
+			frontFaceColor: '#ff3232',
 			points: parsePath(resetPath(cursorHandlerPath)),
 			sideColor: 'black',
 			strokeWidth: 10,
