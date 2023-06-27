@@ -68,6 +68,15 @@ export const Studio: React.FC = () => {
 		durationInFrames: 30,
 		delay: 20,
 	});
+	const jump4 = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		durationInFrames: 30,
+		delay: 20,
+	});
 
 	const font = useFont();
 
@@ -189,26 +198,38 @@ export const Studio: React.FC = () => {
 			translateZ(-10),
 			translateY(320),
 			translateY(interpolate(jump2, [0, 1], [600, 0])),
-			translateX(-rectWidth / 2 + 210 + 350),
+			translateX(-rectWidth / 2 + 560),
 		]
 	);
 
-	const greenFace2 = makeFace({
-		crispEdges: true,
-		description: 'blueBar1',
-		fill: GREEN,
-		points: makeRect({
-			width: 1370,
-			height: 80,
-			cornerRadius: 10,
-		}).path,
-		strokeColor: 'black',
-		strokeWidth: 10,
-	});
-
 	const greenElement2 = transformElement(
-		makeElement(greenFace2, greenFace2.centerPoint, 'greenface'),
-		[translateY(360), translateX(-rectWidth / 2 + 210)]
+		extrudeElement({
+			backFaceColor: 'black',
+			crispEdges: false,
+			depth: 20,
+			description: 'bluebarface',
+			frontFaceColor: GREEN,
+			points: parsePath(
+				centerPath(
+					makeRect({
+						width: 1370,
+						height: 80,
+						cornerRadius: 10,
+					}).path
+				)
+			),
+			sideColor: 'black',
+			strokeColor: 'black',
+			strokeWidth: 10,
+		}),
+		[
+			scaled(interpolate(jump3, [0, 1], [4, 1])),
+			rotateX(-Math.PI + Math.PI * jump3),
+			translateY(400),
+			translateX(-rectWidth / 2 + 795),
+			translateY(interpolate(jump2, [0, 1], [600, 0])),
+			translateZ(-10),
+		]
 	);
 
 	const redFace = makeFace({
