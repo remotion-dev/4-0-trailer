@@ -100,7 +100,7 @@ export const extrudeElement = ({
 
 		return {
 			points: newInstructions,
-			color: sideColor,
+			color: '#000',
 			centerPoint: [0, 0, 0, 1],
 			strokeWidth: 0,
 			strokeColor: 'black',

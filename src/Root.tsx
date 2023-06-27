@@ -16,6 +16,7 @@ import {RightPaneLogo} from './RightPaneLogo';
 import {RustLogo} from './RustLogo';
 import {Sparks} from './Sparks';
 import {Spiral} from './Spiral';
+import {Studio} from './Studio';
 import {Teaser} from './Teaser';
 import {Wheel} from './TeaserWheel';
 import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
@@ -222,6 +223,14 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Spiral"
 				component={Spiral}
+				durationInFrames={1200}
+				fps={25}
+				width={1920}
+				height={1080}
+			/>
+			<Composition
+				id="Studio"
+				component={Studio}
 				durationInFrames={1200}
 				fps={25}
 				width={1920}
