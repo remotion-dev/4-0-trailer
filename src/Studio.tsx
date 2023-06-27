@@ -232,17 +232,18 @@ export const Studio: React.FC = () => {
 		]
 	);
 
-	const redFace = makeFace({
-		description: 'cursor',
-		crispEdges: true,
-		fill: '#ff3232',
-		points: cursorHandlerPath,
-		strokeColor: 'black',
-		strokeWidth: 4,
-	});
-
 	const redElement = transformElement(
-		makeElement(redFace, redFace.centerPoint, 'cursor'),
+		extrudeElement({
+			backFaceColor: 'black',
+			crispEdges: false,
+			depth: 20,
+			description: 'bluebarface',
+			frontFaceColor: '#ff3232',
+			points: parsePath(cursorHandlerPath),
+			sideColor: 'black',
+			strokeColor: 'black',
+			strokeWidth: 4,
+		}),
 		[translateY(151), translateZ(-10)]
 	);
 
