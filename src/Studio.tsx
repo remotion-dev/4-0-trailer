@@ -59,6 +59,16 @@ export const Studio: React.FC = () => {
 		delay: 10,
 	});
 
+	const jump3 = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		durationInFrames: 30,
+		delay: 20,
+	});
+
 	const font = useFont();
 
 	if (!font) {
@@ -147,27 +157,40 @@ export const Studio: React.FC = () => {
 			scaled(interpolate(jump1, [0, 1], [4, 1])),
 			rotateX(-Math.PI + Math.PI * jump1),
 			translateZ(-10),
-			translateY(interpolate(jump1, [0, 1], [400, 240])),
+			translateY(240),
+			translateY(interpolate(jump1, [0, 1], [560, 0])),
 			translateX(-rectWidth / 2 + 120),
 		]
 	);
 
-	const blueBarFace2 = makeFace({
-		crispEdges: true,
-		description: 'blueBar1',
-		fill: BLUE,
-		points: makeRect({
-			width: 900,
-			height: 80,
-			cornerRadius: 10,
-		}).path,
-		strokeColor: 'black',
-		strokeWidth: 10,
-	});
-
 	const blueBarElement2 = transformElement(
-		makeElement(blueBarFace2, blueBarFace2.centerPoint, 'blueBar1'),
-		[translateY(280), translateX(-rectWidth / 2 + 210)]
+		extrudeElement({
+			backFaceColor: 'black',
+			crispEdges: false,
+			depth: 20,
+			description: 'bluebarface',
+			frontFaceColor: BLUE,
+			points: parsePath(
+				centerPath(
+					makeRect({
+						width: 900,
+						height: 80,
+						cornerRadius: 10,
+					}).path
+				)
+			),
+			sideColor: 'black',
+			strokeColor: 'black',
+			strokeWidth: 10,
+		}),
+		[
+			scaled(interpolate(jump2, [0, 1], [4, 1])),
+			rotateX(-Math.PI + Math.PI * jump2),
+			translateZ(-10),
+			translateY(320),
+			translateY(interpolate(jump2, [0, 1], [600, 0])),
+			translateX(-rectWidth / 2 + 210 + 350),
+		]
 	);
 
 	const greenFace2 = makeFace({
@@ -199,7 +222,7 @@ export const Studio: React.FC = () => {
 
 	const redElement = transformElement(
 		makeElement(redFace, redFace.centerPoint, 'cursor'),
-		[translateY(151)]
+		[translateY(151), translateZ(-10)]
 	);
 
 	const renderButton = makeFace({
