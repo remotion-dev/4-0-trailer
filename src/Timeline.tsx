@@ -163,7 +163,7 @@ const Timeline: React.FC<{
 					cornerRadius: 15,
 				}).instructions,
 				sideColor: 'black',
-				strokeWidth: 10,
+				strokeWidth: 20,
 				description: `Track ${i}`,
 				strokeColor: 'black',
 				crispEdges: false,

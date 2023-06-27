@@ -1,26 +1,20 @@
 import {parsePath} from '@remotion/paths';
-import {makeRect} from '@remotion/shapes';
+import {makeTriangle} from '@remotion/shapes';
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {centerPath} from '../center';
-import {GREEN} from '../colors';
+import {BLUE} from '../colors';
 import {transformElement} from '../element';
 import {Faces} from '../Faces';
 import {extrudeElement} from '../join-inbetween-tiles';
-import {
-	MatrixTransform4D,
-	rotateX,
-	rotateY,
-	translateX,
-	translateY,
-} from '../matrix';
+import {MatrixTransform4D, rotateX, rotateY, translateY} from '../matrix';
 
-export const GreenTrack: React.FC = () => {
+export const EverythingTriangle: React.FC = () => {
 	const frame = useCurrentFrame();
-	const shape = makeRect({
-		height: 300,
-		width: 1000,
-		cornerRadius: 60,
+	const shape = makeTriangle({
+		direction: 'right',
+		length: 500,
+		edgeRoundness: 0.71,
 	});
 	const {height, width} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
@@ -33,7 +27,7 @@ export const GreenTrack: React.FC = () => {
 		points: parsePath(centeredButton),
 		depth,
 		sideColor: 'black',
-		frontFaceColor: GREEN,
+		frontFaceColor: BLUE,
 		backFaceColor: 'black',
 		strokeWidth: 20,
 		description: 'Button',
@@ -43,11 +37,9 @@ export const GreenTrack: React.FC = () => {
 
 	const faces = [extrudedButton];
 	const transformations: MatrixTransform4D[] = [
-		translateX(-300),
 		translateY(400 - frame),
 		rotateX(-Math.PI / 4),
-		rotateY(Math.PI / 16 - frame / 250),
-		translateX(-500),
+		rotateY(-Math.PI / 16 - frame / 250),
 	];
 
 	return (

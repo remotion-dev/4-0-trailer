@@ -96,7 +96,7 @@ export const NpmIniVideo: React.FC = () => {
 		rotateY(-Math.PI / 3 + frame / 400),
 		rotateZ(-0.2853981634),
 		scaled(1.8 - frame / 300),
-		translateX(900 - frame * 2),
+		translateX(600 - frame * 2),
 		translateY(300 - frame),
 	];
 

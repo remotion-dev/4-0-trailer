@@ -37,7 +37,7 @@ export const EverythingCursor: React.FC = () => {
 	const transformations: MatrixTransform4D[] = [
 		translateY(-frame * 3),
 		rotateX(Math.PI / 8),
-		rotateY(Math.PI / 8 - frame / 20),
+		rotateY(Math.PI / 8 - frame / 40),
 	];
 
 	return (

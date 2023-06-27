@@ -1,7 +1,7 @@
 import {parsePath, resetPath, scalePath} from '@remotion/paths';
 import {makeRect} from '@remotion/shapes';
 import React from 'react';
-import {AbsoluteFill, useVideoConfig} from 'remotion';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
 import {makeElement, transformElement} from '../element';
@@ -42,6 +42,7 @@ export const EverythingRenderButton: React.FC = () => {
 		strokeColor: 'black',
 		crispEdges: false,
 	});
+	const frame = useCurrentFrame();
 	const font = useFont();
 	if (!font) {
 		return null;
@@ -49,7 +50,7 @@ export const EverythingRenderButton: React.FC = () => {
 
 	const text = getText({font, text: 'Render'});
 
-	const textPath = resetPath(scalePath(text.path, 0.22, 0.22));
+	const textPath = resetPath(scalePath(text.path, 0.17, 0.17));
 
 	const textFace = makeFace({
 		fill: 'white',
@@ -69,18 +70,13 @@ export const EverythingRenderButton: React.FC = () => {
 	const transformations: MatrixTransform4D[] = [
 		scaled(0.8),
 		translateX(-400),
-		translateY(-200),
-		rotateY(-Math.PI / 4),
+		rotateY(Math.PI / 4 - frame / 200),
+		translateY(-150 - frame * 0.5),
 	];
 
 	return (
 		<AbsoluteFill>
-			<svg
-				style={{
-					backgroundColor: 'white',
-				}}
-				viewBox={viewBox.join(' ')}
-			>
+			<svg style={{}} viewBox={viewBox.join(' ')}>
 				<Faces
 					noSort
 					elements={faces.flat(1).map((element) => {

@@ -53,7 +53,7 @@ export const TriangleOut: React.FC<{
 			frontFaceColor: actualColor,
 			depth,
 			points: parsed,
-			strokeWidth: 20,
+			strokeWidth: 30,
 			description: `triangle-${i}`,
 			strokeColor: 'black',
 			crispEdges: false,

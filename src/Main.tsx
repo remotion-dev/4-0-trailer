@@ -1,7 +1,8 @@
 import React from 'react';
-import {AbsoluteFill, Audio, interpolate, Series, staticFile} from 'remotion';
+import {Audio, interpolate, Series, staticFile} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {MyComposition} from './Composition';
+import {Everything} from './Everything';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
@@ -34,7 +35,7 @@ export const Main: React.FC = () => {
 					<TimelinePerspective2 withAudio={false} />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={7 * 30}>
-					<AbsoluteFill />
+					<Everything />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={Infinity}>
 					<MyComposition str="Welcome to Remotion 4.0" />
