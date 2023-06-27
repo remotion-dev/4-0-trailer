@@ -4,7 +4,6 @@ import {EverythingRenderButton} from './Button';
 import {EverythingCursor} from './Cursor';
 import {GreenTrack} from './GreenTrack';
 import {Resize} from './Resize';
-import {Rust} from './Rust';
 import {EverythingTriangle} from './Triangle';
 
 export const Everything: React.FC = () => {
@@ -17,12 +16,11 @@ export const Everything: React.FC = () => {
 				scale: String(interpolate(frame, [0, 100], [1, 1.1])),
 			}}
 		>
+			<EverythingCursor />
 			<EverythingTriangle />
 			<EverythingRenderButton />
 			<Resize />
-			<Rust />
 			<GreenTrack />
-			<EverythingCursor />
 		</AbsoluteFill>
 	);
 };

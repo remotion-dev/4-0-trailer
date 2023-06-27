@@ -43,7 +43,7 @@ export const Resize: React.FC = () => {
 	const transformations: MatrixTransform4D[] = [
 		rotateY(-Math.PI / 4 + frame / 200),
 		translateX(400),
-		translateY(700 + -frame * 2),
+		translateY(0 + -frame * 2),
 		rotateX(Math.PI / 4),
 	];
 

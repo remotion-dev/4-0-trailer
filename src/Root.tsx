@@ -1,12 +1,11 @@
 import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
-import {MyComposition} from './Composition';
 import {DistinctlyReact} from './DistinctlyReact';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
 import {InFrameLogo} from './InFrameLogo';
-import {Main} from './Main';
+import {EndPush, Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
 import {OgImage, ogImageSchema} from './OgImage';
@@ -16,6 +15,7 @@ import {RenderProgress} from './RenderProgress';
 import {RightPaneLogo} from './RightPaneLogo';
 import {RustLogo} from './RustLogo';
 import {Sparks} from './Sparks';
+import {Spiral} from './Spiral';
 import {Teaser} from './Teaser';
 import {Wheel} from './TeaserWheel';
 import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
@@ -26,14 +26,11 @@ export const RemotionRoot: React.FC = () => {
 		<>
 			<Composition
 				id="MyComp"
-				component={MyComposition}
+				component={EndPush}
 				durationInFrames={Math.round(20 * Math.PI * 4)}
 				fps={30}
 				width={1280}
 				height={720}
-				defaultProps={{
-					str: 'Introducing Remotion 4.0',
-				}}
 			/>
 			<Composition
 				id="RenderButton"
@@ -82,7 +79,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Main"
 				component={Main}
-				durationInFrames={2000}
+				durationInFrames={1900}
 				fps={30}
 				width={1920}
 				height={1080}
@@ -218,6 +215,14 @@ export const RemotionRoot: React.FC = () => {
 				id="Everything"
 				component={Everything}
 				durationInFrames={300}
+				fps={25}
+				width={1920}
+				height={1080}
+			/>
+			<Composition
+				id="Spiral"
+				component={Spiral}
+				durationInFrames={1200}
 				fps={25}
 				width={1920}
 				height={1080}

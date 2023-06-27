@@ -20,7 +20,7 @@ export const GreenTrack: React.FC = () => {
 	const shape = makeRect({
 		height: 300,
 		width: 1000,
-		cornerRadius: 60,
+		cornerRadius: 30,
 	});
 	const {height, width} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];

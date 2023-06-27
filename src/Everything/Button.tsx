@@ -48,9 +48,9 @@ export const EverythingRenderButton: React.FC = () => {
 		return null;
 	}
 
-	const text = getText({font, text: 'Render'});
+	const text = getText({font, text: 'Render video'});
 
-	const textPath = resetPath(scalePath(text.path, 0.17, 0.17));
+	const textPath = resetPath(scalePath(text.path, 0.14, 0.14));
 
 	const textFace = makeFace({
 		fill: 'white',

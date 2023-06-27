@@ -85,7 +85,7 @@ export const RenderButton: React.FC = () => {
 		strokeWidth: 20,
 		description: 'Cursor',
 		strokeColor: 'black',
-		crispEdges: false,
+		crispEdges: true,
 	});
 
 	const textFace = makeFace({
@@ -120,6 +120,7 @@ export const RenderButton: React.FC = () => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
+						strokeMiterlimit={30}
 						elements={transformElements(
 							[extrudedButton, textElement, movedCursor],
 							transformations

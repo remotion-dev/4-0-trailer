@@ -1,6 +1,11 @@
 import {getBoundingBox, parsePath, resetPath} from '@remotion/paths';
 import {makeTriangle} from '@remotion/shapes';
-import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import {
+	AbsoluteFill,
+	interpolate,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
 import {transformElement} from './element';
 import {Faces} from './Faces';
 import {extrudeElement} from './join-inbetween-tiles';
@@ -14,12 +19,12 @@ import {
 	translateZ,
 } from './matrix';
 
-const viewBox = [-1600, -800, 3200, 1600];
-
 export const TriangleOut: React.FC<{
 	background: string;
 	dark: boolean;
 }> = ({background, dark}) => {
+	const {width, height} = useVideoConfig();
+	const viewBox = [-width / 2, -height / 2, width, height];
 	const frame = useCurrentFrame();
 
 	const zoomIn = frame * 0.001;
@@ -53,7 +58,7 @@ export const TriangleOut: React.FC<{
 			frontFaceColor: actualColor,
 			depth,
 			points: parsed,
-			strokeWidth: 30,
+			strokeWidth: 20,
 			description: `triangle-${i}`,
 			strokeColor: 'black',
 			crispEdges: false,
@@ -65,7 +70,7 @@ export const TriangleOut: React.FC<{
 			rotateX(-(i * delayedFrame) / 300),
 			rotateY(delayedFrame / 100),
 			rotateZ(delayedFrame / 100),
-			scaled(0.6 + zoomIn),
+			scaled(0.4 + zoomIn),
 		]);
 
 		return projected;

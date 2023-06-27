@@ -7,7 +7,13 @@ import {BLUE} from '../colors';
 import {transformElement} from '../element';
 import {Faces} from '../Faces';
 import {extrudeElement} from '../join-inbetween-tiles';
-import {MatrixTransform4D, rotateX, rotateY, translateY} from '../matrix';
+import {
+	MatrixTransform4D,
+	rotateX,
+	rotateY,
+	translateX,
+	translateY,
+} from '../matrix';
 
 export const EverythingTriangle: React.FC = () => {
 	const frame = useCurrentFrame();
@@ -40,6 +46,7 @@ export const EverythingTriangle: React.FC = () => {
 		translateY(400 - frame),
 		rotateX(-Math.PI / 4),
 		rotateY(-Math.PI / 16 - frame / 250),
+		translateX(300),
 	];
 
 	return (

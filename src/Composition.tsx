@@ -28,14 +28,24 @@ import {
 
 export const MyComposition: React.FC<{
 	str: string;
-}> = ({str}) => {
-	const frame = useCurrentFrame() * 1.3;
-	const {width, height, fps} = useVideoConfig();
+	delay: number;
+}> = ({str, delay}) => {
+	const {fps, width, height} = useVideoConfig();
+	const frame = useCurrentFrame() - delay;
 
 	const font = useFont();
 	if (!font) {
 		return null;
 	}
+
+	const progress = spring({
+		fps,
+		frame,
+		config: {
+			damping: 20,
+		},
+		durationInFrames: 40,
+	});
 
 	const text = getText({font, text: '4'});
 
@@ -47,19 +57,10 @@ export const MyComposition: React.FC<{
 		sideColor: 'black',
 		frontFaceColor: BLUE,
 		backFaceColor: BLUE,
-		strokeWidth: 10,
+		strokeWidth: 20,
 		description: 'text',
 		strokeColor: 'black',
 		crispEdges: false,
-	});
-
-	const progress = spring({
-		fps,
-		frame,
-		config: {
-			damping: 20,
-		},
-		durationInFrames: 40,
 	});
 
 	const fromRight = interpolate(progress, [0, 1], [width * 0.75, 0], {
@@ -132,7 +133,7 @@ export const MyComposition: React.FC<{
 					</h1>
 				</AbsoluteFill>
 			</AbsoluteFill>
-			<Sequence durationInFrames={128}>
+			<Sequence from={delay} durationInFrames={128}>
 				<svg
 					viewBox={[0, 0, width, height].join(' ')}
 					style={{

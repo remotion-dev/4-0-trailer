@@ -14,7 +14,7 @@ export const RenderProgress: React.FC = () => {
 	const {fps} = useVideoConfig();
 
 	const commonTransformations = [
-		translateY((-frame * 1.5 + 50) * 7.5),
+		translateY((-frame * 1.8 + 50) * 7.5),
 		rotateX(-Math.PI / 5),
 		rotateZ(-Math.PI / 5),
 		rotateZ(frame / 1400),
@@ -25,10 +25,10 @@ export const RenderProgress: React.FC = () => {
 		return null;
 	}
 
-	const rendered = new Array(4).fill(true).map((_, i) => {
+	const rendered = new Array(5).fill(true).map((_, i) => {
 		return getButton({
 			font,
-			phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4'][i],
+			phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4', 'five.mp4'][i],
 			depth,
 			color,
 			delay: i * 40,
