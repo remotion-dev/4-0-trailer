@@ -341,7 +341,7 @@ export const Studio: React.FC = () => {
 				damping: 200,
 			},
 			durationInFrames: 30,
-			delay: (2 - i) * 5 + 30,
+			delay: (2 - i) * 3 + 30,
 		});
 		const path = resetPath(triangle.path);
 		const parsed = parsePath(path);
