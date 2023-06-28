@@ -75,7 +75,7 @@ export const Studio: React.FC = () => {
 			damping: 200,
 		},
 		durationInFrames: 30,
-		delay: 20,
+		delay: 40,
 	});
 
 	const font = useFont();
@@ -227,18 +227,30 @@ export const Studio: React.FC = () => {
 			rotateX(-Math.PI + Math.PI * jump3),
 			translateY(400),
 			translateX(-rectWidth / 2 + 795),
-			translateY(interpolate(jump2, [0, 1], [600, 0])),
+			translateY(interpolate(jump3, [0, 1], [300, 0])),
 			translateZ(-10),
 		]
 	);
+
+	const triangleProgress = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		durationInFrames: 90,
+		delay: 70,
+	});
+
+	const niceTriangleFrame = triangleProgress * 103;
 
 	const {width: cursorWeight, height: cursorHeight} =
 		getBoundingBox(cursorHandlerPath);
 	const redElement = transformElement(
 		extrudeElement({
-			backFaceColor: 'black',
+			backFaceColor: '#ff3232',
 			crispEdges: false,
-			depth: 20,
+			depth: 5,
 			description: 'bluebarface',
 			frontFaceColor: '#ff3232',
 			points: parsePath(cursorHandlerPath),
@@ -256,6 +268,8 @@ export const Studio: React.FC = () => {
 			translateY(interpolate(jump4, [0, 1], [1000, 0])),
 			translateX(cursorWeight / 2),
 			translateY(cursorHeight / 2),
+			translateX(-800),
+			translateX(triangleProgress * 900),
 		]
 	);
 
@@ -314,20 +328,20 @@ export const Studio: React.FC = () => {
 		[translateX(0), translateY(-150)]
 	);
 
-	const niceTriangleFrame =
-		spring({
-			fps,
-			frame,
-			config: {
-				damping: 200,
-			},
-		}) * 103;
-
 	const paths = new Array(3).fill(true).map((out, i) => {
 		const triangle = makeTriangle({
 			direction: 'right',
 			length: 1000 + i * 440,
 			edgeRoundness: 0.71,
+		});
+		const moveIn = spring({
+			fps,
+			frame,
+			config: {
+				damping: 200,
+			},
+			durationInFrames: 30,
+			delay: (2 - i) * 5 + 30,
 		});
 		const path = resetPath(triangle.path);
 		const parsed = parsePath(path);
@@ -361,7 +375,8 @@ export const Studio: React.FC = () => {
 			rotateX(-(i * niceTriangleFrame) / 300),
 			rotateY(niceTriangleFrame / 100),
 			rotateZ(niceTriangleFrame / 100),
-			scaled(0.35),
+			scaled(0.25 + triangleProgress * 0.1),
+			translateX(interpolate(moveIn, [0, 1], [-1400, 0], {})),
 			translateY(-160 + niceTriangleFrame * 1.5),
 		]);
 
