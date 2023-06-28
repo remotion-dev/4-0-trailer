@@ -33,10 +33,28 @@ const dotRadius = 3 * 7.5;
 const rectWidth = 150 * 7.5;
 const rectHeight = 120 * 7.5;
 
+const curl = (i: number, progress: number): MatrixTransform4D[] => {
+	const distance = interpolate(progress, [0, 1], [1, 0.000000005]);
+	const divide = 1 / distance;
+
+	const index = (i + 10) / (divide * 80);
+
+	const z = Number(Math.cos(index * -Math.PI * 2));
+	const y = Number(Math.sin(index * Math.PI * 2));
+	const r = interpolate(index, [0, 1], [0, Math.PI * 2]) / 2;
+
+	return [
+		translateZ(-interpolate(progress, [0, 1], [200, 0])),
+		translateZ(z),
+		translateY(y),
+		rotateY(r),
+	];
+};
+
 export const NpmIniVideo: React.FC = () => {
 	const {width, height, fps} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
-	const frame = useCurrentFrame();
+	const frame = useCurrentFrame() + 20;
 
 	const font = useFont();
 
@@ -92,6 +110,26 @@ export const NpmIniVideo: React.FC = () => {
 		strokeColor: 'black',
 		description: 'redFace',
 		crispEdges: false,
+	});
+
+	const dotProgress = (delay: number) =>
+		spring({
+			fps,
+			frame,
+			config: {
+				damping: 200,
+			},
+			delay,
+			durationInFrames: 200,
+		});
+
+	const textProgress = spring({
+		fps,
+		frame,
+		config: {
+			damping: 200,
+		},
+		durationInFrames: 300,
 	});
 
 	const redElement = transformElement(
@@ -156,31 +194,10 @@ export const NpmIniVideo: React.FC = () => {
 				crispEdges: false,
 			});
 
-			const textProgress = spring({
-				fps,
-				frame,
-				config: {
-					damping: 200,
-				},
-				durationInFrames: 300,
-			});
-
-			const distance = interpolate(textProgress, [0, 1], [1, 0.000000005]);
-			const divide = 1 / distance;
-
-			const index = (i + 10) / (divide * 80);
-
-			const z = Number(Math.cos(index * -Math.PI * 2));
-			const y = Number(Math.sin(index * Math.PI * 2));
-			const r = interpolate(index, [0, 1], [0, Math.PI * 2]) / 2;
-
 			return transformElement(
 				makeElement(npmFace, npmFace.centerPoint, 'npmInitVideoFace'),
 				[
-					translateZ(-interpolate(textProgress, [0, 1], [200, 0])),
-					translateZ(z),
-					translateY(y),
-					rotateY(r),
+					...curl(i, textProgress),
 					...topLeftTransformation,
 					translateY(25 * 7.5),
 					translateX(10 * 7.5),
@@ -205,9 +222,9 @@ export const NpmIniVideo: React.FC = () => {
 
 	const allFaces = [
 		transformElement(extrude, transformations),
-		greenElement,
-		yellowElement,
 		redElement,
+		yellowElement,
+		greenElement,
 		dollarElement,
 		...allTextFaces,
 	];

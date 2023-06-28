@@ -28,7 +28,7 @@ export const RenderProgress: React.FC = () => {
 	const rendered = new Array(5).fill(true).map((_, i) => {
 		return getButton({
 			font,
-			phrase: ['one.mp4', 'two.mp4', 'three.mp4', 'four.mp4', 'five.mp4'][i],
+			phrase: ['video.mp4', 'thumb.png', 'sound.wav', 'doc.pdf', 'anim.gif'][i],
 			depth,
 			color,
 			delay: i * 40,

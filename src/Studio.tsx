@@ -344,8 +344,8 @@ export const Studio: React.FC = () => {
 
 	const welcomeText = getText({
 		font,
-		text: 'Welcome to Remotion 4.0',
-		size: 32,
+		text: 'Do more with React.',
+		size: 36,
 	});
 	const welcomeFace = transformFace(
 		makeFace({
