@@ -158,11 +158,11 @@ export const NpmIniVideo: React.FC = () => {
 
 			const textProgress = spring({
 				fps,
-				frame,
+				frame: frame + 50,
 				config: {
 					damping: 200,
 				},
-				durationInFrames: 150,
+				durationInFrames: 200,
 				reverse: true,
 			});
 
