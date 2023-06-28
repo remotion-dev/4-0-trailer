@@ -165,8 +165,8 @@ export const Studio: React.FC = () => {
 	const bottomElement = transformElement(
 		makeElement(bottomFace, bottomFace.centerPoint, 'bottomFace'),
 		[
-			scaled(interpolate(smallJump, [0, 1], [4, 1])),
-			translateY(interpolate(smallJump, [0, 1], [1000, 0])),
+			scaled(interpolate(jump1, [0, 1], [4, 1])),
+			translateY(interpolate(jump1, [0, 1], [1000, 0])),
 			translateY((rectHeight - bottomHeight) / 2),
 		]
 	);
@@ -411,8 +411,8 @@ export const Studio: React.FC = () => {
 	const whiteCanvasElement = transformElement(
 		makeElement(whiteCanvasFace, whiteCanvasFace.centerPoint, 'whiteCanvas'),
 		[
-			scaled(interpolate(smallJump, [0, 1], [2, 1])),
-			translateY(interpolate(smallJump, [0, 1], [-1000, 0])),
+			scaled(interpolate(jump1, [0, 1], [2, 1])),
+			translateY(interpolate(jump1, [0, 1], [-1000, 0])),
 			translateY(-150),
 		]
 	);
