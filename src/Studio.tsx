@@ -227,7 +227,7 @@ export const Studio: React.FC = () => {
 			rotateX(-Math.PI + Math.PI * jump3),
 			translateY(400),
 			translateX(-rectWidth / 2 + 795),
-			translateY(interpolate(jump3, [0, 1], [300, 0])),
+			translateY(interpolate(jump3, [0, 1], [400, 0])),
 			translateZ(-10),
 		]
 	);
@@ -399,7 +399,11 @@ export const Studio: React.FC = () => {
 	const transformed = transformElements(allElements, []);
 
 	return (
-		<AbsoluteFill>
+		<AbsoluteFill
+			style={{
+				backgroundColor: 'white',
+			}}
+		>
 			<svg viewBox={viewBox.join(' ')}>
 				<Faces elements={transformed} />
 			</svg>
