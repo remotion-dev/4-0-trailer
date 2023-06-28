@@ -232,6 +232,8 @@ export const Studio: React.FC = () => {
 		]
 	);
 
+	const {width: cursorWeight, height: cursorHeight} =
+		getBoundingBox(cursorHandlerPath);
 	const redElement = transformElement(
 		extrudeElement({
 			backFaceColor: 'black',
@@ -244,7 +246,17 @@ export const Studio: React.FC = () => {
 			strokeColor: 'black',
 			strokeWidth: 4,
 		}),
-		[translateY(151), translateZ(-10)]
+		[
+			translateX(-cursorWeight / 2),
+			translateY(-cursorHeight / 2),
+			scaled(interpolate(jump4, [0, 1], [4, 1])),
+			rotateY(Math.PI * 2 * jump4),
+			translateY(151),
+			translateZ(-10),
+			translateY(interpolate(jump4, [0, 1], [1000, 0])),
+			translateX(cursorWeight / 2),
+			translateY(cursorHeight / 2),
+		]
 	);
 
 	const renderButton = makeFace({
