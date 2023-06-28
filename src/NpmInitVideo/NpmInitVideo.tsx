@@ -1,7 +1,13 @@
 import {parsePath} from '@remotion/paths';
 import {makeCircle, makeRect} from '@remotion/shapes';
 import React from 'react';
-import {AbsoluteFill, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {
+	AbsoluteFill,
+	interpolate,
+	spring,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
 import {centerPath} from '../center';
 import {BLUE} from '../colors';
 import {makeElement, transformElement} from '../element';
@@ -37,17 +43,6 @@ export const NpmIniVideo: React.FC = () => {
 	if (!font) {
 		return null;
 	}
-
-	const textZDistance = (delay: number) =>
-		900 -
-		spring({
-			frame: frame + 300,
-			fps,
-			delay,
-			durationInFrames: 600,
-			config: {damping: 200},
-		}) *
-			900;
 
 	const dollar = getText({
 		font,
@@ -101,11 +96,7 @@ export const NpmIniVideo: React.FC = () => {
 
 	const redElement = transformElement(
 		makeElement(redFace, redFace.centerPoint, 'redFace'),
-		[
-			...topLeftTransformation,
-			translateZ(-textZDistance(0)),
-			...transformations,
-		]
+		[...topLeftTransformation, ...transformations]
 	);
 
 	const yellowFace = makeFace({
@@ -119,12 +110,7 @@ export const NpmIniVideo: React.FC = () => {
 
 	const yellowElement = transformElement(
 		makeElement(yellowFace, [0, 0, 0, 1], 'yellowFace'),
-		[
-			...topLeftTransformation,
-			translateZ(-textZDistance(20)),
-			translateX(10 * 7.5),
-			...transformations,
-		]
+		[...topLeftTransformation, translateX(10 * 7.5), ...transformations]
 	);
 
 	const greenFace = makeFace({
@@ -138,12 +124,7 @@ export const NpmIniVideo: React.FC = () => {
 
 	const greenElement = transformElement(
 		makeElement(greenFace, greenFace.centerPoint, 'greenFace'),
-		[
-			...topLeftTransformation,
-			translateX(20 * 7.5),
-			translateZ(-textZDistance(40)),
-			...transformations,
-		]
+		[...topLeftTransformation, translateX(20 * 7.5), ...transformations]
 	);
 
 	const dollarFace = makeFace({
@@ -157,33 +138,51 @@ export const NpmIniVideo: React.FC = () => {
 
 	const dollarElement = transformElement(
 		makeElement(dollarFace, dollarFace.centerPoint, 'dollarFace'),
-		[
-			...topLeftTransformation,
-			translateY(25 * 7.5),
-			translateZ(-textZDistance(0)),
-			...transformations,
-		]
+		[...topLeftTransformation, translateY(25 * 7.5), ...transformations]
 	);
 
 	const allTextFaces = npmInitVideo.path
-		.map((points) => {
+		.map((points, i) => {
 			if (points === '') {
 				return null;
 			}
+
 			const npmFace = makeFace({
 				fill: 'white',
 				points,
-				strokeWidth: 0,
+				strokeWidth: 2,
 				strokeColor: 'black',
 				description: 'npmInitVideoFace',
 				crispEdges: false,
 			});
 
+			const textProgress = spring({
+				fps,
+				frame,
+				config: {
+					damping: 200,
+				},
+				durationInFrames: 150,
+				reverse: true,
+			});
+
+			const distance = interpolate(textProgress, [0, 1], [1, 0.000000005]);
+			const divide = 1 / distance;
+
+			const index = (i + 10) / (divide * 80);
+
+			const z = Number(Math.cos(index * -Math.PI * 2));
+			const y = Number(Math.sin(index * Math.PI * 2));
+			const r = interpolate(index, [0, 1], [0, Math.PI * 2]) / 2;
+
 			return transformElement(
 				makeElement(npmFace, npmFace.centerPoint, 'npmInitVideoFace'),
 				[
+					translateZ(-interpolate(textProgress, [0, 1], [1000, 0])),
+					translateZ(z),
+					translateY(y),
+					rotateY(r),
 					...topLeftTransformation,
-					translateZ(-textZDistance(40)),
 					translateY(25 * 7.5),
 					translateX(10 * 7.5),
 					...transformations,
