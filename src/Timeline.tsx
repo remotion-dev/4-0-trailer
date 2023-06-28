@@ -322,7 +322,7 @@ export const TimelinePerspective2: React.FC<{
 			<Timeline
 				second
 				delay={-200}
-				startTimeInSeconds={start + 7.5}
+				startTimeInSeconds={start + 7}
 				amplitude={visualize[0]}
 				matrices={[
 					translateX(-1800 - frame * 4),

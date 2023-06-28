@@ -5,7 +5,7 @@ import {DistinctlyReact} from './DistinctlyReact';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
 import {InFrameLogo} from './InFrameLogo';
-import {EndPush, Main} from './Main';
+import {Main} from './Main';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
 import {OgImage, ogImageSchema} from './OgImage';
@@ -25,14 +25,6 @@ import {WaysToRender} from './WaysToRender';
 export const RemotionRoot: React.FC = () => {
 	return (
 		<>
-			<Composition
-				id="MyComp"
-				component={EndPush}
-				durationInFrames={Math.round(20 * Math.PI * 4)}
-				fps={30}
-				width={1280}
-				height={720}
-			/>
 			<Composition
 				id="RenderButton"
 				component={RenderButton}

@@ -103,7 +103,7 @@ export const NpmIniVideo: React.FC = () => {
 	const redFace = makeFace({
 		fill: '#fe5f57',
 		points: dot.path,
-		strokeWidth: 10,
+		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'redFace',
 		crispEdges: false,
@@ -121,7 +121,7 @@ export const NpmIniVideo: React.FC = () => {
 	const yellowFace = makeFace({
 		fill: '#ffbc2e',
 		points: dot.path,
-		strokeWidth: 10,
+		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'yellowFace',
 		crispEdges: false,
@@ -140,7 +140,7 @@ export const NpmIniVideo: React.FC = () => {
 	const greenFace = makeFace({
 		fill: '#28c840',
 		points: dot.path,
-		strokeWidth: 10,
+		strokeWidth: 0,
 		strokeColor: 'black',
 		description: 'greenFace',
 		crispEdges: false,
