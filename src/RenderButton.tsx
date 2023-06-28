@@ -51,18 +51,35 @@ export const RenderButton: React.FC = () => {
 
 	const transformations = [
 		rotateY(-Math.PI / 4 + frame / 100),
-		rotateX(-Math.PI / 4 + frame / 600),
+		rotateX(-Math.PI / 4 + frame / 400),
 	];
 
 	const push = spring({
 		fps,
 		frame,
-		durationInFrames: 600,
+		durationInFrames: 270,
+		config: {
+			damping: 200,
+		},
 	});
 
-	const cursorDistance = interpolate(push, [0, 1], [750, 0], {});
+	const push2 = spring({
+		fps,
+		frame,
+		durationInFrames: 30,
+		config: {
+			damping: 10,
+		},
+		delay: 165,
+	});
 
-	const actualDepth = depth;
+	const cursorDistance =
+		interpolate(push, [0, 1], [1250, 100], {}) -
+		interpolate(push2, [0, 1], [0, 200], {});
+
+	const pressIn = Math.min(0, cursorDistance);
+
+	const actualDepth = depth + pressIn;
 
 	const extrudedButton = extrudeElement({
 		points: parsePath(centeredButton),
@@ -77,7 +94,7 @@ export const RenderButton: React.FC = () => {
 	});
 
 	const extrudedCursor = extrudeElement({
-		points: parsePath(cursorPath),
+		points: parsePath(resetPath(cursorPath)),
 		depth: cursorDepth,
 		sideColor: 'black',
 		frontFaceColor: 'white',
@@ -103,10 +120,11 @@ export const RenderButton: React.FC = () => {
 	);
 
 	const movedCursor = transformElement(extrudedCursor, [
+		translateZ(-cursorDepth / 2 - 0.001),
 		rotateY(Math.PI / 2),
 		rotateX(-Math.PI / 4),
 		rotateZ(-interpolate(push, [0, 1], [Math.PI * 2, 0])),
-		translateZ(Number(-depth - 0.001) - cursorDistance),
+		translateZ(Number(-depth / 2 - 0.001) - cursorDistance),
 	]);
 
 	return (
@@ -120,6 +138,7 @@ export const RenderButton: React.FC = () => {
 			>
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
+						noSort
 						strokeMiterlimit={30}
 						elements={transformElements(
 							[extrudedButton, textElement, movedCursor],

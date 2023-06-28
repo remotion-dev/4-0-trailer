@@ -112,17 +112,6 @@ export const NpmIniVideo: React.FC = () => {
 		crispEdges: false,
 	});
 
-	const dotProgress = (delay: number) =>
-		spring({
-			fps,
-			frame,
-			config: {
-				damping: 200,
-			},
-			delay,
-			durationInFrames: 200,
-		});
-
 	const textProgress = spring({
 		fps,
 		frame,
