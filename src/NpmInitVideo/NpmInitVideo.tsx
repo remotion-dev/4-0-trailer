@@ -36,7 +36,7 @@ const rectHeight = 120 * 7.5;
 export const NpmIniVideo: React.FC = () => {
 	const {width, height, fps} = useVideoConfig();
 	const viewBox = [-width / 2, -height / 2, width, height];
-	const frame = 150 - useCurrentFrame();
+	const frame = useCurrentFrame();
 
 	const font = useFont();
 
@@ -158,12 +158,11 @@ export const NpmIniVideo: React.FC = () => {
 
 			const textProgress = spring({
 				fps,
-				frame: frame + 50,
+				frame,
 				config: {
 					damping: 200,
 				},
-				durationInFrames: 200,
-				reverse: true,
+				durationInFrames: 300,
 			});
 
 			const distance = interpolate(textProgress, [0, 1], [1, 0.000000005]);
@@ -178,7 +177,7 @@ export const NpmIniVideo: React.FC = () => {
 			return transformElement(
 				makeElement(npmFace, npmFace.centerPoint, 'npmInitVideoFace'),
 				[
-					translateZ(-interpolate(textProgress, [0, 1], [1000, 0])),
+					translateZ(-interpolate(textProgress, [0, 1], [200, 0])),
 					translateZ(z),
 					translateY(y),
 					rotateY(r),
