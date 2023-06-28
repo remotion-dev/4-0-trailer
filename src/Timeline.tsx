@@ -303,7 +303,7 @@ export const TimelinePerspective2: React.FC<{
 		return null;
 	}
 
-	const start = 37;
+	const start = 44;
 	const visualize = visualizeAudio({
 		audioData,
 		fps,

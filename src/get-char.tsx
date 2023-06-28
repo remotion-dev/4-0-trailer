@@ -40,3 +40,19 @@ export const getText = ({
 		path: path.toPathData(1),
 	};
 };
+
+export const getChars = ({
+	font,
+	text,
+	size = fontSize,
+}: {
+	font: Font;
+	text: string;
+	size?: number;
+}) => {
+	const path = font.getPaths(text, 0, 0, size, {});
+
+	return {
+		path: path.map((p) => p.toPathData(1)),
+	};
+};
