@@ -1,54 +1,38 @@
-# Remotion video
+# Remotion 4.0 Trailer
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.gif">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+See the result at https://remotion.dev/4!
 
-Welcome to your Remotion project!
+## License disclaimer
 
-## Commands
+This repository is unlicensed - you may not use the assets in it, it is solely for reference and exploration. This in particular affects the music, the font and our brand assets.
 
-**Install Dependencies**
+The 3D engine will be extracted and made available for use at a later stage.
 
-```console
-npm i
-```
+Remotion itself is released under the [Remotion license](https://remotion.dev/license).
 
-**Start Preview**
+## How does the 3D engine work?
 
-```console
-npm start
-```
+The 3D animations that you find in this example are based on SVG manipulation and [`@remotion/paths`](https://remotion.dev/paths).
 
-**Render video**
+The idea behind the engine is to take what SVG has to offer and enhance it with another dimension.
 
-```console
-npm run build
-```
+**Guiding pricinciples:**
 
-**Upgrade Remotion**
+- SVG Paths in 3D: A 2D path `M 0 0 L 100 100` becomes `M 0 0 0 L 100 100 0` in 3D. After the conversion, a shape can be scaled, translated and rotated using matrix transformations.
+- Reduced instructions: For simplicity, `M`, `L`, `C`, `Q`, `Z` are used internally. Other instructions will be converted to these.
+- Flat extrusion: When extruded, a front and back surface will be generated, and inbetween, tiles in uniform colors are calculated that are orthogonal to the faces.
+- Strokes: SVG only supports strokes drawn from the center of the line, so strokes would overlap the side tiles. To prevent this, the stroke width is halfed by applying a mask.
 
-```console
-npm run upgrade
-```
+**Current Limitations**:
 
-## Docs
+- No perspective: Perspective is currently not implemented.
+- Only flat extrusions: Shapes like a sphere or a torus are not supported.
 
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
+**Current bugs:**
 
-## Help
+- Borders are either not antialiased, or show a white line, depending on the `crispEdges` attribute.
+- z-index sorting is extremely primitive and not correct.
 
-We provide help [on our Discord server](https://discord.gg/6VzzNDwUwV).
+**Not planned / not possible:**
 
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
-
-## License
-
-Notice that for some entities a company license is needed. Read [the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+- Lighting, shaders, materials, shadows etc - this engine is only good for these types of animations.
