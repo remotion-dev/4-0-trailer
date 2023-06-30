@@ -1,6 +1,7 @@
 import {Composition} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
+import {DiscoverRemotion4} from './DiscoverRemotion4';
 import {DistinctlyReact} from './DistinctlyReact';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
@@ -223,6 +224,14 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="Studio"
 				component={Studio}
+				durationInFrames={1200}
+				fps={25}
+				width={1920}
+				height={1080}
+			/>
+			<Composition
+				id="Discover"
+				component={DiscoverRemotion4}
 				durationInFrames={1200}
 				fps={25}
 				width={1920}
