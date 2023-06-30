@@ -50,16 +50,6 @@ export const Studio: React.FC = () => {
 		durationInFrames: 70,
 	});
 
-	const smallJump = spring({
-		fps,
-		frame,
-		config: {
-			damping: 200,
-		},
-		durationInFrames: 90,
-		delay: 10,
-	});
-
 	const jump1 = spring({
 		fps,
 		frame,
