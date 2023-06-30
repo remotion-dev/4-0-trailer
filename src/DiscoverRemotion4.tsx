@@ -3,22 +3,25 @@ import {
 	AbsoluteFill,
 	Img,
 	interpolate,
+	Sequence,
 	spring,
 	staticFile,
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
+import {EndCard} from './EndCard';
 import './v4.css';
+import {WrittenInReact} from './WrittenInReact';
 
 export const DiscoverRemotion4: React.FC = () => {
-	const {fps, height} = useVideoConfig();
+	const {fps, height, width} = useVideoConfig();
 	const frame = useCurrentFrame();
 
 	const spr = (delay: number) =>
 		spring({
 			fps,
 			frame,
-			delay,
+			delay: delay + 80,
 			config: {
 				damping: 200,
 			},
@@ -40,9 +43,16 @@ export const DiscoverRemotion4: React.FC = () => {
 					translate: '0 ' + interpolate(spr(13), [0, 1], [0, -height]) + 'px',
 				}}
 			>
-				<h1>Discover Remotion 4.0</h1>
+				<h1>
+					Discover Remotion 4.0 <br />
+					on remotion.dev
+				</h1>
 			</AbsoluteFill>
-			<AbsoluteFill>
+			<AbsoluteFill
+				style={{
+					translate: '0 ' + interpolate(spr(160), [0, 1], [0, -height]) + 'px',
+				}}
+			>
 				<AbsoluteFill
 					style={{
 						padding: 40,
@@ -69,7 +79,7 @@ export const DiscoverRemotion4: React.FC = () => {
 					<EventComp
 						src={staticFile('day3.png')}
 						date="July 5th"
-						title="Render button"
+						title="Render Button"
 					/>
 				</AbsoluteFill>
 				<AbsoluteFill
@@ -103,6 +113,36 @@ export const DiscoverRemotion4: React.FC = () => {
 						title="Last but not least"
 					/>
 				</AbsoluteFill>
+			</AbsoluteFill>
+			<AbsoluteFill
+				style={{
+					justifyContent: 'center',
+					alignItems: 'center',
+					fontFamily: 'GT Planar',
+					fontSize: 50,
+					translate:
+						interpolate(spr(300), [0, 1], [0, -width]) +
+						'px ' +
+						interpolate(spr(160), [0, 1], [height, 0]) +
+						'px',
+				}}
+			>
+				<Sequence from={180}>
+					<WrittenInReact />
+				</Sequence>
+			</AbsoluteFill>
+			<AbsoluteFill
+				style={{
+					justifyContent: 'center',
+					alignItems: 'center',
+					fontFamily: 'GT Planar',
+					fontSize: 50,
+					translate: interpolate(spr(300), [0, 1], [width, 0]) + 'px',
+				}}
+			>
+				<Sequence from={300}>
+					<EndCard />
+				</Sequence>
 			</AbsoluteFill>
 		</AbsoluteFill>
 	);

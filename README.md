@@ -2,6 +2,11 @@
 
 See the result at https://remotion.dev/4!
 
+```
+npm i
+npm start
+```
+
 ## License disclaimer
 
 This repository is unlicensed - you may not use the assets in it, it is solely for reference and exploration. This in particular affects the music, the font and our brand assets.
