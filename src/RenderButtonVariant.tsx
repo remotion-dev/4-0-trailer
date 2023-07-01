@@ -54,7 +54,7 @@ export const RenderButtonVariant: React.FC<{
 		sideColor: 'black',
 		frontFaceColor: BLUE,
 		backFaceColor: 'black',
-		strokeWidth: 20,
+		strokeWidth: 30,
 		description: 'Button',
 		strokeColor: 'black',
 		crispEdges: false,

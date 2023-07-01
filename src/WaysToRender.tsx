@@ -46,13 +46,13 @@ export const WaysToRender: React.FC = () => {
 				style={{
 					backgroundColor: 'white',
 					transform: `translateX(${interpolate(out, [0, 1], [0, width])}px)`,
+					borderLeft: '10px solid black',
 				}}
 			/>
 			<AbsoluteFill
 				style={{
 					justifyContent: 'center',
 					alignItems: 'center',
-
 					transform: `translateY(${y}px)`,
 				}}
 			>
@@ -61,9 +61,10 @@ export const WaysToRender: React.FC = () => {
 						style={{
 							fontFamily: 'GT Planar',
 							fontSize: 80,
+							marginTop: -60,
 						}}
 					>
-						Ways to render
+						Render videos using
 					</h1>
 					<div
 						style={{
@@ -80,8 +81,8 @@ export const WaysToRender: React.FC = () => {
 							}}
 						>
 							<Box delay={0} text="Command line" alpha={false} />
-							<Box delay={10} text="Node.JS" alpha={false} />
-							<Box delay={20} text="Lambda" alpha={false} />
+							<Box delay={5} text="Node.JS" alpha={false} />
+							<Box delay={10} text="Lambda" alpha={false} />
 						</div>
 						<div
 							style={{
@@ -90,9 +91,9 @@ export const WaysToRender: React.FC = () => {
 								gap,
 							}}
 						>
-							<Box delay={30} text="Docker" alpha={false} />
-							<Box delay={40} text="GitHub Actions" alpha={false} />
-							<Box alpha delay={50} text="Cloud Run" />
+							<Box delay={20} text="Docker" alpha={false} />
+							<Box delay={30} text="GitHub Actions" alpha={false} />
+							<Box alpha delay={40} text="Cloud Run" />
 						</div>
 					</div>
 				</div>
@@ -116,7 +117,7 @@ const Box: React.FC<{
 	alpha: boolean;
 	delay: number;
 }> = ({text, alpha, delay}) => {
-	const {fps} = useVideoConfig();
+	const {fps, height} = useVideoConfig();
 	const frame = useCurrentFrame();
 
 	const fade = spring({
@@ -126,7 +127,7 @@ const Box: React.FC<{
 			damping: 200,
 		},
 		delay,
-		durationInFrames: 90,
+		durationInFrames: 50,
 	});
 
 	return (
@@ -135,21 +136,29 @@ const Box: React.FC<{
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'flex-end',
-				border: '10px solid black',
+				border: '8px solid black',
 				height: 250,
 				width: 500,
 				padding: 30,
 				borderRadius: 20,
-				opacity: fade,
+				transform: `translateY(${interpolate(fade, [0, 1], [height, 0])}px)`,
+				position: 'relative',
 			}}
 		>
 			{alpha ? (
 				<div
 					style={{
 						fontFamily: 'GT Planar',
-						color: BLUE,
+						color: 'white',
 						fontWeight: 'bolder',
 						fontSize: 32,
+						backgroundColor: BLUE,
+						position: 'absolute',
+						padding: '6px 16px',
+						border: '8px solid black',
+						borderRadius: 20,
+						top: 10,
+						marginLeft: -50,
 					}}
 				>
 					ALPHA

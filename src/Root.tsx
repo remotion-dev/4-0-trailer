@@ -7,10 +7,13 @@ import {EndCard} from './EndCard';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
 import {InFrameLogo} from './InFrameLogo';
+import {Introducing} from './Introducing';
 import {Main} from './Main';
+import {NameTag} from './NameTag';
 import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
 import {OgImage, ogImageSchema} from './OgImage';
+import {ProductLineUp} from './ProductLineup';
 import {Reencoding} from './ReEncoding';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
@@ -21,6 +24,7 @@ import {Studio} from './Studio';
 import {Teaser} from './Teaser';
 import {Wheel} from './TeaserWheel';
 import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
+import {TenK} from './Updates';
 import {WaysToRender} from './WaysToRender';
 import {WrittenInReact} from './WrittenInReact';
 
@@ -210,6 +214,38 @@ export const RemotionRoot: React.FC = () => {
 					width={1920}
 					height={1080}
 					id="EndCard"
+				/>
+				<Composition
+					id="NameTag"
+					component={NameTag}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={200}
+				/>
+				<Composition
+					id="ProductLineup"
+					component={ProductLineUp}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={600}
+				/>
+				<Composition
+					id="Updates"
+					component={TenK}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={600}
+				/>
+				<Composition
+					id="Introducing"
+					component={Introducing}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={600}
 				/>
 			</Folder>
 			<Folder name="SocialMediaAssets">
