@@ -57,7 +57,7 @@ export const RenderButton: React.FC = () => {
 	const push = spring({
 		fps,
 		frame,
-		durationInFrames: 270,
+		durationInFrames: 290,
 		config: {
 			damping: 200,
 		},
@@ -70,7 +70,7 @@ export const RenderButton: React.FC = () => {
 		config: {
 			damping: 10,
 		},
-		delay: 165,
+		delay: 190,
 	});
 
 	const cursorDistance =
@@ -139,7 +139,7 @@ export const RenderButton: React.FC = () => {
 				<svg viewBox={viewBox.join(' ')} style={{overflow: 'visible'}}>
 					<Faces
 						noSort
-						strokeMiterlimit={30}
+						strokeMiterlimit={1000}
 						elements={transformElements(
 							[extrudedButton, textElement, movedCursor],
 							transformations

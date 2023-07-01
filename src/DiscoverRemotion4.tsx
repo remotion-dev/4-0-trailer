@@ -121,7 +121,7 @@ export const DiscoverRemotion4: React.FC = () => {
 					fontFamily: 'GT Planar',
 					fontSize: 50,
 					translate:
-						interpolate(spr(300), [0, 1], [0, -width]) +
+						interpolate(spr(250), [0, 1], [0, -width]) +
 						'px ' +
 						interpolate(spr(160), [0, 1], [height, 0]) +
 						'px',
@@ -137,10 +137,10 @@ export const DiscoverRemotion4: React.FC = () => {
 					alignItems: 'center',
 					fontFamily: 'GT Planar',
 					fontSize: 50,
-					translate: interpolate(spr(300), [0, 1], [width, 0]) + 'px',
+					translate: interpolate(spr(250), [0, 1], [width, 0]) + 'px',
 				}}
 			>
-				<Sequence from={300}>
+				<Sequence from={250}>
 					<EndCard />
 				</Sequence>
 			</AbsoluteFill>

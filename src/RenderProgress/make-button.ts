@@ -18,7 +18,7 @@ import {MatrixTransform4D, rotateX, translateZ, Vector4D} from '../matrix';
 import {makeRoundedProgress} from './make-rounded-progress';
 
 const outerCornerRadius = 30 * 7.5;
-const padding = 1 * 7.5;
+const padding = 0;
 const outerWidth = 300 * 7.5;
 const outerHeight = 100 * 7.5;
 

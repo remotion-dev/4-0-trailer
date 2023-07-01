@@ -190,7 +190,7 @@ export const RemotionRoot: React.FC = () => {
 				<Composition
 					id="Discover"
 					component={DiscoverRemotion4}
-					durationInFrames={700}
+					durationInFrames={900}
 					fps={25}
 					width={1920}
 					height={1080}
