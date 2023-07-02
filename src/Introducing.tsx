@@ -32,7 +32,7 @@ export const Introducing: React.FC = () => {
 					</h1>
 				</AbsoluteFill>
 				<AbsoluteFill style={{marginLeft: 573}}>
-					<NumberWheel digit={4} delay={0} />
+					<NumberWheel digit={4} delay={10} />
 				</AbsoluteFill>
 				<AbsoluteFill
 					style={{

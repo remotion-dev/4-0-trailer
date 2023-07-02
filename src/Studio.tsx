@@ -56,8 +56,8 @@ export const Studio: React.FC = () => {
 		config: {
 			damping: 200,
 		},
-		durationInFrames: 70,
-		delay: 60,
+		durationInFrames: 80,
+		delay: 20,
 	});
 
 	const jump2 = spring({
@@ -67,7 +67,7 @@ export const Studio: React.FC = () => {
 			damping: 200,
 		},
 		durationInFrames: 70,
-		delay: 70,
+		delay: 50,
 	});
 
 	const jump3 = spring({

@@ -7,6 +7,7 @@ import {EndCard} from './EndCard';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
 import {InFrameLogo} from './InFrameLogo';
+import {InstallPanel} from './InstallPanel';
 import {Introducing} from './Introducing';
 import {Main} from './Main';
 import {NameTag} from './NameTag';
@@ -20,6 +21,7 @@ import {RenderProgress} from './RenderProgress';
 import {RightPaneLogo} from './RightPaneLogo';
 import {RustLogo} from './RustLogo';
 import {Spiral} from './Spiral';
+import {Splash} from './Splash';
 import {Studio} from './Studio';
 import {Teaser} from './Teaser';
 import {Wheel} from './TeaserWheel';
@@ -246,6 +248,22 @@ export const RemotionRoot: React.FC = () => {
 					height={1080}
 					fps={30}
 					durationInFrames={600}
+				/>
+				<Composition
+					id="NpmPanel"
+					component={InstallPanel}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={600}
+				/>
+				<Composition
+					id="Splash"
+					component={Splash}
+					width={1920}
+					height={1080}
+					fps={30}
+					durationInFrames={200}
 				/>
 			</Folder>
 			<Folder name="SocialMediaAssets">
