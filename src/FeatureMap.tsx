@@ -52,7 +52,7 @@ export const FeatureMap: React.FC = () => {
 			style={{
 				translate:
 					interpolate(spr(0), [0, 1], [width, 0]) +
-					interpolate(spr(200), [0, 1], [0, -width]) +
+					interpolate(spr(200), [0, 1], [0, -width - 10]) +
 					'px',
 			}}
 		>
