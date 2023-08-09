@@ -6,6 +6,7 @@ import {DistinctlyReact} from './DistinctlyReact';
 import {EndCard} from './EndCard';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
+import {Icon} from './Icon';
 import {InFrameLogo} from './InFrameLogo';
 import {InstallPanel} from './InstallPanel';
 import {Introducing} from './Introducing';
@@ -308,6 +309,14 @@ export const RemotionRoot: React.FC = () => {
 					defaultProps={{
 						topLayer: true,
 					}}
+				/>
+				<Composition
+					id="Icon"
+					component={Icon}
+					durationInFrames={1000}
+					fps={25}
+					width={1920}
+					height={1080}
 				/>
 			</Folder>
 		</>
