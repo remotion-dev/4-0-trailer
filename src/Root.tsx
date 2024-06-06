@@ -17,7 +17,7 @@ import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
 import {OgImage, ogImageSchema} from './OgImage';
 import {ProductLineUp} from './ProductLineup';
-import {Recorder} from './Recorder';
+import {Recorder} from './Recorder/Recorder';
 import {Reencoding} from './ReEncoding';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';
@@ -42,7 +42,7 @@ export const RemotionRoot: React.FC = () => {
 					component={Recorder}
 					durationInFrames={1900}
 					fps={30}
-					width={1920}
+					width={1080}
 					height={1080}
 				/>
 			</Folder>
