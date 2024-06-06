@@ -63,6 +63,7 @@ export const TriangleOut: React.FC<{
 			strokeColor: 'black',
 			crispEdges: false,
 		});
+
 		const projected = transformElement(extruded, [
 			translateZ(spread * i - spread),
 			translateX(-width / 2),
