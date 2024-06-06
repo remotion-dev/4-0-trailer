@@ -1,6 +1,7 @@
 import {Composition, Folder} from 'remotion';
 import {TriangleOut} from './3DRemotionLogo';
 import {AudioViz} from './AudioViz';
+import {LogoOnDark} from './Card';
 import {DiscoverRemotion4} from './DiscoverRemotion4';
 import {DistinctlyReact} from './DistinctlyReact';
 import {EndCard} from './EndCard';
@@ -55,6 +56,18 @@ export const RemotionRoot: React.FC = () => {
 					defaultProps={{
 						background: 'white',
 						dark: false,
+					}}
+				/>
+				<Composition
+					id="1-Logo-Dark"
+					component={LogoOnDark}
+					durationInFrames={1200}
+					fps={30}
+					width={1920}
+					height={1080}
+					defaultProps={{
+						background: 'white',
+						dark: true,
 					}}
 				/>
 				<Composition

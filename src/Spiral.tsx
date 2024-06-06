@@ -65,7 +65,7 @@ export const Spiral: React.FC = () => {
 	return (
 		<AbsoluteFill
 			style={{
-				backgroundColor: 'white',
+				backgroundColor: 'transparent',
 			}}
 		>
 			<svg
