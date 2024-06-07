@@ -17,7 +17,7 @@ import {NpmIniVideo} from './NpmInitVideo/NpmInitVideo';
 import {Cube, cubeSchema} from './NumberedChapter';
 import {OgImage, ogImageSchema} from './OgImage';
 import {ProductLineUp} from './ProductLineup';
-import {Recorder} from './Recorder/Recorder';
+import {Recorder} from './RecorderArt1/Recorder';
 import {Reencoding} from './ReEncoding';
 import {RenderButton} from './RenderButton';
 import {RenderProgress} from './RenderProgress';

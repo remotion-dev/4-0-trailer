@@ -33,11 +33,7 @@ export const Recorder: React.FC = () => {
 		}) * 0.8;
 
 	return (
-		<AbsoluteFill
-			style={{
-				backgroundColor: 'rgb(250, 250, 250)',
-			}}
-		>
+		<AbsoluteFill style={{}}>
 			<AbsoluteFill
 				style={{
 					scale: String(imgScale),
