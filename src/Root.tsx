@@ -4,6 +4,7 @@ import {AudioViz} from './AudioViz';
 import {LogoOnDark} from './Card';
 import {DiscoverRemotion4} from './DiscoverRemotion4';
 import {DistinctlyReact} from './DistinctlyReact';
+import {EmailSignature} from './EnailSignature';
 import {EndCard} from './EndCard';
 import {Everything} from './Everything';
 import {FeatureMap} from './FeatureMap';
@@ -26,6 +27,7 @@ import {RustLogo} from './RustLogo';
 import {Spiral} from './Spiral';
 import {Splash} from './Splash';
 import {Studio} from './Studio';
+import {StudioPromoGraphic} from './StudioPromoGraphics';
 import {Teaser} from './Teaser';
 import {Wheel} from './TeaserWheel';
 import {TimelinePerspective1, TimelinePerspective2} from './Timeline';
@@ -65,8 +67,19 @@ export const RemotionRoot: React.FC = () => {
 					width={1920}
 					height={1080}
 					defaultProps={{
-						background: 'white',
+						background: 'transparent',
 						dark: false,
+					}}
+				/>
+				<Composition
+					id="EmailSignature"
+					component={EmailSignature}
+					durationInFrames={100}
+					fps={30}
+					width={1080}
+					height={1080}
+					defaultProps={{
+						background: 'transparent',
 					}}
 				/>
 				<Composition
@@ -135,6 +148,14 @@ export const RemotionRoot: React.FC = () => {
 				<Composition
 					id="8-Studio"
 					component={Studio}
+					durationInFrames={1200}
+					fps={25}
+					width={1920}
+					height={1080}
+				/>{' '}
+				<Composition
+					id="9-StudioPromoGraphic"
+					component={StudioPromoGraphic}
 					durationInFrames={1200}
 					fps={25}
 					width={1920}

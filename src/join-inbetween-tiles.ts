@@ -1,5 +1,9 @@
-import {Instruction, reduceInstructions} from '@remotion/paths';
-import {getBoundingBoxFromInstructions} from '@remotion/paths/dist/get-bounding-box';
+import {
+	getBoundingBox,
+	Instruction,
+	reduceInstructions,
+	serializeInstructions,
+} from '@remotion/paths';
 import {ThreeDReducedInstruction} from './3d-svg';
 import {makeElement, ThreeDElement} from './element';
 import {turnInto3D} from './fix-z';
@@ -29,8 +33,8 @@ export const extrudeElement = ({
 	strokeColor: string;
 	crispEdges: boolean;
 }): ThreeDElement => {
-	const boundingBox = getBoundingBoxFromInstructions(
-		reduceInstructions(points)
+	const boundingBox = getBoundingBox(
+		serializeInstructions(reduceInstructions(points))
 	);
 
 	const centerX = (boundingBox.x2 - boundingBox.x1) / 2 + boundingBox.x1;

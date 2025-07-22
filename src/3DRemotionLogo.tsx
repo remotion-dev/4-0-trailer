@@ -31,51 +31,57 @@ export const TriangleOut: React.FC<{
 
 	const delayedFrame = Math.max(frame - 80, 0);
 
-	const paths = new Array(3).fill(true).map((out, i) => {
-		const triangle = makeTriangle({
-			direction: 'right',
-			length: 1500 + i * 675,
-			edgeRoundness: 0.71,
-		});
-		const path = resetPath(triangle.path);
-		const parsed = parsePath(path);
+	const paths = new Array(3)
+		.fill(true)
+		.map((out, i) => {
+			if (i !== 1) {
+				return null;
+			}
+			const triangle = makeTriangle({
+				direction: 'right',
+				length: 1500 + i * 675,
+				edgeRoundness: 0.71,
+			});
+			const path = resetPath(triangle.path);
+			const parsed = parsePath(path);
 
-		const boundingBox = getBoundingBox(path);
-		const width = boundingBox.x2 - boundingBox.x1;
-		const height = boundingBox.y2 - boundingBox.y1;
+			const boundingBox = getBoundingBox(path);
+			const width = boundingBox.x2 - boundingBox.x1;
+			const height = boundingBox.y2 - boundingBox.y1;
 
-		const depth = (5 + delayedFrame / 20) * 7.5;
-		const spread = depth + (delayedFrame / 1.2) * 7.5;
+			const depth = (5 + delayedFrame / 20) * 7.5;
+			const spread = depth + (delayedFrame / 1.2) * 7.5;
 
-		const darkColor = i === 2 ? '#bbb' : i === 1 ? '#ddd' : '#fff';
-		const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
+			const darkColor = i === 2 ? '#bbb' : i === 1 ? '#ddd' : '#fff';
+			const color = i === 2 ? '#E9F3FD' : i === 1 ? '#C1DBF9' : '#0b84f3';
 
-		const actualColor = dark ? darkColor : color;
+			const actualColor = dark ? darkColor : color;
 
-		const extruded = extrudeElement({
-			backFaceColor: actualColor,
-			sideColor: 'black',
-			frontFaceColor: actualColor,
-			depth,
-			points: parsed,
-			strokeWidth: 20,
-			description: `triangle-${i}`,
-			strokeColor: 'black',
-			crispEdges: false,
-		});
+			const extruded = extrudeElement({
+				backFaceColor: actualColor,
+				sideColor: 'black',
+				frontFaceColor: actualColor,
+				depth,
+				points: parsed,
+				strokeWidth: 20,
+				description: `triangle-${i}`,
+				strokeColor: 'black',
+				crispEdges: false,
+			});
 
-		const projected = transformElement(extruded, [
-			translateZ(spread * i - spread),
-			translateX(-width / 2),
-			translateY(-height / 2 + 20),
-			rotateX(-(i * delayedFrame) / 300),
-			rotateY(delayedFrame / 100),
-			rotateZ(delayedFrame / 100),
-			scaled(0.4 + zoomIn),
-		]);
+			const projected = transformElement(extruded, [
+				translateZ(spread * i - spread),
+				translateX(-width / 2),
+				translateY(-height / 2 + 20),
+				rotateX(-(i * delayedFrame) / 300),
+				rotateY(delayedFrame / 100),
+				rotateZ(delayedFrame / 100),
+				scaled(0.4 + zoomIn),
+			]);
 
-		return projected;
-	});
+			return projected;
+		})
+		.filter(Boolean);
 
 	return (
 		<AbsoluteFill

@@ -9,8 +9,8 @@ import {
 } from 'remotion';
 import {Square} from './Square';
 
-const rows = 9;
-const columns = 9;
+const rows = 1;
+const columns = 1;
 const size = 90;
 
 const padding = 25;
@@ -33,7 +33,7 @@ export const Recorder: React.FC = () => {
 		}) * 0.8;
 
 	return (
-		<AbsoluteFill style={{}}>
+		<AbsoluteFill style={{scale: '8'}}>
 			<AbsoluteFill
 				style={{
 					scale: String(imgScale),
@@ -41,6 +41,7 @@ export const Recorder: React.FC = () => {
 			>
 				<Img src={staticFile('recorder-logo.png')} />
 			</AbsoluteFill>
+
 			<AbsoluteFill>
 				<svg
 					viewBox={viewBox.join(' ')}
@@ -49,15 +50,13 @@ export const Recorder: React.FC = () => {
 					}}
 				>
 					{new Array(rows).fill(true).map((_, i) => {
-						return new Array(columns).fill(true).map((_, j) => {
-							const key = `${i}-${j}`;
-							const sizePerRow = (height - padding * 2) / rows;
-							const sizePerColumn = (width - padding * 2) / columns;
-							const top = sizePerRow * (j + 0.5) + padding;
-							const left = sizePerColumn * (i + 0.5) + padding;
+						const key = `${i} `;
+						const sizePerRow = (height - padding * 2) / rows;
+						const sizePerColumn = (width - padding * 2) / columns;
+						const top = sizePerRow * (0 + 0.5) + padding;
+						const left = sizePerColumn * (0 + 0.5) + padding;
 
-							return <Square key={key} left={left} size={size} top={top} />;
-						});
+						return <Square key={key} left={left} top={top} />;
 					})}
 				</svg>
 			</AbsoluteFill>
